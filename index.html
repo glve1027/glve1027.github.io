@@ -1,102 +1,141 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ghcoder</title>
-<meta name="description" content="">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
+<meta name="description" content="" />
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1576600538382">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1576599366959">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
 
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
   </head>
   <body>
-    <div id="app" class="main">
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://glve1027.github.io/">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1576600538382" alt="">
+  </a>
+  <h1 class="site-title">
+    Ghcoder
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/glve1027" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
 
-      <div class="sidebar" :class="{ 'full-height': menuVisible }">
-  <div class="top-container" data-aos="fade-right">
-    <div class="top-header-container">
-      <a class="site-title-container" href="https://glve1027.github.io/">
-        <img src="https://glve1027.github.io//images/avatar.png?v=1576599366959" class="site-logo">
-        <h1 class="site-title">Ghcoder</h1>
+    
+        <div class="post-container">
+  
+    <article class="post">
+      <a href="https://glve1027.github.io//post/app-zhu-ti-huan-fu-gong-neng">
+        <h2 class="post-title">App主题换肤功能</h2>
       </a>
-      <div class="menu-btn" @click="menuVisible = !menuVisible">
-        <div class="line"></div>
+      <div class="post-info">
+        <span>
+          2019-12-18
+        </span>
+        <span>
+          7 min read
+        </span>
+        
+          <a href="https://glve1027.github.io//tag/9qkBdYSPa" class="post-tag">
+            # Objective-C
+          </a>
+        
       </div>
-    </div>
-    <div>
       
-    </div>
-  </div>
-  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
-    <div class="social-container">
+        <a href="https://glve1027.github.io//post/app-zhu-ti-huan-fu-gong-neng" class="post-feature-image" style="background-image: url('https://glve1027.github.io//post-images/app-zhu-ti-huan-fu-gong-neng.png')">
+        </a>
       
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    </div>
-    <div class="site-description">
-      
-    </div>
-    <div class="site-footer">
-       | <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
-    </div>
-  </div>
+      <div class="post-abstract">
+        <p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
+
+      </div>
+    </article>
+  
 </div>
 
-
-      <div class="main-container">
-        <div class="content-container" data-aos="fade-up">
-          
-
-          <div class="pagination-container">
+    
+        <div class="pagination-container">
   
   
 </div>
 
-        </div>
-      </div>
-    </div>
+    
+        <div class="site-footer">
+   | 
+  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
+</div>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+  hljs.initHighlightingOnLoad()
 
-<script type="application/javascript">
+  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-AOS.init();
+  // This should probably be throttled.
+  // Especially because it triggers during smooth scrolling.
+  // https://lodash.com/docs/4.17.10#throttle
+  // You could do like...
+  // window.addEventListener("scroll", () => {
+  //    _.throttle(doThatStuff, 100);
+  // });
+  // Only not doing it here to keep this Pen dependency-free.
 
-hljs.initHighlightingOnLoad()
+  window.addEventListener("scroll", event => {
+    let fromTop = window.scrollY;
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+    mainNavLinks.forEach((link, index) => {
+      let section = document.getElementById(decodeURI(link.hash).substring(1));
+      let nextSection = null
+      if (mainNavLinks[index + 1]) {
+        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+      }
+      if (section.offsetTop <= fromTop) {
+        if (nextSection) {
+          if (nextSection.offsetTop > fromTop) {
+            link.classList.add("current");
+          } else {
+            link.classList.remove("current");    
+          }
+        } else {
+          link.classList.add("current");
+        }
+      } else {
+        link.classList.remove("current");
+      }
+    });
+  });
 
 </script>
 
-
-
-
+      </div>
+    </div>
   </body>
 </html>
