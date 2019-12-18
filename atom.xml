@@ -2,13 +2,38 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2019-12-18T02:44:17.091Z</updated>
+    <updated>2019-12-18T07:50:33.536Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io//atom.xml"/>
     <logo>https://glve1027.github.io//images/avatar.png</logo>
     <icon>https://glve1027.github.io//favicon.ico</icon>
     <rights>All rights reserved 2019, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[iOS多线程操作]]></title>
+        <id>https://glve1027.github.io//post/ios-duo-xian-cheng-cao-zuo</id>
+        <link href="https://glve1027.github.io//post/ios-duo-xian-cheng-cao-zuo">
+        </link>
+        <updated>2019-12-18T07:39:14.000Z</updated>
+        <summary type="html"><![CDATA[<p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
+<!-- more -->
+<p>方案有很多种：</p>
+<ul>
+<li>可以使用<code>锁</code>[这里就不具体展开了，锁的实现太多了]，这里重点说一下第二个方案：</li>
+<li>利用GCD实现“多读单写”的功能</li>
+</ul>
+<pre><code>// 创建一个全局的自定义并行队列
+dispatch_queue_t globalQueue = dispatch_queue_create(&quot;xxx&quot;, DISPATCH_QUEUE_CONCURRENT);
+// 对于&quot;写&quot;的操作
+// 1. 保证在我写之前所有的操作已经完成。2. 也只有在我完成此次&quot;写&quot;的操作的时候，下面的操作才能继续执行。
+dispatch_barrier_async(globalQueue, ^{ });
+// 对于&quot;读&quot;的操作, 同步的获取值
+dispatch_sync(globalQueue, ^{ });
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[App主题换肤功能]]></title>
         <id>https://glve1027.github.io//post/app-zhu-ti-huan-fu-gong-neng</id>
