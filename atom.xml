@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2019-12-26T04:08:58.687Z</updated>
+    <updated>2019-12-26T04:10:47.787Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io//atom.xml"/>
@@ -113,6 +113,7 @@ class Solution {
 <ul>
 <li>LeetCode 994</li>
 </ul>
+<figure data-type="image" tabindex="2"><img src="https://glve1027.github.io//post-images/1577333441345.jpg" alt=""></figure>
 <pre><code>
 import Foundation
 
