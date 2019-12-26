@@ -1,0 +1,393 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DFS&amp;BFS 解题心得 | Ghcoder</title>
+<meta name="description" content="" />
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1577332775591">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://glve1027.github.io/">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1577332775591" alt="">
+  </a>
+  <h1 class="site-title">
+    Ghcoder
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/glve1027" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              DFS&amp;BFS 解题心得
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-12-26
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://glve1027.github.io//post-images/dfsandbfs-jie-ti-xin-de.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <blockquote>
+<p>最近在一直在刷LeetCode, 一直在练习DFS与BFS的题，练多了发现有很多都是有固定套路的心得：</p>
+</blockquote>
+<ul>
+<li>先写一段伪代码，这段伪代码是下面套路的“白话文”</li>
+</ul>
+<pre><code>// 1. 这里的value 是初始值
+func start(value) {
+    // 2. 初始值的边界问题
+    if (value 不合法) { return }
+
+    // 3. !!关键，这里一定要新建一个函数，用于递归, 见下面的函数recursive
+    // 同时，recursive函数的入参，你可以自己不断的加
+    // 参数的理解， 如果recursive函数的终止条件 需要通过value 来计算出来，这里就有必要传入进去
+    let terminalValue = func handle(value)
+    // 参数1：
+    recursive(terminalValue, [value])
+}
+
+private func recursive(terminalValue, [value]) {
+    // 4. 判断终止条件
+    if (terminalValue) { return }
+    // 5. 这里需要一个临时的集合，用数组Array
+    var tempArray = []
+
+    for v in [value] {
+        // 6. !!这里通过v来找到下一个需要遍历的量，这里既可以实现DFS, 也可以实现BFS
+        let nextV = func findNextV(v)
+        
+        tempArray.append(nextV)
+    }
+
+    // 递归调用
+    recursive(terminalValue, tempArray)
+}
+</code></pre>
+<ul>
+<li>
+<p>下面看两道题目：</p>
+</li>
+<li>
+<p>LeetCode 199题目</p>
+</li>
+</ul>
+<pre><code>import Foundation
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+class Solution {
+    func rightSideView(_ root: TreeNode?) -&gt; [Int] {
+        guard let root = root else { return [] }
+
+        var datas: [TreeNode] = [root]
+        var result: [Int] = [root.val]
+        var currentLevel: Int = 1
+
+        printRight(&amp;datas, &amp;result, &amp;currentLevel)
+        return result
+    }
+
+    private func printRight(_ datas: inout [TreeNode], _ result: inout [Int], _ level: inout Int) {
+        guard !datas.isEmpty else { return }
+
+        // 记录层数
+        level += 1
+
+        var tempDatas: [TreeNode] = []
+        for d in datas {
+            // 下一个循环要检查的子数，这里都要记录下来
+            if let r = d.right {
+                tempDatas.append(r)
+                if result.count &lt; level { result.append(r.val) }
+            }
+            if let l = d.left {
+                tempDatas.append(l)
+                if result.count &lt; level { result.append(l.val) }
+            }
+        }
+
+        printRight(&amp;tempDatas, &amp;result, &amp;level)
+    }
+}
+</code></pre>
+<ul>
+<li>LeetCode 994</li>
+</ul>
+<pre><code>
+import Foundation
+
+class Solution {
+    func orangesRotting(_ grid: [[Int]]) -&gt; Int {
+        guard !grid.isEmpty else { return 0 }
+
+        var bads: [[Int]] = []
+        var visited: [[Int]] = []
+        var grid = grid
+        var total: Int = 0
+        var maxY: Int = 0
+        let maxX: Int = grid.count - 1
+
+        for i in 0..&lt;grid.count {
+            let temp = grid[i]
+            maxY = max(maxY, temp.count - 1)
+            for j in 0..&lt;temp.count {
+                if (temp[j] == 2) {
+                    bads.append([i, j])
+                    visited.append([i, j])
+                }
+                total += 1
+            }
+        }
+
+        // 起始条件判断
+        if (bads.isEmpty) { return hasNoBad(grid) ? -1 : 0  }
+
+        var minu: Int = 0
+        countMinute(&amp;minu, maxX, maxY, &amp;grid, &amp;bads, &amp;visited, total)
+        return hasNoBad(grid) ?  -1 : minu
+    }
+
+    private func countMinute(_ minu: inout Int, _ maxX: Int, _ maxY: Int, _ grid: inout [[Int]], _ bads: inout [[Int]], _ visited: inout [[Int]], _ total: Int) {
+        guard !bads.isEmpty else { return }
+        guard visited.count &lt; total else { return }
+
+        // 临时收集坏的
+        var visited = visited
+        var tempBads: [[Int]] = []
+        // 遍历
+        for b in bads {
+            let currentX = b[0]
+            let currentY = b[1]
+            let currentIsBad = grid[currentX][currentY] == 2
+            // 四个方向进行判断
+            
+            // 1. 上
+            let upY = currentY - 1
+            if (upY &gt;= 0 &amp;&amp; upY &lt;= maxY &amp;&amp; !containsInDatas(visited, [currentX, upY])) {
+                visited.append([currentX, upY])
+                if (currentIsBad &amp;&amp; grid[currentX][upY] == 1) {
+                    // 已经腐烂
+                    grid[currentX][upY] = 2
+                    tempBads.append([currentX, upY])
+                }
+            }
+
+            // 2. 左
+            let leftX = currentX - 1
+            if (leftX &gt;= 0 &amp;&amp; leftX &lt;= maxX &amp;&amp; !containsInDatas(visited, [leftX, currentY])) {
+                visited.append([leftX, currentY])
+                if (currentIsBad &amp;&amp; grid[leftX][currentY] == 1) {
+                    // 已经腐烂
+                    grid[leftX][currentY] = 2
+                    tempBads.append([leftX, currentY])
+                }
+            }
+
+            // 3. 下
+            let downY = currentY + 1
+            if (downY &gt;= 0 &amp;&amp; downY &lt;= maxY &amp;&amp; !containsInDatas(visited, [currentX, downY])) {
+                visited.append([currentX, downY])
+                if (currentIsBad &amp;&amp; grid[currentX][downY] == 1) {
+                    // 已经腐烂
+                    grid[currentX][downY] = 2
+                    tempBads.append([currentX, downY])
+                }
+            }
+
+            // 4. 右
+            let rightX = currentX + 1
+            if (rightX &gt;= 0 &amp;&amp; rightX &lt;= maxX &amp;&amp; !containsInDatas(visited, [rightX, currentY])) {
+                visited.append([rightX, currentY])
+                if (currentIsBad &amp;&amp; grid[rightX][currentY] == 1) {
+                    // 已经腐烂
+                    grid[rightX][currentY] = 2
+                    tempBads.append([rightX, currentY])
+                }
+            }
+        }
+
+        // 如果已经没有坏橘子，就提前退出
+        guard noBads(tempBads, grid) == false else { return }
+        // 累计时间
+        minu += 1
+        countMinute(&amp;minu, maxX, maxY, &amp;grid, &amp;tempBads, &amp;visited, total)
+    }
+
+    private func hasNoBad(_ grid: [[Int]]) -&gt; Bool {
+        guard !grid.isEmpty else { return false }
+        for i in 0..&lt;grid.count {
+            let temp = grid[i]
+            for j in 0..&lt;temp.count {
+                if (temp[j] == 1) { return true }
+            }
+        }
+        return false
+    }
+
+    private func noBads(_ bads: [[Int]], _ grid: [[Int]]) -&gt; Bool {
+        guard !bads.isEmpty else { return true }
+        for b in bads {
+            let x = b[0]
+            let y = b[1]
+            if (grid[x][y] == 2) { return false }
+        }
+        return true
+    }
+
+    private func containsInDatas(_ datas: [[Int]], _ e: [Int]) -&gt; Bool {
+        guard !datas.isEmpty else { return false }
+        for d in datas where e == d {
+            return true
+        }
+        return false
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://glve1027.github.io//post/ios-duo-xian-cheng-cao-zuo">
+              <h3 class="post-title">
+                iOS多线程操作
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+
+          
+            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var options = {
+  shortname: 'https-glve1027-github-io',
+  apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+          
+        
+
+        <div class="site-footer">
+   | 
+  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+
+  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+  // This should probably be throttled.
+  // Especially because it triggers during smooth scrolling.
+  // https://lodash.com/docs/4.17.10#throttle
+  // You could do like...
+  // window.addEventListener("scroll", () => {
+  //    _.throttle(doThatStuff, 100);
+  // });
+  // Only not doing it here to keep this Pen dependency-free.
+
+  window.addEventListener("scroll", event => {
+    let fromTop = window.scrollY;
+
+    mainNavLinks.forEach((link, index) => {
+      let section = document.getElementById(decodeURI(link.hash).substring(1));
+      let nextSection = null
+      if (mainNavLinks[index + 1]) {
+        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+      }
+      if (section.offsetTop <= fromTop) {
+        if (nextSection) {
+          if (nextSection.offsetTop > fromTop) {
+            link.classList.add("current");
+          } else {
+            link.classList.remove("current");    
+          }
+        } else {
+          link.classList.add("current");
+        }
+      } else {
+        link.classList.remove("current");
+      }
+    });
+  });
+
+</script>
+
+      </div>
+    </div>
+  </body>
+</html>
