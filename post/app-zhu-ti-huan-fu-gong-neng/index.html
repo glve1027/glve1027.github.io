@@ -2,87 +2,74 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ghcoder</title>
+<title>App主题换肤功能 | Ghcoder</title>
 <meta name="description" content="" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579573868094">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579573946162">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-<link href="https://cdn.remixicon.com/releases/v1.3.1/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Ghcoder - Atom Feed" href="https://glve1027.github.io//atom.xml">
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
   </head>
   <body>
-    <div id="app" class="main px-4 flex flex-col lg:flex-row">
-      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
-  <div class="lg:sticky top-0">
-    <div class="sidebar-content">
-      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
-        <i class="remixicon-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://glve1027.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://glve1027.github.io//images/avatar.png?v=1579573868094" alt="">
-        </a>
-        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Ghcoder</h1>
-      </div>
-      
-        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
-          <p class="my-4 text-gray-600 font-light hidden lg:block">
-            文章目录
-          </p>
-          <div class="toc-container hidden lg:block">
-            <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E4%B8%BB%E9%A2%98%E7%9A%AE%E8%82%A4%E5%88%87%E6%8D%A2%E6%A8%A1%E5%9D%97">主题皮肤切换模块</a>
-<ul>
-<li><a href="#gcttheme%E9%85%8D%E7%BD%AE%E7%AF%87">GCTTheme配置篇</a></li>
-<li><a href="#gcttheme%E4%BD%BF%E7%94%A8%E7%AF%87">GCTTheme使用篇</a>
-<ul>
-<li><a href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5">实际使用情况</a></li>
-</ul>
-</li>
-<li><a href="#gcttheme%E5%8E%9F%E7%90%86%E7%AF%87">GCTTheme原理篇</a></li>
-<li><a href="#%E6%B5%8B%E8%AF%95%E7%AF%87">测试篇</a></li>
-<li><a href="#%E6%80%9D%E8%80%83%E7%AF%87">思考篇</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      
-    </div>
-  </div>
-</div>
-
-<div class="menu-container">
-  <i class="remixicon-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
-  <div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://glve1027.github.io/">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1579573946162" alt="">
+  </a>
+  <h1 class="site-title">
+    Ghcoder
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
     
   </div>
-  <div class="site-footer">
-    <div class="py-4 text-gray-700"></div>
-    <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
-<div class="mask" onclick="closeMenu()">
-</div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">App主题换肤功能</h1>
-        <div class="text-sm text-gray-700 lg:my-8">
-          2019-12-18 / 7 min read
-        </div>
-        
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://glve1027.github.io//post-images/app-zhu-ti-huan-fu-gong-neng.jpg" alt="">
-        
-        <div class="post-content yue">
-          <p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              App主题换肤功能
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-12-18
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://glve1027.github.io/tag/9qkBdYSPa" class="post-tag">
+                  # Objective-C
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://glve1027.github.io//post-images/app-zhu-ti-huan-fu-gong-neng.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
 <!-- more -->
 <h2 id="主题皮肤切换模块">主题皮肤切换模块</h2>
 <h3 id="gcttheme配置篇">GCTTheme配置篇</h3>
@@ -279,29 +266,34 @@ NS_ASSUME_NONNULL_BEGIN
 <li>统一修改的时机每次启动只有一次，后期这里需要修改。</li>
 </ul>
 
-        </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%BB%E9%A2%98%E7%9A%AE%E8%82%A4%E5%88%87%E6%8D%A2%E6%A8%A1%E5%9D%97">主题皮肤切换模块</a>
+<ul>
+<li><a href="#gcttheme%E9%85%8D%E7%BD%AE%E7%AF%87">GCTTheme配置篇</a></li>
+<li><a href="#gcttheme%E4%BD%BF%E7%94%A8%E7%AF%87">GCTTheme使用篇</a>
+<ul>
+<li><a href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5">实际使用情况</a></li>
+</ul>
+</li>
+<li><a href="#gcttheme%E5%8E%9F%E7%90%86%E7%AF%87">GCTTheme原理篇</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E7%AF%87">测试篇</a></li>
+<li><a href="#%E6%80%9D%E8%80%83%E7%AF%87">思考篇</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-        
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://glve1027.github.io/tag/9qkBdYSPa">
-            <span class="flex-auto">Objective-C</span>
-          </a>
-        
-
-
-        <div class="flex justify-between py-8">
-          
-            <div class="prev-post">
-              <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo">
-                <h3 class="post-title">
-                  <i class="remixicon-arrow-left-line"></i>
-                  iOS多线程操作
-                </h3>
-              </a>
+              </div>
             </div>
-          
-
-          
+          </article>
         </div>
+
+        
 
         
           
@@ -328,107 +320,53 @@ var dsqjs = new DisqusJS(options)
           
         
 
-      </div>
-    </div>
+        <div class="site-footer">
+   | 
+  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
+</div>
 
-    <script src="https://glve1027.github.io//media/prism.js"></script>  
 <script>
+  hljs.initHighlightingOnLoad()
 
-Prism.highlightAll()
+  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+  // This should probably be throttled.
+  // Especially because it triggers during smooth scrolling.
+  // https://lodash.com/docs/4.17.10#throttle
+  // You could do like...
+  // window.addEventListener("scroll", () => {
+  //    _.throttle(doThatStuff, 100);
+  // });
+  // Only not doing it here to keep this Pen dependency-free.
 
-// This should probably be throttled.
-// Especially because it triggers during smooth scrolling.
-// https://lodash.com/docs/4.17.10#throttle
-// You could do like...
-// window.addEventListener("scroll", () => {
-//    _.throttle(doThatStuff, 100);
-// });
-// Only not doing it here to keep this Pen dependency-free.
+  window.addEventListener("scroll", event => {
+    let fromTop = window.scrollY;
 
-window.addEventListener("scroll", event => {
-  let fromTop = window.scrollY;
-
-  mainNavLinks.forEach((link, index) => {
-    let section = document.getElementById(decodeURI(link.hash).substring(1));
-    let nextSection = null
-    if (mainNavLinks[index + 1]) {
-      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-    }
-    if (section.offsetTop <= fromTop) {
-      if (nextSection) {
-        if (nextSection.offsetTop > fromTop) {
-          link.classList.add("current");
+    mainNavLinks.forEach((link, index) => {
+      let section = document.getElementById(decodeURI(link.hash).substring(1));
+      let nextSection = null
+      if (mainNavLinks[index + 1]) {
+        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+      }
+      if (section.offsetTop <= fromTop) {
+        if (nextSection) {
+          if (nextSection.offsetTop > fromTop) {
+            link.classList.add("current");
+          } else {
+            link.classList.remove("current");    
+          }
         } else {
-          link.classList.remove("current");    
+          link.classList.add("current");
         }
       } else {
-        link.classList.add("current");
+        link.classList.remove("current");
       }
-    } else {
-      link.classList.remove("current");
-    }
-  });
-});
-
-
-document.addEventListener("DOMContentLoaded", function() {
-  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
-
-  if ("IntersectionObserver" in window) {
-    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          let lazyImage = entry.target
-          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
-          lazyImage.classList.remove("lazy")
-          lazyImageObserver.unobserve(lazyImage)
-        }
-      });
     });
+  });
 
-    lazyImages.forEach(function(lazyImage) {
-      lazyImageObserver.observe(lazyImage)
-    })
-  } else {
-    // Possibly fall back to a more compatible method here
-  }
-});
-
-const menuContainer = document.querySelector('.menu-container')
-const menus = document.querySelectorAll('.menu-container .menu')
-const mask = document.querySelector('.mask')
-const contentWrapper = document.querySelector('.content-wrapper')
-const latestArticle = document.querySelector('.latest-article')
-const readMore = document.querySelector('.read-more')
-const indexPage = document.querySelector('.index-page')
-
-const isHome = location.pathname === '/'
-if (latestArticle) {
-  latestArticle.style.display = isHome ? 'block' : 'none'
-  readMore.style.display = isHome ? 'block' : 'none'
-  indexPage.style.display = isHome ? 'none' : 'block'
-}
-
-const openMenu = () => {
-  menuContainer.classList.add('open')
-  menus.forEach(menu => {
-    menu.classList.add('animated', 'fadeInLeft')
-  })
-  mask.classList.add('open')
-  contentWrapper.classList.add('is-second')
-}
-
-const closeMenu = () => {
-  menuContainer.classList.remove('open')
-  menus.forEach(menu => {
-    menu.classList.remove('animated', 'fadeInLeft')
-  })
-  mask.classList.remove('open')
-  contentWrapper.classList.remove('is-second')
-}
 </script>
-  
+
+      </div>
+    </div>
   </body>
 </html>
