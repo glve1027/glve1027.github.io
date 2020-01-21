@@ -2,17 +2,17 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2019-12-26T06:42:17.759Z</updated>
+    <updated>2020-01-21T02:28:54.910Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
-    <link rel="self" href="https://glve1027.github.io//atom.xml"/>
-    <logo>https://glve1027.github.io//images/avatar.png</logo>
-    <icon>https://glve1027.github.io//favicon.ico</icon>
-    <rights>All rights reserved 2019, Ghcoder</rights>
+    <link rel="self" href="https://glve1027.github.io/atom.xml"/>
+    <logo>https://glve1027.github.io/images/avatar.png</logo>
+    <icon>https://glve1027.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Ghcoder</rights>
     <entry>
         <title type="html"><![CDATA[DFS&BFS 解题心得]]></title>
-        <id>https://glve1027.github.io//post/dfsandbfs-jie-ti-xin-de</id>
-        <link href="https://glve1027.github.io//post/dfsandbfs-jie-ti-xin-de">
+        <id>https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de</id>
+        <link href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de">
         </link>
         <updated>2019-12-26T02:12:29.000Z</updated>
         <summary type="html"><![CDATA[<blockquote>
@@ -67,7 +67,7 @@ private func recursive(terminalValue, [value]) {
 <p>LeetCode 199题目</p>
 </li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="https://glve1027.github.io//post-images/1577333311197.jpg" alt=""></figure>
+<figure data-type="image" tabindex="1"><img src="https://glve1027.github.io//post-images/1577333311197.jpg" alt="" loading="lazy"></figure>
 <pre><code>import Foundation
 
 /**
@@ -121,7 +121,7 @@ class Solution {
 <ul>
 <li>LeetCode 994</li>
 </ul>
-<figure data-type="image" tabindex="2"><img src="https://glve1027.github.io//post-images/1577333441345.jpg" alt=""></figure>
+<figure data-type="image" tabindex="2"><img src="https://glve1027.github.io//post-images/1577333441345.jpg" alt="" loading="lazy"></figure>
 <pre><code>
 import Foundation
 
@@ -256,8 +256,8 @@ class Solution {
     </entry>
     <entry>
         <title type="html"><![CDATA[iOS多线程操作]]></title>
-        <id>https://glve1027.github.io//post/ios-duo-xian-cheng-cao-zuo</id>
-        <link href="https://glve1027.github.io//post/ios-duo-xian-cheng-cao-zuo">
+        <id>https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo</id>
+        <link href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo">
         </link>
         <updated>2019-12-18T07:39:14.000Z</updated>
         <summary type="html"><![CDATA[<p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
@@ -281,8 +281,8 @@ dispatch_sync(globalQueue, ^{ });
     </entry>
     <entry>
         <title type="html"><![CDATA[App主题换肤功能]]></title>
-        <id>https://glve1027.github.io//post/app-zhu-ti-huan-fu-gong-neng</id>
-        <link href="https://glve1027.github.io//post/app-zhu-ti-huan-fu-gong-neng">
+        <id>https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng</id>
+        <link href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng">
         </link>
         <updated>2019-12-17T16:19:47.000Z</updated>
         <summary type="html"><![CDATA[<p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
