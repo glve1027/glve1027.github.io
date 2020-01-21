@@ -1,97 +1,105 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" >
+
 <title>iOS多线程操作 | Ghcoder</title>
-<meta name="description" content="一个不断在修炼的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579577506388">
+<meta name="description" content="一个不断在修炼的程序员">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579577609622">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
 
+
+  
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
 
 
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://glve1027.github.io/">
-  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1579577506388" alt="">
-  </a>
-  <h1 class="site-title">
-    Ghcoder
-  </h1>
-  <p class="site-description">
-    一个不断在修炼的程序员
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://glve1027.github.io/">
+        <img src="https://glve1027.github.io//images/avatar.png?v=1579577609622" class="site-logo">
+        <h1 class="site-title">Ghcoder</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="https://ghcoder.com/" class="menu">
-          首页
-        </a>
+        
+          <a href="https://ghcoder.com/" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="https://ghcoder.com/archives/" class="site-nav">
+            归档
+          </a>
+        
       
-        <a href="https://ghcoder.com/archives/" class="menu">
-          归档
-        </a>
+        
+          <a href="https://ghcoder.com/tags/" class="site-nav">
+            标签
+          </a>
+        
       
-    
-      
-        <a href="https://ghcoder.com/tags/" class="menu">
-          标签
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
+      
+    </div>
+    <div class="site-description">
+      一个不断在修炼的程序员
+    </div>
+    <div class="site-footer">
+       | <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
   </div>
 </div>
 
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              iOS多线程操作
-            </h2>
-            <div class="post-info">
-              <span>
-                2019-12-18
-              </span>
-              <span>
-                1 min read
-              </span>
-              
-                <a href="https://glve1027.github.io/tag/8khxWRoB4" class="post-tag">
-                  # GCD
-                </a>
-              
-                <a href="https://glve1027.github.io/tag/9qkBdYSPa" class="post-tag">
-                  # Objective-C
-                </a>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">iOS多线程操作</h2>
+            <div class="post-date">2019-12-18</div>
             
-              <img class="post-feature-image" src="https://glve1027.github.io//post-images/ios-duo-xian-cheng-cao-zuo.jpg" alt="">
+              <div class="feature-container" style="background-image: url('https://glve1027.github.io//post-images/ios-duo-xian-cheng-cao-zuo.jpg')">
+              </div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
+            <div class="post-content">
+              <p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
 <!-- more -->
 <p>方案有很多种：</p>
 <ul>
@@ -107,97 +115,84 @@ dispatch_barrier_async(globalQueue, ^{ });
 dispatch_sync(globalQueue, ^{ });
 </code></pre>
 
-              </div>
-              <div class="toc-container">
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://glve1027.github.io/tag/8khxWRoB4" class="tag">
+                    GCD
+                  </a>
+                
+                  <a href="https://glve1027.github.io/tag/9qkBdYSPa" class="tag">
+                    Objective-C
+                  </a>
                 
               </div>
-            </div>
-          </article>
-        </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng">
+                  <h3 class="post-title">
+                    App主题换肤功能
+                  </h3>
+                </a>
+              </div>
+            
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng">
-              <h3 class="post-title">
-                App主题换肤功能
-              </h3>
-            </a>
+            
+              
+
+              
+                <div id="disqus_thread" data-aos="fade-in"></div>
+              
+            
+
           </div>
-        
 
-        
-          
-
-          
-            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
-<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
-
-<div id="disqus_thread"></div>
-
-<script>
-
-var options = {
-  shortname: 'https-glve1027-github-io',
-  apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
-}
-if ('https://disqus.skk.moe/disqus/') {
-  options.api = 'https://disqus.skk.moe/disqus/'
-}
-var dsqjs = new DisqusJS(options)
-
-</script>
-
-          
-        
-
-        <div class="site-footer">
-   | 
-  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
-</div>
-
-<script>
-  hljs.initHighlightingOnLoad()
-
-  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
-
-  // This should probably be throttled.
-  // Especially because it triggers during smooth scrolling.
-  // https://lodash.com/docs/4.17.10#throttle
-  // You could do like...
-  // window.addEventListener("scroll", () => {
-  //    _.throttle(doThatStuff, 100);
-  // });
-  // Only not doing it here to keep this Pen dependency-free.
-
-  window.addEventListener("scroll", event => {
-    let fromTop = window.scrollY;
-
-    mainNavLinks.forEach((link, index) => {
-      let section = document.getElementById(decodeURI(link.hash).substring(1));
-      let nextSection = null
-      if (mainNavLinks[index + 1]) {
-        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-      }
-      if (section.offsetTop <= fromTop) {
-        if (nextSection) {
-          if (nextSection.offsetTop > fromTop) {
-            link.classList.add("current");
-          } else {
-            link.classList.remove("current");    
-          }
-        } else {
-          link.classList.add("current");
-        }
-      } else {
-        link.classList.remove("current");
-      }
-    });
-  });
-
-</script>
-
+        </div>
       </div>
     </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+
+  
+    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+    <script>
+
+    var options = {
+      shortname: 'https-glve1027-github-io',
+      apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
+    }
+    if ('https://disqus.skk.moe/disqus/') {
+      options.api = 'https://disqus.skk.moe/disqus/'
+    }
+    var dsqjs = new DisqusJS(options)
+
+    </script>
+  
+
+
+
+
   </body>
 </html>
