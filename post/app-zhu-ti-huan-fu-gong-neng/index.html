@@ -1,88 +1,87 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ghcoder</title>
-<meta name="description" content="一个正在不断Coiding的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579575019571">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-<link href="https://cdn.remixicon.com/releases/v1.3.1/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <meta charset="utf-8" >
 
+<title>App主题换肤功能 | Ghcoder</title>
+<meta name="description" content="一个正在不断Coiding的程序员">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579576394979">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Ghcoder - Atom Feed" href="https://glve1027.github.io//atom.xml">
+
+
+  
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
 
 
   </head>
   <body>
-    <div id="app" class="main px-4 flex flex-col lg:flex-row">
-      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
-  <div class="lg:sticky top-0">
-    <div class="sidebar-content">
-      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
-        <i class="remixicon-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://glve1027.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://glve1027.github.io//images/avatar.png?v=1579575019571" alt="">
-        </a>
-        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Ghcoder</h1>
-      </div>
-      
-        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
-          <p class="my-4 text-gray-600 font-light hidden lg:block">
-            文章目录
-          </p>
-          <div class="toc-container hidden lg:block">
-            <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E4%B8%BB%E9%A2%98%E7%9A%AE%E8%82%A4%E5%88%87%E6%8D%A2%E6%A8%A1%E5%9D%97">主题皮肤切换模块</a>
-<ul>
-<li><a href="#gcttheme%E9%85%8D%E7%BD%AE%E7%AF%87">GCTTheme配置篇</a></li>
-<li><a href="#gcttheme%E4%BD%BF%E7%94%A8%E7%AF%87">GCTTheme使用篇</a>
-<ul>
-<li><a href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5">实际使用情况</a></li>
-</ul>
-</li>
-<li><a href="#gcttheme%E5%8E%9F%E7%90%86%E7%AF%87">GCTTheme原理篇</a></li>
-<li><a href="#%E6%B5%8B%E8%AF%95%E7%AF%87">测试篇</a></li>
-<li><a href="#%E6%80%9D%E8%80%83%E7%AF%87">思考篇</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+    <div id="app" class="main">
 
-          </div>
-        </div>
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://glve1027.github.io/">
+        <img src="https://glve1027.github.io//images/avatar.png?v=1579576394979" class="site-logo">
+        <h1 class="site-title">Ghcoder</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      一个正在不断Coiding的程序员
+    </div>
+    <div class="site-footer">
+       | <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
     </div>
   </div>
 </div>
 
-<div class="menu-container">
-  <i class="remixicon-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
-  <div>
-    
-  </div>
-  <div class="site-footer">
-    <div class="py-4 text-gray-700"></div>
-    <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
-  </div>
-</div>
-<div class="mask" onclick="closeMenu()">
-</div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">App主题换肤功能</h1>
-        <div class="text-sm text-gray-700 lg:my-8">
-          2019-12-18 / 7 min read
-        </div>
-        
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://glve1027.github.io//post-images/app-zhu-ti-huan-fu-gong-neng.jpg" alt="">
-        
-        <div class="post-content yue">
-          <p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">App主题换肤功能</h2>
+            <div class="post-date">2019-12-18</div>
+            
+              <div class="feature-container" style="background-image: url('https://glve1027.github.io//post-images/app-zhu-ti-huan-fu-gong-neng.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
 <!-- more -->
 <h2 id="主题皮肤切换模块">主题皮肤切换模块</h2>
 <h3 id="gcttheme配置篇">GCTTheme配置篇</h3>
@@ -279,156 +278,71 @@ NS_ASSUME_NONNULL_BEGIN
 <li>统一修改的时机每次启动只有一次，后期这里需要修改。</li>
 </ul>
 
-        </div>
-
-        
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://glve1027.github.io/tag/9qkBdYSPa">
-            <span class="flex-auto">Objective-C</span>
-          </a>
-        
-
-
-        <div class="flex justify-between py-8">
-          
-            <div class="prev-post">
-              <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo">
-                <h3 class="post-title">
-                  <i class="remixicon-arrow-left-line"></i>
-                  iOS多线程操作
-                </h3>
-              </a>
             </div>
-          
+            
+              <div class="tag-container">
+                
+                  <a href="https://glve1027.github.io/tag/9qkBdYSPa" class="tag">
+                    Objective-C
+                  </a>
+                
+              </div>
+            
+            
 
-          
+            
+              
+
+              
+                <div id="disqus_thread" data-aos="fade-in"></div>
+              
+            
+
+          </div>
+
         </div>
-
-        
-          
-
-          
-            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
-<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
-
-<div id="disqus_thread"></div>
-
-<script>
-
-var options = {
-  shortname: 'https-glve1027-github-io',
-  apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
-}
-if ('https://disqus.skk.moe/disqus/') {
-  options.api = 'https://disqus.skk.moe/disqus/'
-}
-var dsqjs = new DisqusJS(options)
-
-</script>
-
-          
-        
-
       </div>
     </div>
 
-    <script src="https://glve1027.github.io//media/prism.js"></script>  
-<script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 
-Prism.highlightAll()
+<script type="application/javascript">
 
-let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+AOS.init();
 
-// This should probably be throttled.
-// Especially because it triggers during smooth scrolling.
-// https://lodash.com/docs/4.17.10#throttle
-// You could do like...
-// window.addEventListener("scroll", () => {
-//    _.throttle(doThatStuff, 100);
-// });
-// Only not doing it here to keep this Pen dependency-free.
+hljs.initHighlightingOnLoad()
 
-window.addEventListener("scroll", event => {
-  let fromTop = window.scrollY;
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
-  mainNavLinks.forEach((link, index) => {
-    let section = document.getElementById(decodeURI(link.hash).substring(1));
-    let nextSection = null
-    if (mainNavLinks[index + 1]) {
-      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-    }
-    if (section.offsetTop <= fromTop) {
-      if (nextSection) {
-        if (nextSection.offsetTop > fromTop) {
-          link.classList.add("current");
-        } else {
-          link.classList.remove("current");    
-        }
-      } else {
-        link.classList.add("current");
-      }
-    } else {
-      link.classList.remove("current");
-    }
-  });
-});
-
-
-document.addEventListener("DOMContentLoaded", function() {
-  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
-
-  if ("IntersectionObserver" in window) {
-    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          let lazyImage = entry.target
-          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
-          lazyImage.classList.remove("lazy")
-          lazyImageObserver.unobserve(lazyImage)
-        }
-      });
-    });
-
-    lazyImages.forEach(function(lazyImage) {
-      lazyImageObserver.observe(lazyImage)
-    })
-  } else {
-    // Possibly fall back to a more compatible method here
-  }
-});
-
-const menuContainer = document.querySelector('.menu-container')
-const menus = document.querySelectorAll('.menu-container .menu')
-const mask = document.querySelector('.mask')
-const contentWrapper = document.querySelector('.content-wrapper')
-const latestArticle = document.querySelector('.latest-article')
-const readMore = document.querySelector('.read-more')
-const indexPage = document.querySelector('.index-page')
-
-const isHome = location.pathname === '/'
-if (latestArticle) {
-  latestArticle.style.display = isHome ? 'block' : 'none'
-  readMore.style.display = isHome ? 'block' : 'none'
-  indexPage.style.display = isHome ? 'none' : 'block'
-}
-
-const openMenu = () => {
-  menuContainer.classList.add('open')
-  menus.forEach(menu => {
-    menu.classList.add('animated', 'fadeInLeft')
-  })
-  mask.classList.add('open')
-  contentWrapper.classList.add('is-second')
-}
-
-const closeMenu = () => {
-  menuContainer.classList.remove('open')
-  menus.forEach(menu => {
-    menu.classList.remove('animated', 'fadeInLeft')
-  })
-  mask.classList.remove('open')
-  contentWrapper.classList.remove('is-second')
-}
 </script>
+
+
+
   
+
+  
+    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+    <script>
+
+    var options = {
+      shortname: 'https-glve1027-github-io',
+      apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
+    }
+    if ('https://disqus.skk.moe/disqus/') {
+      options.api = 'https://disqus.skk.moe/disqus/'
+    }
+    var dsqjs = new DisqusJS(options)
+
+    </script>
+  
+
+
+
+
   </body>
 </html>
