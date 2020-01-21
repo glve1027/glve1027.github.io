@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-01-21T03:22:20.842Z</updated>
+    <updated>2020-01-21T03:23:34.522Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -19,17 +19,14 @@
         <summary type="html"><![CDATA[<blockquote>
 <p>最近在一直在刷LeetCode, 一直在练习DFS与BFS的题，练多了发现有很多都是有固定套路的心得：</p>
 </blockquote>
-<ul>
-<li>先写一段伪代码，这段伪代码是下面套路的“白话文”</li>
-</ul>
 ]]></summary>
         <content type="html"><![CDATA[<blockquote>
 <p>最近在一直在刷LeetCode, 一直在练习DFS与BFS的题，练多了发现有很多都是有固定套路的心得：</p>
 </blockquote>
+  <!-- more -->
 <ul>
 <li>先写一段伪代码，这段伪代码是下面套路的“白话文”</li>
 </ul>
-<!-- more -->
 <pre><code>// 1. 这里的value 是初始值
 func start(value) {
     // 2. 初始值的边界问题
