@@ -1,0 +1,308 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>学习优秀的iOS代码（一） | Ghcoder</title>
+<meta name="description" content="一个不断在修炼的程序员" />
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579705173542">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://glve1027.github.io/">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1579705173542" alt="">
+  </a>
+  <h1 class="site-title">
+    Ghcoder
+  </h1>
+  <p class="site-description">
+    一个不断在修炼的程序员
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://ghcoder.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://ghcoder.com/archives/" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://ghcoder.com/tags/" class="menu">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              学习优秀的iOS代码（一）
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-01-22
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://glve1027.github.io//post-images/xue-xi-you-xiu-de-ios-dai-ma-yi.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><a href="https://github.com/SDWebImage/SDWebImage">SDWebImage</a>,一个iOS图片加载库，在iOS界，一直是标杆的存在，本篇博客不去讨论他的具体代码架构、设计、算法，而是从一个个小的tips来发现这些代码的闪光点。</p>
+<!-- more -->
+<h3 id="1-协议接口的使用">1. 协议(接口)的使用</h3>
+<ul>
+<li>自吹一下，作者的这一点写代码的风格和我还是很像的，都很喜欢<code>面向接口编程</code>，整个<code>SDWebImage</code>中存在很多这样的情况，比如：<code>SDImageCodersManager</code>， 光从这个名字就能看出这是一个关于给图片编码的类，再看定义：</li>
+</ul>
+<pre><code>@interface SDImageCodersManager : NSObject &lt;SDImageCoder&gt;
+@end
+
+@protocol SDImageCoder &lt;NSObject&gt;
+@end
+</code></pre>
+<ul>
+<li>这样代码风格遍布在整个项目中, 例如下面类中定义的<code>SDWebImageDownloaderRequestModifier</code>,<code>SDWebImageDownloaderResponseModifier</code>,<code>SDWebImageDownloaderDecryptor</code></li>
+</ul>
+<pre><code>@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderRequestModifier&gt; requestModifier;
+
+@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderResponseModifier&gt; responseModifier;
+
+@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderDecryptor&gt; decryptor;
+</code></pre>
+<blockquote>
+<p>总结：如果后面我们也想实现一个功能可以模仿这种规范：1：定义一个接口  2：定义一个默认的类并且遵循相应的接口  3：暴露给外面的是一个id&lt;协议&gt;object。</p>
+</blockquote>
+<h3 id="2-宏的使用">2. 宏的使用</h3>
+<ul>
+<li>其实如果你正常看第三个优秀源码，你就会发现，很多代码存在很多优秀的宏定义，一方面使用起来很优雅，一方面也可以学习到关于编译器的一个参数的设置。在项目中，我经常看到下面的代码：</li>
+</ul>
+<pre><code>SD_LOCK(self.HTTPHeadersLock);
+[self.HTTPHeaders setValue:value forKey:field];
+SD_UNLOCK(self.HTTPHeadersLock);
+
+// 定义
+#ifndef SD_LOCK
+#define SD_LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
+#endif
+
+#ifndef SD_UNLOCK
+#define SD_UNLOCK(lock) dispatch_semaphore_signal(lock);
+#endif
+
+// 用来区分平台的宏
+#if TARGET_OS_IOS || TARGET_OS_TV
+    #define SD_UIKIT 1
+#else
+    #define SD_UIKIT 0
+#endif
+
+#if TARGET_OS_IOS
+    #define SD_IOS 1
+#else
+    #define SD_IOS 0
+#endif
+</code></pre>
+<blockquote>
+<p>总结：没什么技术含量，大家都会这样去实现<code>锁</code>,但是代码未必有这么优雅，点赞。<br>
+说道<code>锁</code>的实现，代码中还存在另一个保证线程安全的就是<code>@synchronized(self)</code>, 这里在项目源码中，有时候作者用的是<code>@synchronized(self)</code>, 有时候用的又是一个临时变量：<code>@synchronized(xx)</code>, 网上之前也有一些关于这样<code>性能不是很好的传闻</code>。关于这个我特意去查阅了一些资料，大家可以看一下<a href="http://mrpeak.cn/blog/synchronized/">FaceBook大神的这篇文章</a></p>
+</blockquote>
+<h3 id="3-关于函数定义规范的问题">3. 关于函数定义规范的问题</h3>
+<ul>
+<li>在项目中关于下载图片的<code>api</code>，可以说是核心的代码，在看看内部函数定义，代码如下：</li>
+</ul>
+<pre><code>// 参数类型的定义
+typedef void(^SDWebImageNoParamsBlock)(void);
+typedef NSString * SDWebImageContextOption NS_EXTENSIBLE_STRING_ENUM;
+typedef NSDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageContext;
+typedef NSMutableDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageMutableContext;
+
+
+- (void)sd_setImageWithURL:(nullable NSURL *)url {
+    [self sd_setImageWithURL:url placeholderImage:nil options:0 progress:nil completed:nil];
+}
+
+- (void)sd_setImageWithURL:(nullable NSURL *)url placeholderImage:(nullable UIImage *)placeholder {
+    [self sd_setImageWithURL:url placeholderImage:placeholder options:0 progress:nil completed:nil];
+}
+
+- (void)sd_setImageWithURL:(nullable NSURL *)url placeholderImage:(nullable UIImage *)placeholder options:(SDWebImageOptions)options {
+    [self sd_setImageWithURL:url placeholderImage:placeholder options:options progress:nil completed:nil];
+}
+
+- (void)sd_setImageWithURL:(nullable NSURL *)url placeholderImage:(nullable UIImage *)placeholder options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context
+</code></pre>
+<ul>
+<li>后期定义函数也可以这样，最后收拢到一个核心的函数上。</li>
+<li>关于参数的类型，是否需要提前定义，这个从规整的角度来看，还是需要的。</li>
+<li>关于函数类型是否为<code>nil</code>，还是需要<code>nullable</code>来标识。</li>
+</ul>
+<blockquote>
+<p>越是规范的东西，越是在写代码的时候可以的去实现，时间长了，也可以学习到优秀代码的规范。</p>
+</blockquote>
+<h3 id="4-关于网络请求的实现">4. 关于网络请求的实现</h3>
+<ul>
+<li>这里用自定义的<code>NSOperation</code>, 这里要说一下，自定义<code>NSOperation</code>有两种实现，一种是<code>从写start方法</code>【需要自己去管理isFinish/isExecuting】, 领一种是<code>从写main方法</code>【不需要管理状态值】</li>
+<li>并且这里上来就用了<code>@synchronized</code>保证线程安全。</li>
+<li>并且这里使用了一个自定义的串行队列来管理<code>_coderQueue = dispatch_queue_create(&quot;com.hackemist.SDWebImageDownloaderOperationCoderQueue&quot;, DISPATCH_QUEUE_SERIAL);</code></li>
+</ul>
+<pre><code>- (void)start {
+    @synchronized (self) {
+        ...
+    }
+}
+</code></pre>
+<h3 id="5-关于代码设计开闭原则">5. 关于代码设计：<code>开闭原则</code></h3>
+<ul>
+<li>其实在设计<code>Framework</code>的时候，需要时刻记着，那些东西不应该暴露给用户，那些需要暴露给用户修改的，这里作者大量使用枚举来实现外部自定义配置：</li>
+</ul>
+<pre><code>if (self.options &amp; SDWebImageDownloaderHighPriority) {
+    self.dataTask.priority = NSURLSessionTaskPriorityHigh;
+} else if (self.options &amp; SDWebImageDownloaderLowPriority) {
+    self.dataTask.priority = NSURLSessionTaskPriorityLow;
+}      
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-%E5%8D%8F%E8%AE%AE%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8">1. 协议(接口)的使用</a></li>
+<li><a href="#2-%E5%AE%8F%E7%9A%84%E4%BD%BF%E7%94%A8">2. 宏的使用</a></li>
+<li><a href="#3-%E5%85%B3%E4%BA%8E%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E8%A7%84%E8%8C%83%E7%9A%84%E9%97%AE%E9%A2%98">3. 关于函数定义规范的问题</a></li>
+<li><a href="#4-%E5%85%B3%E4%BA%8E%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E5%AE%9E%E7%8E%B0">4. 关于网络请求的实现</a></li>
+<li><a href="#5-%E5%85%B3%E4%BA%8E%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99">5. 关于代码设计：<code>开闭原则</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de">
+              <h3 class="post-title">
+                DFS&amp;BFS 解题心得
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+
+          
+            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var options = {
+  shortname: 'https-glve1027-github-io',
+  apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+          
+        
+
+        <div class="site-footer">
+   | 
+  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+
+  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+  // This should probably be throttled.
+  // Especially because it triggers during smooth scrolling.
+  // https://lodash.com/docs/4.17.10#throttle
+  // You could do like...
+  // window.addEventListener("scroll", () => {
+  //    _.throttle(doThatStuff, 100);
+  // });
+  // Only not doing it here to keep this Pen dependency-free.
+
+  window.addEventListener("scroll", event => {
+    let fromTop = window.scrollY;
+
+    mainNavLinks.forEach((link, index) => {
+      let section = document.getElementById(decodeURI(link.hash).substring(1));
+      let nextSection = null
+      if (mainNavLinks[index + 1]) {
+        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+      }
+      if (section.offsetTop <= fromTop) {
+        if (nextSection) {
+          if (nextSection.offsetTop > fromTop) {
+            link.classList.add("current");
+          } else {
+            link.classList.remove("current");    
+          }
+        } else {
+          link.classList.add("current");
+        }
+      } else {
+        link.classList.remove("current");
+      }
+    });
+  });
+
+</script>
+
+      </div>
+    </div>
+  </body>
+</html>
