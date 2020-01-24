@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-01-22T15:03:34.169Z</updated>
+    <updated>2020-01-24T12:20:11.288Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -155,15 +155,17 @@ func start(value) {
     // 2. 初始值的边界问题
     if (value 不合法) { return }
 
-    // 3. !!关键，这里一定要新建一个函数，用于递归, 见下面的函数recursive
-    // 同时，recursive函数的入参，你可以自己不断的加
-    // 参数的理解， 如果recursive函数的终止条件 需要通过value 来计算出来，这里就有必要传入进去
+    // 3. !!关键，这里一定要新建一个函数，用于递归, 见下面的函数bfs
+    // 同时，bfs函数的入参，你可以自己不断的加
+    // 参数的理解， 如果bfs函数的终止条件 需要通过value 来计算出来，这里就有必要传入进去
     let terminalValue = func handle(value)
     // 参数1：
-    recursive(terminalValue, [value])
+    bfs(terminalValue, [value])
+    // 或者dfs
+    dfs(terminalValue, value, [])
 }
 
-private func recursive(terminalValue, [value]) {
+private func bfs(terminalValue, [value]) {
     // 4. 判断终止条件
     if (terminalValue) { return }
     // 5. 这里需要一个临时的集合，用数组Array
@@ -177,7 +179,29 @@ private func recursive(terminalValue, [value]) {
     }
 
     // 递归调用
-    recursive(terminalValue, tempArray)
+    bfs(terminalValue, tempArray)
+}
+
+
+private func dfs(terminalValue, value, arr) {
+    // 4. 判断终止条件
+    if (terminalValue) { return }
+    
+    // 5. 这里是关键！！判断arr数组逻辑关系
+    
+    var arrLeftDatas = arr
+    if let leftNode = value.left {
+        arrLeftDatas.append(leftNode)
+        
+        dfs(terminalValue, value, arrLeftDatas)
+    }
+    
+    var arrRightDatas = arr
+    if let rightNode = value.right {
+        arrRightDatas.append(rightNode)
+        
+        dfs(terminalValue, value, arrRightDatas)
+    }
 }
 </code></pre>
 <ul>

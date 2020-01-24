@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>DFS&amp;BFS 解题心得 | Ghcoder</title>
 <meta name="description" content="一个不断在修炼的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579705410664">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1579868404030">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
@@ -20,7 +20,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://glve1027.github.io/">
-  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1579705410664" alt="">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1579868404030" alt="">
   </a>
   <h1 class="site-title">
     Ghcoder
@@ -103,15 +103,17 @@ func start(value) {
     // 2. 初始值的边界问题
     if (value 不合法) { return }
 
-    // 3. !!关键，这里一定要新建一个函数，用于递归, 见下面的函数recursive
-    // 同时，recursive函数的入参，你可以自己不断的加
-    // 参数的理解， 如果recursive函数的终止条件 需要通过value 来计算出来，这里就有必要传入进去
+    // 3. !!关键，这里一定要新建一个函数，用于递归, 见下面的函数bfs
+    // 同时，bfs函数的入参，你可以自己不断的加
+    // 参数的理解， 如果bfs函数的终止条件 需要通过value 来计算出来，这里就有必要传入进去
     let terminalValue = func handle(value)
     // 参数1：
-    recursive(terminalValue, [value])
+    bfs(terminalValue, [value])
+    // 或者dfs
+    dfs(terminalValue, value, [])
 }
 
-private func recursive(terminalValue, [value]) {
+private func bfs(terminalValue, [value]) {
     // 4. 判断终止条件
     if (terminalValue) { return }
     // 5. 这里需要一个临时的集合，用数组Array
@@ -125,7 +127,29 @@ private func recursive(terminalValue, [value]) {
     }
 
     // 递归调用
-    recursive(terminalValue, tempArray)
+    bfs(terminalValue, tempArray)
+}
+
+
+private func dfs(terminalValue, value, arr) {
+    // 4. 判断终止条件
+    if (terminalValue) { return }
+    
+    // 5. 这里是关键！！判断arr数组逻辑关系
+    
+    var arrLeftDatas = arr
+    if let leftNode = value.left {
+        arrLeftDatas.append(leftNode)
+        
+        dfs(terminalValue, value, arrLeftDatas)
+    }
+    
+    var arrRightDatas = arr
+    if let rightNode = value.right {
+        arrRightDatas.append(rightNode)
+        
+        dfs(terminalValue, value, arrRightDatas)
+    }
 }
 </code></pre>
 <ul>
