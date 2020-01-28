@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-01-24T12:20:11.288Z</updated>
+    <updated>2020-01-28T15:55:27.031Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,27 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[整理学习C++笔记]]></title>
+        <id>https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji</id>
+        <link href="https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji">
+        </link>
+        <updated>2020-01-28T15:54:39.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="第一天">第一天</h3>
+<ol>
+<li>c++ 中是不能同时存在两个<code>main</code>函数。</li>
+<li><code>getchar()</code> 等待键盘输入。</li>
+<li>输出: <code>cout &lt;&lt; &quot;xx&quot;</code>。</li>
+<li><code>endl</code>: 换行的意思。</li>
+<li>键盘赋值给： <code>cin &gt;&gt; xx</code>。</li>
+<li>C语言不支持函数重载。【重载 -&gt; 函数名相同，参数的个数，参数的类型，参数的顺序不同。】</li>
+<li>extern &quot;C&quot;/ extern &quot;C&quot; { } -&gt; 按照C语言的方式编译。</li>
+<li>extern &quot;C&quot;/ extern &quot;C&quot; { } 使用在函数声明的地方。</li>
+<li>c++ 支持默认参数，【默认参数只能从右边开始】</li>
+<li>c++ 函数中使用默认参数，既有<code>定义</code>，也有<code>实现</code>，只能将默认参数使用在<code>定义</code>中 【可是是<code>常量</code>，也可以是<code>全局变量</code>】</li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[学习优秀的iOS代码（一）]]></title>
         <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi</id>
