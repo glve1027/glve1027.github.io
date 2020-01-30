@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-01-30T09:21:08.113Z</updated>
+    <updated>2020-01-30T09:30:26.991Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -34,6 +34,7 @@
 <li>c++ 函数中使用默认参数，既有<code>定义</code>，也有<code>实现</code>，只能将默认参数使用在<code>定义</code>中 【可是是<code>常量</code>，也可以是<code>全局变量</code>】</li>
 </ul>
 <h3 id="第二天">第二天</h3>
+<h4 id="inline">inline</h4>
 <ul>
 <li><code>inline</code> -&gt; 1. 函数代码不多  2. 函数调用频率比较频繁【可以修饰函数<code>声明</code>、也可以修饰函数<code>实现</code>】</li>
 <li><code>inline</code>和<code>宏</code>的区别：<code>inline</code>还是有<code>语法检测</code>和<code>函数检测</code></li>
@@ -51,29 +52,27 @@ rp = &amp;b;      // rp的指针指向变量b/相当于变量b的指针赋值给
 int array[] = { 10, 20, 30 };
 int (&amp;rArray)[3] = array;
 </code></pre>
+<h4 id="const">const</h4>
 <ul>
 <li><code>const</code>: 1. 常量的意思，被修饰的变量不可修改。 2. 如果修饰的是<code>类</code>,<code>结构体（的指针）</code>其他的成员也不可以修改。3. 修饰的是其右边的内容 4. const 必须放在&amp;左边才能算是<code>常引用</code> 5. <code>常引用</code>可以用来修饰临时变量/表达式/函数返回值</li>
+<li>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.</li>
+<li>函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></li>
 </ul>
+<h4 id="demo">Demo:</h4>
 <pre><code>int age = 10;
 const int *p0 = &amp;age; // *p0是常量  p0不是常量
 int const *p1 = &amp;age; // *p1是常量  p1不是常量
 int * const p2 = &amp;age; // *p2不是常量，p2是常量
 const int * const p3 = &amp;age; // *p3是常量，p3是常量
 
-//
 int age = 10;
 int&amp; const rage = age; // rage 的指向不能改 【不管这里加不加`const`, 引用都不能再次赋值】
 int const&amp; rage1 = age;// 不能通过引用修改所指向的内容 【因为rage的时候不需要添加&amp;】
 rage = 30;
 
-
 int const *page = &amp;age;  // 不能通过指针修改所指向的内容
 int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过指针修改指向的内容
 </code></pre>
-<ul>
-<li>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.</li>
-<li>函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></li>
-</ul>
 ]]></content>
     </entry>
     <entry>
