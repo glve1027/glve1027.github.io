@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>整理C++笔记 | Ghcoder</title>
 <meta name="description" content="一个不断在修炼的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1580376623592">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1580548847610">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
@@ -20,7 +20,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://glve1027.github.io/">
-  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1580376623592" alt="">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1580548847610" alt="">
   </a>
   <h1 class="site-title">
     Ghcoder
@@ -74,7 +74,7 @@
                 2020-01-28
               </span>
               <span>
-                4 min read
+                5 min read
               </span>
               
                 <a href="https://glve1027.github.io/tag/l65AawOOY" class="post-tag">
@@ -89,6 +89,7 @@
               <div class="post-content">
                 <h2 id="学习c-的重要性不言而喻春节在家没事就整理了一下c的知识点">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</h2>
 <!-- more -->
+<h2 id="学习c">学习C++</h2>
 <h3 id="第一天">第一天</h3>
 <ul>
 <li>c++ 中是不能同时存在两个<code>main</code>函数。</li>
@@ -103,7 +104,6 @@
 <li>c++ 函数中使用默认参数，既有<code>定义</code>，也有<code>实现</code>，只能将默认参数使用在<code>定义</code>中 【可是是<code>常量</code>，也可以是<code>全局变量</code>】</li>
 </ul>
 <h3 id="第二天">第二天</h3>
-<h4 id="inline">inline</h4>
 <ul>
 <li><code>inline</code> -&gt; 1. 函数代码不多  2. 函数调用频率比较频繁【可以修饰函数<code>声明</code>、也可以修饰函数<code>实现</code>】</li>
 <li><code>inline</code>和<code>宏</code>的区别：<code>inline</code>还是有<code>语法检测</code>和<code>函数检测</code></li>
@@ -121,26 +121,78 @@ rp = &amp;b;      // rp的指针指向变量b/相当于变量b的指针赋值给
 int array[] = { 10, 20, 30 };
 int (&amp;rArray)[3] = array;
 </code></pre>
-<h4 id="const">const</h4>
 <ul>
 <li><code>const</code>: 1. 常量的意思，被修饰的变量不可修改。 2. 如果修饰的是<code>类</code>,<code>结构体（的指针）</code>其他的成员也不可以修改。3. 修饰的是其右边的内容 4. const 必须放在&amp;左边才能算是<code>常引用</code> 5. <code>常引用</code>可以用来修饰临时变量/表达式/函数返回值</li>
-<li>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.</li>
-<li>函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></li>
 </ul>
-<h4 id="demo">Demo:</h4>
 <pre><code>int age = 10;
 const int *p0 = &amp;age; // *p0是常量  p0不是常量
 int const *p1 = &amp;age; // *p1是常量  p1不是常量
 int * const p2 = &amp;age; // *p2不是常量，p2是常量
 const int * const p3 = &amp;age; // *p3是常量，p3是常量
 
+//
 int age = 10;
 int&amp; const rage = age; // rage 的指向不能改 【不管这里加不加`const`, 引用都不能再次赋值】
 int const&amp; rage1 = age;// 不能通过引用修改所指向的内容 【因为rage的时候不需要添加&amp;】
 rage = 30;
 
+
 int const *page = &amp;age;  // 不能通过指针修改所指向的内容
 int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过指针修改指向的内容
+</code></pre>
+<ul>
+<li>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.</li>
+<li>函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></li>
+</ul>
+<h3 id="第三天">第三天</h3>
+<ul>
+<li>汇编基础</li>
+</ul>
+<pre><code>// Intel / AT&amp;T汇编
+// 寄存器是在CPU里面的
+// x86(32bit)  eax/ebx/ecx/edx/ebp...
+// x86(64bit) |63-56|55-48|47-40|39-32|31-24|23-16|15-8|7-0|
+//								                  |AH..|AL.|
+//		                                          |AX......|
+//									  |EAX.................|
+//		      |RAX.........................................|
+</code></pre>
+<ul>
+<li><code>R开头的寄存器是64位的，占8个字节</code>/ <code>E开头的寄存器是64位的，占4个字节</code></li>
+<li>[地址值]</li>
+<li><code>word</code> = <code>2</code>个字节  <code>dword</code> = <code>4</code>个字节(double)  <code>qword</code> = <code>8</code>个字节(quad)</li>
+<li><code>call</code>调用函数</li>
+<li>lea dest [地址值]</li>
+</ul>
+<pre><code>move eax, [0x12313..] // 将从地址 0x12313..取四个字节的值赋值给eax
+lea dest [0x12313..]  // 将地址 0x12313..  赋值给 dest
+</code></pre>
+<ul>
+<li><code>ret</code>函数返回</li>
+<li><code>xor</code>异或</li>
+<li><code>inc</code>自增/ <code>dec</code>自减</li>
+<li><code>j</code>开头的一般都是跳转，大多数的带条件的跳转，一般跟test/cmp等指令配合使用</li>
+</ul>
+<pre><code>jmp 0x12129.. // 无条件的跳转
+// 有条件的跳转
+cmp eax, ebx
+jz 0x12129..
+mov eax, 1
+mov ebx, 2
+</code></pre>
+<ul>
+<li>开始开始调用前，<code>栈</code>空间已经分配好了，<code>栈</code>内存的特点：1. 由<code>CPU</code>自动创建和回收的</li>
+</ul>
+<blockquote>
+<p>从内存地址开始往高地址走，取几个字节，就是取到的值<br>
+一个变量的地址值是它所有字节中最小的地址值</p>
+</blockquote>
+<ul>
+<li><code>引用</code>的本质就是<code>地址</code></li>
+<li><code>引用不能修改</code>如何实现？ 【C++的规则】</li>
+</ul>
+<pre><code>int age = 10;
+int &amp;rage = age; // 相当于 int * const rage = &amp;age 作用一样
 </code></pre>
 
               </div>
@@ -148,16 +200,12 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
                 <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E5%AD%A6%E4%B9%A0c-%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E4%B8%8D%E8%A8%80%E8%80%8C%E5%96%BB%E6%98%A5%E8%8A%82%E5%9C%A8%E5%AE%B6%E6%B2%A1%E4%BA%8B%E5%B0%B1%E6%95%B4%E7%90%86%E4%BA%86%E4%B8%80%E4%B8%8Bc%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</a>
+<li><a href="#%E5%AD%A6%E4%B9%A0c-%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E4%B8%8D%E8%A8%80%E8%80%8C%E5%96%BB%E6%98%A5%E8%8A%82%E5%9C%A8%E5%AE%B6%E6%B2%A1%E4%BA%8B%E5%B0%B1%E6%95%B4%E7%90%86%E4%BA%86%E4%B8%80%E4%B8%8Bc%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</a></li>
+<li><a href="#%E5%AD%A6%E4%B9%A0c">学习C++</a>
 <ul>
 <li><a href="#%E7%AC%AC%E4%B8%80%E5%A4%A9">第一天</a></li>
-<li><a href="#%E7%AC%AC%E4%BA%8C%E5%A4%A9">第二天</a>
-<ul>
-<li><a href="#inline">inline</a></li>
-<li><a href="#const">const</a></li>
-<li><a href="#demo">Demo:</a></li>
-</ul>
-</li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E5%A4%A9">第二天</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E5%A4%A9">第三天</a></li>
 </ul>
 </li>
 </ul>
