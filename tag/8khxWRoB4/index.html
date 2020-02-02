@@ -1,161 +1,89 @@
-<html>
-  <head>
-  <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>GCD | Ghcoder</title>
-<meta name="description" content="一个不断在修炼的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1580633704088">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Ghcoder</title>
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://glve1027.github.io//media/tailwind.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Ghcoder - Atom Feed" href="https://glve1027.github.io//atom.xml">
 
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+    
 
+  <meta name="description" content="一个不断在修炼的程序员" />
+</head>
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
 
-
-  </head>
-  <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://glve1027.github.io/">
-  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1580633704088" alt="">
-  </a>
-  <h1 class="site-title">
-    Ghcoder
-  </h1>
-  <p class="site-description">
-    一个不断在修炼的程序员
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://ghcoder.com/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://ghcoder.com/archives/" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://ghcoder.com/tags/" class="menu">
-          标签
-        </a>
-      
-    
+    <div class="nav py-3 md:py-8 fixed w-full z-10 bg-gray-50 dark:bg-gray-700 transition-all duration-300" :class="{ 'scroll': scrolled }">
+  <div class="flex justify-end px-4">
+    <div class="w-8 h-8 flex justify-center items-center rounded-full md:hidden" @click="showMenu = !showMenu">
+      <i class="ri-close-line" v-show="showMenu"></i>
+      <i class="ri-menu-3-line" v-show="!showMenu"></i>
+    </div>
   </div>
-  <div class="social-container">
+  <nav class="max-w-4xl w-full mx-auto text-center flex flex-col md:flex-row justify-center md:block" :class="`${ showMenu ? 'block' : 'hidden' }`">
     
-      
+      <a href="https://ghcoder.com/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        首页
+      </a>
     
-      
+      <a href="https://ghcoder.com/archives/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        归档
+      </a>
     
-      
+      <a href="https://ghcoder.com/tags/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        标签
+      </a>
     
-      
-    
-      
-    
-  </div>
+    <a href="https://glve1027.github.io//atom.xml" target="_blank" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+      RSS
+    </a>
+  </nav>
 </div>
 
-        <div class="current-tag-container">
-            <h2 class="title">
-                标签：# GCD
-            </h2> 
-        </div>
-        <div class="post-container">
-  
-    <article class="post">
-      <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo">
-        <h2 class="post-title">iOS多线程操作</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2019-12-18
-        </span>
-        <span>
-          1 min read
-        </span>
+    <div class="max-w-4xl w-full mx-auto pt-32">
+      <h1 class="text-2xl font-bold pb-8 flex justify-center items-center">
+        <i class="ri-hashtag"></i>
+        GCD
+      </h1>
+      <div class="shadow-box bg-white dark:bg-gray-600 border-gray-300 rounded-none md:rounded-lg -mx-1 md:mx-0 md:px-0">
         
-          <a href="https://glve1027.github.io/tag/8khxWRoB4" class="post-tag">
-            # GCD
-          </a>
-        
-          <a href="https://glve1027.github.io/tag/9qkBdYSPa" class="post-tag">
-            # Objective-C
-          </a>
-        
-      </div>
-      
-        <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo" class="post-feature-image" style="background-image: url('https://glve1027.github.io//post-images/ios-duo-xian-cheng-cao-zuo.jpg')">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          iOS多线程操作
         </a>
-      
-      <div class="post-abstract">
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2019-12-18</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
         <p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
 
       </div>
-    </article>
-  
-</div>
-
-        <div class="pagination-container">
-  
-  
-</div>
-
-        <div class="site-footer">
-   | 
-  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
-</div>
-
-<script>
-  hljs.initHighlightingOnLoad()
-
-  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
-
-  // This should probably be throttled.
-  // Especially because it triggers during smooth scrolling.
-  // https://lodash.com/docs/4.17.10#throttle
-  // You could do like...
-  // window.addEventListener("scroll", () => {
-  //    _.throttle(doThatStuff, 100);
-  // });
-  // Only not doing it here to keep this Pen dependency-free.
-
-  window.addEventListener("scroll", event => {
-    let fromTop = window.scrollY;
-
-    mainNavLinks.forEach((link, index) => {
-      let section = document.getElementById(decodeURI(link.hash).substring(1));
-      let nextSection = null
-      if (mainNavLinks[index + 1]) {
-        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-      }
-      if (section.offsetTop <= fromTop) {
-        if (nextSection) {
-          if (nextSection.offsetTop > fromTop) {
-            link.classList.add("current");
-          } else {
-            link.classList.remove("current");    
-          }
-        } else {
-          link.classList.add("current");
-        }
-      } else {
-        link.classList.remove("current");
-      }
-    });
-  });
-
-</script>
-
-      </div>
+      <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo" class="btn">
+        阅读更多
+      </a>
     </div>
-  </body>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://glve1027.github.io//post-images/ios-duo-xian-cheng-cao-zuo.jpg" alt="iOS多线程操作">
+    
+  </div>
+  
+      </div>
+
+      
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  
+</footer>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://glve1027.github.io//media/scripts/main.js"></script>
+</body>
 </html>

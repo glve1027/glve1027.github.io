@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-02T08:55:09.099Z</updated>
+    <updated>2020-02-02T12:58:29.779Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -82,7 +82,7 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
 // 寄存器是在CPU里面的
 // x86(32bit)  eax/ebx/ecx/edx/ebp...
 // x86(64bit) |63-56|55-48|47-40|39-32|31-24|23-16|15-8|7-0|
-//								                  |AH..|AL.|
+//								                    |AH..|AL.|
 //		                                          |AX......|
 //									  |EAX.................|
 //		      |RAX.........................................|
@@ -186,7 +186,7 @@ int main() {
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[学习优秀的iOS代码（一）]]></title>
+        <title type="html"><![CDATA[学习优秀的iOS代码(SDWebImage)（一）]]></title>
         <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi</id>
         <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi">
         </link>

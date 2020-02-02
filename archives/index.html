@@ -1,191 +1,107 @@
-<html>
-  <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Ghcoder</title>
-<meta name="description" content="一个不断在修炼的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1580633704088">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://glve1027.github.io//media/tailwind.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
-
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
-
-
-
-  </head>
-  <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://glve1027.github.io/">
-  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1580633704088" alt="">
-  </a>
-  <h1 class="site-title">
-    Ghcoder
-  </h1>
-  <p class="site-description">
-    一个不断在修炼的程序员
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://ghcoder.com/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://ghcoder.com/archives/" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://ghcoder.com/tags/" class="menu">
-          标签
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
+<link rel="alternate" type="application/atom+xml" title="Ghcoder - Atom Feed" href="https://glve1027.github.io//atom.xml">
 
     
-        
 
-<div class="archives-container">
-  
-    <h2 class="year">2020</h2>
-    
-      
-        <a href="https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji" class="post">
-          <h2 class="post-title">
-            整理C++笔记
-          </h2>
-          <div class="time">2020-01-28</div>
-        </a>
-      
-    
-      
-        <a href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi" class="post">
-          <h2 class="post-title">
-            学习优秀的iOS代码（一）
-          </h2>
-          <div class="time">2020-01-22</div>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-  
-    <h2 class="year">2019</h2>
-    
-      
-    
-      
-    
-      
-        <a href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de" class="post">
-          <h2 class="post-title">
-            DFS&amp;BFS 解题心得
-          </h2>
-          <div class="time">2019-12-26</div>
-        </a>
-      
-    
-      
-        <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo" class="post">
-          <h2 class="post-title">
-            iOS多线程操作
-          </h2>
-          <div class="time">2019-12-18</div>
-        </a>
-      
-    
-      
-        <a href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng" class="post">
-          <h2 class="post-title">
-            App主题换肤功能
-          </h2>
-          <div class="time">2019-12-18</div>
-        </a>
-      
-    
-  
-</div>
+  <meta name="description" content="一个不断在修炼的程序员" />
+</head>
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
 
-    
-        <div class="pagination-container">
-  
-  
-</div>
-
-    
-        <div class="site-footer">
-   | 
-  <a class="rss" href="https://glve1027.github.io//atom.xml" target="_blank">RSS</a>
-</div>
-
-<script>
-  hljs.initHighlightingOnLoad()
-
-  let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
-
-  // This should probably be throttled.
-  // Especially because it triggers during smooth scrolling.
-  // https://lodash.com/docs/4.17.10#throttle
-  // You could do like...
-  // window.addEventListener("scroll", () => {
-  //    _.throttle(doThatStuff, 100);
-  // });
-  // Only not doing it here to keep this Pen dependency-free.
-
-  window.addEventListener("scroll", event => {
-    let fromTop = window.scrollY;
-
-    mainNavLinks.forEach((link, index) => {
-      let section = document.getElementById(decodeURI(link.hash).substring(1));
-      let nextSection = null
-      if (mainNavLinks[index + 1]) {
-        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-      }
-      if (section.offsetTop <= fromTop) {
-        if (nextSection) {
-          if (nextSection.offsetTop > fromTop) {
-            link.classList.add("current");
-          } else {
-            link.classList.remove("current");    
-          }
-        } else {
-          link.classList.add("current");
-        }
-      } else {
-        link.classList.remove("current");
-      }
-    });
-  });
-
-</script>
-
-      </div>
+    <div class="nav py-3 md:py-8 fixed w-full z-10 bg-gray-50 dark:bg-gray-700 transition-all duration-300" :class="{ 'scroll': scrolled }">
+  <div class="flex justify-end px-4">
+    <div class="w-8 h-8 flex justify-center items-center rounded-full md:hidden" @click="showMenu = !showMenu">
+      <i class="ri-close-line" v-show="showMenu"></i>
+      <i class="ri-menu-3-line" v-show="!showMenu"></i>
     </div>
-  </body>
+  </div>
+  <nav class="max-w-4xl w-full mx-auto text-center flex flex-col md:flex-row justify-center md:block" :class="`${ showMenu ? 'block' : 'hidden' }`">
+    
+      <a href="https://ghcoder.com/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        首页
+      </a>
+    
+      <a href="https://ghcoder.com/archives/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        归档
+      </a>
+    
+      <a href="https://ghcoder.com/tags/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        标签
+      </a>
+    
+    <a href="https://glve1027.github.io//atom.xml" target="_blank" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+      RSS
+    </a>
+  </nav>
+</div>
+
+    <div class="max-w-4xl w-full mx-auto pt-32">
+      <div class="py-8 shadow-box bg-white dark:bg-gray-600 border-gray-300 rounded-none md:rounded-lg -mx-1 md:mx-0 md:px-0">
+        
+          <div class="px-8 pb-5 flex relative overflow-hidden">
+            
+            <div class="flex-1">
+              <a href="https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji" class="text-gray-700 border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100">
+                整理C++笔记
+              </a>
+            </div>
+          </div>
+        
+          <div class="px-8 pb-5 flex relative overflow-hidden">
+            
+            <div class="flex-1">
+              <a href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi" class="text-gray-700 border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100">
+                学习优秀的iOS代码(SDWebImage)（一）
+              </a>
+            </div>
+          </div>
+        
+          <div class="px-8 pb-5 flex relative overflow-hidden">
+            
+            <div class="flex-1">
+              <a href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de" class="text-gray-700 border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100">
+                DFS&amp;BFS 解题心得
+              </a>
+            </div>
+          </div>
+        
+          <div class="px-8 pb-5 flex relative overflow-hidden">
+            
+            <div class="flex-1">
+              <a href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo" class="text-gray-700 border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100">
+                iOS多线程操作
+              </a>
+            </div>
+          </div>
+        
+          <div class="px-8 pb-5 flex relative overflow-hidden">
+            
+            <div class="flex-1">
+              <a href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng" class="text-gray-700 border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100">
+                App主题换肤功能
+              </a>
+            </div>
+          </div>
+        
+      </div>
+
+      
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  
+</footer>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://glve1027.github.io//media/scripts/main.js"></script>
+</body>
 </html>
