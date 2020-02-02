@@ -84,7 +84,7 @@ GCTTheme配置篇
 <ul>
 <li>调用<code>GCTThemeManager</code>之前需要注册配置数据, 调用的时机目前是在<code>didFinishLaunchingWithOptions</code>的时候 （这个后期可以修改！！）</li>
 </ul>
-<pre><code class="language-objectivec">// 1. GCTThemeSwitchObject 控制开关的类，灵活控制开关就可以配置这个类 （面向协议）
+<pre><code class="language-objc">// 1. GCTThemeSwitchObject 控制开关的类，灵活控制开关就可以配置这个类 （面向协议）
 GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 [switchObj setGCTThemeSwitch:YES];
 // 2. GCTThemeData 数据源的类，目前只读取本地数据，后期远程数据只需要配置它（面向协议）
@@ -94,12 +94,12 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 <ul>
 <li>方法1：如果要修改的控件是<strong>UIView或者是它的子类</strong>并且这个<strong>UIView不等于nil</strong>，可以直接调用方法</li>
 </ul>
-<pre><code class="language-objectivec">- (void)configSkinWithModule:(GCTThemeModuleTypes)module skinDatas:(NSDictionary&lt;NSString *, NSString *&gt; *)skinDatas;
+<pre><code class="language-objc">- (void)configSkinWithModule:(GCTThemeModuleTypes)module skinDatas:(NSDictionary&lt;NSString *, NSString *&gt; *)skinDatas;
 </code></pre>
 <ul>
 <li>方法2：如果上面的条件有其中一个不满足，可以直接调用单例<code>GCTThemeManager</code></li>
 </ul>
-<pre><code class="language-objectivec">// 需要配置皮肤替换功能的，图片获取需要 1. moduleName  2. imgKey
+<pre><code class="language-objc">// 需要配置皮肤替换功能的，图片获取需要 1. moduleName  2. imgKey
 - (UIImage *)getImageByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
 - (NSString *)getImageNameByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
 // 需要配置皮肤替换功能的，颜色获取需要 1. moduleName  2. colorKey
@@ -111,7 +111,7 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 <ul>
 <li>直接配置TabBarController图片、文字。【<strong>因为tabBarItem默认是懒加载的，所以只能通过GCTThemeManager去实现</strong>】</li>
 </ul>
-<pre><code class="language-objectivec">navController.tabBarItem.title = [[GCTThemeManager sharedInstance] getTitleByKey:model.titleKey from:GCTThemeModuleTypeHomeTabbar];
+<pre><code class="language-objc">navController.tabBarItem.title = [[GCTThemeManager sharedInstance] getTitleByKey:model.titleKey from:GCTThemeModuleTypeHomeTabbar];
 navController.tabBarItem.image = [UIImage imageMakeWithName:model.imageName type:@&quot;png&quot;];
 NSString *imageName = [[GCTThemeManager sharedInstance] getImageNameByKey:model.imageSelectedKey from:GCTThemeModuleTypeHomeTabbar];
 navController.tabBarItem.selectedImage = [[UIImage imageMakeWithName:imageName type:@&quot;png&quot;] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -120,14 +120,14 @@ navController.tabBarItem.selectedImage = [[UIImage imageMakeWithName:imageName t
 <li><strong>在默认情况下，使用的是背景色</strong>。</li>
 <li><strong>在春节皮肤的配置下使用的是图片</strong> 【这里可以以此类推，某种皮肤下面使用的属性1，在另一种皮肤下使用的是属性2，因为当找不到对应的属性值的时候返回nil，也就是不实现】</li>
 </ol>
-<pre><code class="language-objectivec">self.tipsView.homeBG.image = [[GCTThemeManager sharedInstance] getImageByKey:@&quot;home_wifi_scaning_unconnected&quot; from:GCTThemeModuleTypeHomeWifi];
+<pre><code class="language-objc">self.tipsView.homeBG.image = [[GCTThemeManager sharedInstance] getImageByKey:@&quot;home_wifi_scaning_unconnected&quot; from:GCTThemeModuleTypeHomeWifi];
 self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@&quot;home_wifi_found_scaning&quot; from:GCTThemeModuleTypeHomeWifi];
 </code></pre>
 <h3 id="gcttheme原理篇">GCTTheme原理篇</h3>
 <ul>
 <li>GCTThemeSwitchObject遵循的协议</li>
 </ul>
-<pre><code class="language-objectivec">@protocol GCTThemeSwitchProtocol &lt;NSObject&gt;
+<pre><code class="language-objc">@protocol GCTThemeSwitchProtocol &lt;NSObject&gt;
 
 - (void)setGCTThemeSwitch:(BOOL)isOpen;
 - (BOOL)GCTThemeSwitchIsOpen;
@@ -137,7 +137,7 @@ self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@&quot;ho
 <ul>
 <li>数据源GCTThemeData遵循的协议</li>
 </ul>
-<pre><code class="language-objectivec">typedef enum : NSUInteger {
+<pre><code class="language-objc">typedef enum : NSUInteger {
     GCTThemeDefaultData,
     GCTThemeFestivalData
 } GCTThemeDataTypes;
@@ -157,7 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
 <ul>
 <li><strong>GCTThemeManager核心代码</strong></li>
 </ul>
-<pre><code class="language-objectivec">- (NSString *)findResourceBy:(NSString *)key from:(GCTThemeModuleTypes)module with:(NSString *)subKey {
+<pre><code class="language-objc">- (NSString *)findResourceBy:(NSString *)key from:(GCTThemeModuleTypes)module with:(NSString *)subKey {
     // 切换数据
     NSDictionary *resourcesData = self.switchIsOpen ? self.tempSkinData : self.skinData;
     NSString *moduleString = [self convertThemeType2String:module];
@@ -173,7 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
 <ul>
 <li>配置以及Mock数据</li>
 </ul>
-<pre><code class="language-objectivec">- (void)setUp {
+<pre><code class="language-objc">- (void)setUp {
     self.themeData = [GCTThemeData new];
     // Mock Data
     [self.themeData setSkinData:@{@&quot;home_tabbar&quot;: @{@&quot;images&quot;: @{@&quot;image_home_button_selected&quot;: @&quot;Home_Selected&quot;,
