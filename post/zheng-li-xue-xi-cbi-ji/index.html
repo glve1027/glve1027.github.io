@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>整理C++笔记 | Ghcoder</title>
 <meta name="description" content="一个不断在修炼的程序员" />
-<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1580548847610">
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico?v=1580633704088">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
@@ -20,7 +20,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://glve1027.github.io/">
-  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1580548847610" alt="">
+  <img class="avatar" src="https://glve1027.github.io//images/avatar.png?v=1580633704088" alt="">
   </a>
   <h1 class="site-title">
     Ghcoder
@@ -74,7 +74,7 @@
                 2020-01-28
               </span>
               <span>
-                5 min read
+                6 min read
               </span>
               
                 <a href="https://glve1027.github.io/tag/l65AawOOY" class="post-tag">
@@ -89,7 +89,6 @@
               <div class="post-content">
                 <h2 id="学习c-的重要性不言而喻春节在家没事就整理了一下c的知识点">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</h2>
 <!-- more -->
-<h2 id="学习c">学习C++</h2>
 <h3 id="第一天">第一天</h3>
 <ul>
 <li>c++ 中是不能同时存在两个<code>main</code>函数。</li>
@@ -194,18 +193,77 @@ mov ebx, 2
 <pre><code>int age = 10;
 int &amp;rage = age; // 相当于 int * const rage = &amp;age 作用一样
 </code></pre>
+<ul>
+<li><code>当引用指向了不同类型的数据时，会产生临时变量，即引用指向的并不是初始化的那个变量</code></li>
+<li><code>表达式</code>可以被<code>赋值</code> =&gt; <code>(a = b) = 4;</code></li>
+</ul>
+<h3 id="第四天">第四天</h3>
+<ul>
+<li>C++中可以使用<code>struct</code>/<code>class</code>定义类.</li>
+<li><code>struct</code>默认属性都是<code>public</code></li>
+<li><code>class</code>默认属性都是<code>private</code></li>
+</ul>
+<pre><code>struct Person {
+	// 成员变量
+	int m_id;
+	int m_age;
+	int m_height;
+
+	// 成员函数
+	void run() {
+		// this指向Person对象的指针
+		// this里面存储的就是person对象的地址值
+		this-&gt;m_id = 11;
+		this-&gt;m_age = 22;
+		this-&gt;m_height = 33;
+	};
+};
+
+int main() {
+
+	// 在栈空间分配了内存给person对象
+	// 这个person的对象的内存会自动回收，不需要开发人员去管理
+	// person对象占4个字节
+	Person person;
+	person.m_id = 1;
+	person.m_age = 2;
+	person.m_height = 3;
+	person.run(); // 函数代码不占用空间【在编译的完成的时候就已经决定了函数的地址，调用函数直接就是call xxx】
+
+	cout &lt;&lt; sizeof(person) &lt;&lt; endl; // 12个字节
+	/*
+	* 属性值在对象内的分布是连续的，分别占4个字节
+	*/
+	cout &lt;&lt; &amp;person &lt;&lt; endl;
+	cout &lt;&lt; &amp;person.m_id &lt;&lt; endl;
+	cout &lt;&lt; &amp;person.m_age &lt;&lt; endl;
+	cout &lt;&lt; &amp;person.m_height &lt;&lt; endl;
+
+	/*
+	* 1.  取出person 的对象地址，存入到pPerson
+	* 2.  取出pPerson也就是m_id的地址进行赋值
+	* 3/4 取出pPerson的地址偏移4/8个字节，进行赋值
+	*/
+	Person* pPerson = &amp;person;
+	pPerson-&gt;m_id = 4;
+	pPerson-&gt;m_age = 5;
+	pPerson-&gt;m_height = 6;
+
+	return 0;
+}
+</code></pre>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E5%AD%A6%E4%B9%A0c-%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E4%B8%8D%E8%A8%80%E8%80%8C%E5%96%BB%E6%98%A5%E8%8A%82%E5%9C%A8%E5%AE%B6%E6%B2%A1%E4%BA%8B%E5%B0%B1%E6%95%B4%E7%90%86%E4%BA%86%E4%B8%80%E4%B8%8Bc%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</a></li>
-<li><a href="#%E5%AD%A6%E4%B9%A0c">学习C++</a>
+<li><a href="#%E5%AD%A6%E4%B9%A0c-%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E4%B8%8D%E8%A8%80%E8%80%8C%E5%96%BB%E6%98%A5%E8%8A%82%E5%9C%A8%E5%AE%B6%E6%B2%A1%E4%BA%8B%E5%B0%B1%E6%95%B4%E7%90%86%E4%BA%86%E4%B8%80%E4%B8%8Bc%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</a>
 <ul>
 <li><a href="#%E7%AC%AC%E4%B8%80%E5%A4%A9">第一天</a></li>
 <li><a href="#%E7%AC%AC%E4%BA%8C%E5%A4%A9">第二天</a></li>
 <li><a href="#%E7%AC%AC%E4%B8%89%E5%A4%A9">第三天</a></li>
+<li><a href="#%E7%AC%AC%E5%9B%9B%E5%A4%A9">第四天</a></li>
 </ul>
 </li>
 </ul>
