@@ -105,7 +105,7 @@ endl...">
 <li><code>#pragma once</code>：防止整个文件内容被重复引入。【#ifndef,#define,#endif 不受任何编译器限制，也可以用于<code>部分代码</code>不被重复引用】</li>
 <li>引用：1. <code>定义了一个引用,相当于变量的别名</code>, 2. <code>对引用做计算，就相当于对引用的变量做计算</code> 3. <code>定义引用的时候必须要赋值，不能修改指向 【对比指针更加安全】</code> 4. <code>不存在引用的引用/引用的指针/引用数组</code></li>
 </ul>
-<pre><code>int a = 10;
+<pre><code class="language-c++">int a = 10;
 int b = 20;
 
 int *p = &amp;a;  // 相当于p的指针指向变量a
@@ -119,7 +119,7 @@ int (&amp;rArray)[3] = array;
 <ul>
 <li><code>const</code>: 1. 常量的意思，被修饰的变量不可修改。 2. 如果修饰的是<code>类</code>,<code>结构体（的指针）</code>其他的成员也不可以修改。3. 修饰的是其右边的内容 4. const 必须放在&amp;左边才能算是<code>常引用</code> 5. <code>常引用</code>可以用来修饰临时变量/表达式/函数返回值</li>
 </ul>
-<pre><code>int age = 10;
+<pre><code class="language-c++">int age = 10;
 const int *p0 = &amp;age; // *p0是常量  p0不是常量
 int const *p1 = &amp;age; // *p1是常量  p1不是常量
 int * const p2 = &amp;age; // *p2不是常量，p2是常量
@@ -143,7 +143,7 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
 <ul>
 <li>汇编基础</li>
 </ul>
-<pre><code>// Intel / AT&amp;T汇编
+<pre><code class="language-c++">// Intel / AT&amp;T汇编
 // 寄存器是在CPU里面的
 // x86(32bit)  eax/ebx/ecx/edx/ebp...
 // x86(64bit) |63-56|55-48|47-40|39-32|31-24|23-16|15-8|7-0|
@@ -159,7 +159,7 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
 <li><code>call</code>调用函数</li>
 <li>lea dest [地址值]</li>
 </ul>
-<pre><code>move eax, [0x12313..] // 将从地址 0x12313..取四个字节的值赋值给eax
+<pre><code class="language-c++">move eax, [0x12313..] // 将从地址 0x12313..取四个字节的值赋值给eax
 lea dest [0x12313..]  // 将地址 0x12313..  赋值给 dest
 </code></pre>
 <ul>
@@ -168,7 +168,7 @@ lea dest [0x12313..]  // 将地址 0x12313..  赋值给 dest
 <li><code>inc</code>自增/ <code>dec</code>自减</li>
 <li><code>j</code>开头的一般都是跳转，大多数的带条件的跳转，一般跟test/cmp等指令配合使用</li>
 </ul>
-<pre><code>jmp 0x12129.. // 无条件的跳转
+<pre><code class="language-c++">jmp 0x12129.. // 无条件的跳转
 // 有条件的跳转
 cmp eax, ebx
 jz 0x12129..
@@ -186,7 +186,7 @@ mov ebx, 2
 <li><code>引用</code>的本质就是<code>地址</code></li>
 <li><code>引用不能修改</code>如何实现？ 【C++的规则】</li>
 </ul>
-<pre><code>int age = 10;
+<pre><code class="language-c++">int age = 10;
 int &amp;rage = age; // 相当于 int * const rage = &amp;age 作用一样
 </code></pre>
 <ul>
@@ -199,7 +199,7 @@ int &amp;rage = age; // 相当于 int * const rage = &amp;age 作用一样
 <li><code>struct</code>默认属性都是<code>public</code></li>
 <li><code>class</code>默认属性都是<code>private</code></li>
 </ul>
-<pre><code>struct Person {
+<pre><code class="language-c++">struct Person {
 	// 成员变量
 	int m_id;
 	int m_age;

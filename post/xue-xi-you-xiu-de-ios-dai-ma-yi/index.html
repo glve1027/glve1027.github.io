@@ -75,7 +75,7 @@
 <ul>
 <li>自吹一下，作者的这一点写代码的风格和我还是很像的，都很喜欢<code>面向接口编程</code>，整个<code>SDWebImage</code>中存在很多这样的情况，比如：<code>SDImageCodersManager</code>， 光从这个名字就能看出这是一个关于给图片编码的类，再看定义：</li>
 </ul>
-<pre><code>@interface SDImageCodersManager : NSObject &lt;SDImageCoder&gt;
+<pre><code class="language-objectivec">@interface SDImageCodersManager : NSObject &lt;SDImageCoder&gt;
 @end
 
 @protocol SDImageCoder &lt;NSObject&gt;
@@ -84,7 +84,7 @@
 <ul>
 <li>这样代码风格遍布在整个项目中, 例如下面类中定义的<code>SDWebImageDownloaderRequestModifier</code>,<code>SDWebImageDownloaderResponseModifier</code>,<code>SDWebImageDownloaderDecryptor</code></li>
 </ul>
-<pre><code>@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderRequestModifier&gt; requestModifier;
+<pre><code class="language-objectivec">@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderRequestModifier&gt; requestModifier;
 
 @property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderResponseModifier&gt; responseModifier;
 
@@ -97,7 +97,7 @@
 <ul>
 <li>其实如果你正常看第三个优秀源码，你就会发现，很多代码存在很多优秀的宏定义，一方面使用起来很优雅，一方面也可以学习到关于编译器的一个参数的设置。在项目中，我经常看到下面的代码：</li>
 </ul>
-<pre><code>SD_LOCK(self.HTTPHeadersLock);
+<pre><code class="language-objectivec">SD_LOCK(self.HTTPHeadersLock);
 [self.HTTPHeaders setValue:value forKey:field];
 SD_UNLOCK(self.HTTPHeadersLock);
 
@@ -131,7 +131,7 @@ SD_UNLOCK(self.HTTPHeadersLock);
 <ul>
 <li>在项目中关于下载图片的<code>api</code>，可以说是核心的代码，在看看内部函数定义，代码如下：</li>
 </ul>
-<pre><code>// 参数类型的定义
+<pre><code class="language-objectivec">// 参数类型的定义
 typedef void(^SDWebImageNoParamsBlock)(void);
 typedef NSString * SDWebImageContextOption NS_EXTENSIBLE_STRING_ENUM;
 typedef NSDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageContext;
@@ -166,7 +166,7 @@ typedef NSMutableDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageMutable
 <li>并且这里上来就用了<code>@synchronized</code>保证线程安全。</li>
 <li>并且这里使用了一个自定义的串行队列来管理<code>_coderQueue = dispatch_queue_create(&quot;com.hackemist.SDWebImageDownloaderOperationCoderQueue&quot;, DISPATCH_QUEUE_SERIAL);</code></li>
 </ul>
-<pre><code>- (void)start {
+<pre><code class="language-objectivec">- (void)start {
     @synchronized (self) {
         ...
     }
@@ -176,7 +176,7 @@ typedef NSMutableDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageMutable
 <ul>
 <li>其实在设计<code>Framework</code>的时候，需要时刻记着，哪些东西不应该暴露给用户，哪些需要暴露给用户修改的，这里作者大量使用枚举来实现外部自定义配置：</li>
 </ul>
-<pre><code>if (self.options &amp; SDWebImageDownloaderHighPriority) {
+<pre><code class="language-objectivec">if (self.options &amp; SDWebImageDownloaderHighPriority) {
     self.dataTask.priority = NSURLSessionTaskPriorityHigh;
 } else if (self.options &amp; SDWebImageDownloaderLowPriority) {
     self.dataTask.priority = NSURLSessionTaskPriorityLow;

@@ -95,7 +95,7 @@
 <li>可以使用<code>锁</code>[这里就不具体展开了，锁的实现太多了]，这里重点说一下第二个方案：</li>
 <li>利用GCD实现“多读单写”的功能</li>
 </ul>
-<pre><code>// 创建一个全局的自定义并行队列
+<pre><code class="language-objectivec">// 创建一个全局的自定义并行队列
 dispatch_queue_t globalQueue = dispatch_queue_create(&quot;xxx&quot;, DISPATCH_QUEUE_CONCURRENT);
 // 对于&quot;写&quot;的操作
 // 1. 保证在我写之前所有的操作已经完成。2. 也只有在我完成此次&quot;写&quot;的操作的时候，下面的操作才能继续执行。
