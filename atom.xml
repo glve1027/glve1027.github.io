@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-03T15:59:41.340Z</updated>
+    <updated>2020-02-03T16:42:44.096Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -20,6 +20,7 @@
 ]]></summary>
         <content type="html"><![CDATA[<h2 id="学习c-的重要性不言而喻春节在家没事就整理了一下c的知识点">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</h2>
 <!-- more -->
+<h2 id="学习c">学习C++</h2>
 <h3 id="第一天">第一天</h3>
 <ul>
 <li>c++ 中是不能同时存在两个<code>main</code>函数。</li>
@@ -82,7 +83,7 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
 // 寄存器是在CPU里面的
 // x86(32bit)  eax/ebx/ecx/edx/ebp...
 // x86(64bit) |63-56|55-48|47-40|39-32|31-24|23-16|15-8|7-0|
-//								                    |AH..|AL.|
+//								                |AH..|AL.|
 //		                                          |AX......|
 //									  |EAX.................|
 //		      |RAX.........................................|
@@ -182,6 +183,206 @@ int main() {
 
 	return 0;
 }
+</code></pre>
+<h3 id="第五天">第五天</h3>
+<pre><code class="language-c++">
+struct Person {
+private:
+	int m_age;
+
+public:
+	void setAge(int age) {
+		// 过滤的操作
+		if (age &lt; 0) return;
+		// 不能通过.来获取值，例如this.xx 这是不对的
+		this-&gt;m_age = age;
+	}
+
+	int getAge() {
+		return this-&gt;m_age;
+	}
+};
+
+class Person {// struct 只有成员访问权限的区别，其他没有区别
+public:
+	int m_age;
+	void run() {
+		cout &lt;&lt; &quot;run() &quot; &lt;&lt; endl;
+	};
+};
+
+/* 内存空间的分布
+1. 栈空间 【自动回收和分配】
+2. 堆空间 【需要我们主动申请和释放】
+3. 代码区
+4. 全局区 【全局变量，特点：整个程序运行过程中都存在】
+*/
+</code></pre>
+<ul>
+<li>在c++的堆空间如何创建内存？</li>
+</ul>
+<pre><code class="language-c++">/*
+1. malloc -&gt; free
+2. new -&gt; delete
+3. new [] -&gt; delete []
+*/
+
+void test() {
+	// 申请4个字节的堆空间内存
+	int* p = (int*)malloc(4);
+	*p = 10;
+	cout &lt;&lt; *p &lt;&lt; endl;
+	free(p);
+}
+
+void test2() {
+	int* p = new int;
+	delete p;
+};
+
+void test3() {
+	// 申请10个连续的int类型
+	int* p = (int*)malloc(sizeof(int) * 10);
+	free(p);
+
+	int* p1 = new int[10];
+	delete[] p1;
+};
+
+// 下列代码会出现内存泄漏
+void test4() {
+	int* p = new int; // 第一个int *的指针会出现内存泄漏
+	p = new int;
+
+	delete p;
+};
+
+void test5() {
+	int size = sizeof(int);
+	int* p = (int*)malloc(size); // 申请完内存之后，*p的值是脏数据
+	// memory set =&gt; [从p地址开始的4个字节, 每个字节都存放0]
+	memset(p, 0, size);
+
+	cout &lt;&lt; *p &lt;&lt; endl;
+
+	free(p);
+};
+
+void test6() {
+	int* p1 = new int; // 没有初始化
+	int* p2 = new int(); // 初始化为0
+	int* p3 = new int(5); // 初始化为5
+	int* p4 = new int[3]; // 没有初始化
+	int* p5 = new int[3](); // 初始化为0
+	int* p6 = new int[3]{}; // 初始化为0
+	int* p7 = new int[3]{ 5 }; // 初始化为 5，0，0
+};
+
+struct Person {
+	int m_age;
+};
+
+// 全局区
+Person g_person;
+
+int main() {
+	// 栈空间
+	Person person;
+
+	// 堆空间
+	Person* p = new Person();
+	p-&gt;m_age = 20;
+	// 释放空间
+	delete p;
+
+	Person* p1 = (Person*)malloc(sizeof(Person));
+	// 释放空间
+	free(p1);
+
+	return 0;
+}
+</code></pre>
+<ul>
+<li>构造函数的注意事项：</li>
+</ul>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+struct Person {
+	int m_age;
+
+	Person() {
+		cout &lt;&lt; &quot;Person() &quot; &lt;&lt; endl;
+		this-&gt;m_age = 0;
+		// 格式化Person中的所有值为0：memset(this, 0, sizeof(Person));
+	};
+
+	// 构造函数重载 overload
+	// 一旦自定义了构造函数，一定要用自定义的构造函数初始化对象
+	Person(int age) {
+		this-&gt;m_age = age;
+		cout &lt;&lt; &quot;Person(int age)&quot; &lt;&lt; endl;
+	};
+};
+
+Person g_person(); // 这是一个函数声明
+
+int main() {
+	Person person3(); // 这是一个函数声明，无参，返回值类型为Person
+
+	// 创建的person对象在栈空间
+	Person person1;
+	Person person(30);
+	person.m_age = 20;
+	cout &lt;&lt; &quot;age is &quot; &lt;&lt; person.m_age &lt;&lt; endl;
+
+	// 创建的person对象在堆空间
+	Person* person2 = new Person();
+	delete person2;
+	Person* person3 = new Person(100);
+	delete person3;
+
+	// 通过malloc创建对象内存的时候不会调用构造函数
+	Person* person4 = (Person*)malloc(sizeof(Person));
+	delete person4;
+
+	// 在某些特定的情况下，编译器会为类生成空的无参的构造函数
+
+	return 0;
+};
+</code></pre>
+<ul>
+<li>成员变量的初始化问题</li>
+</ul>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+struct Person {
+	int m_age;
+};
+
+// 全局区（成员变量的初始值为0）【不管有没有实现构造函数，都会默认初始化成员变量】
+Person g_person;
+
+/*
+！！如果自定义了构造函数，除了全局区，其他内存空间的成员变量默认都不会初始化，需要开发人员手动初始化
+*/
+
+//!! 1个字节  =&gt; 0000 0000 (8个bit)
+
+int main() {
+	// 栈空间（成员变量没有初始化）【不管有没有实现构造函数，都不会初始化成员变量】
+	Person person;
+	// 堆空间
+	Person* p1 = new Person; // 成员变量没有初始化 【不管有没有实现构造函数，都不会初始化成员变量】
+	Person* p2 = new Person(); // 成员变量有初始化 【如果没有定义构造函数则会初始化成员变量，如果定义了构造函数则不会初始化成员变量】
+
+	cout &lt;&lt; g_person.m_age &lt;&lt; endl;
+	cout &lt;&lt; p1-&gt;m_age &lt;&lt; endl;
+	cout &lt;&lt; p2-&gt;m_age &lt;&lt; endl;
+
+	return 0;
+};
 </code></pre>
 ]]></content>
     </entry>
