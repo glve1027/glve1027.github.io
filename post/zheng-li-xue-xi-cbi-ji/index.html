@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 11 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 16 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -148,7 +148,7 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
 // 寄存器是在CPU里面的
 // x86(32bit)  eax/ebx/ecx/edx/ebp...
 // x86(64bit) |63-56|55-48|47-40|39-32|31-24|23-16|15-8|7-0|
-//								                |AH..|AL.|
+//								                  |AH..|AL.|
 //		                                          |AX......|
 //									  |EAX.................|
 //		      |RAX.........................................|
@@ -449,6 +449,264 @@ int main() {
 	return 0;
 };
 </code></pre>
+<h3 id="第六天">第六天</h3>
+<ul>
+<li>析构函数的特点：</li>
+</ul>
+<pre><code class="language-c++">struct Person {
+	int m_age;
+	// 对象创建完毕的时候调用
+	Person() {
+		cout &lt;&lt; &quot;Person()&quot; &lt;&lt; endl;
+		this-&gt;m_age = 0;
+	};
+	// 对象销毁的时候调用
+	// 析构函数特点： 1. 不能重载 2. 使用malloc创建的内存，调用free, 不能触发析构函数 3. 构建函数/析构函数必要public
+	~Person() {
+		cout &lt;&lt; &quot;~Person()&quot; &lt;&lt; endl;
+	};
+};
+</code></pre>
+<ul>
+<li>对象内存的管理</li>
+</ul>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+// 如果这个对象里面没有任何成员变量，也会占1个字节
+struct Car {
+	Car() {
+		cout &lt;&lt; &quot;Car()&quot; &lt;&lt; endl;
+	};
+
+	~Car() {
+		cout &lt;&lt; &quot;~Car()&quot; &lt;&lt; endl;
+	};
+};
+
+struct Person {
+	int m_age;  // 4个字节
+	Car *m_car; // 一个指针，占4个字节，起初不会立即创建一个Car对象
+
+	// 初始化工作
+	Person() {
+		cout &lt;&lt; &quot;Person created&quot; &lt;&lt; endl;
+		this-&gt;m_car = new Car();
+	};
+
+	// 内存回收，清理工作（回收Person对象内部的申请的空间）
+	~Person() {
+		delete this-&gt;m_car;
+		cout &lt;&lt; &quot;Person destoryed&quot; &lt;&lt; endl;
+	};
+};
+
+int main() {
+	Person* p = new Person(); // p指针在栈空间  Person/Car都在堆空间
+
+	cout &lt;&lt; sizeof(Car) &lt;&lt; endl; // 啥属性都没有，也会占有1个字节
+
+	delete p;
+
+	return 0;
+};
+</code></pre>
+<ul>
+<li>声明和实现分离的操作</li>
+<li><code>Person.h</code>文件  定义声明</li>
+</ul>
+<pre><code class="language-c++">#pragma once
+
+// 声明
+class Person {
+	int m_age;
+public:
+	Person();
+	~Person();
+	void setAge(int age);
+	int getAge();
+};
+</code></pre>
+<ul>
+<li><code>Person.cpp</code>文件  实现内容</li>
+</ul>
+<pre><code class="language-c++">#include &quot;Person.h&quot;
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// :: 域运算符号 【跟在函数名的前面】
+// 实现
+Person::Person() {
+	cout &lt;&lt; &quot;Person()&quot; &lt;&lt; endl;
+};
+Person::~Person() {
+	cout &lt;&lt; &quot;~Person()&quot; &lt;&lt; endl;
+};
+void Person::setAge(int age) {
+	this-&gt;m_age = age;
+};
+int Person::getAge() {
+	return this-&gt;m_age;
+};
+</code></pre>
+<ul>
+<li>命名空间的概念</li>
+</ul>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+#include &quot;Person.h&quot;
+using namespace G2;
+using namespace std;
+
+
+// 命名空间不影响内存布局
+namespace GX {
+	int g_no;
+	class Person {
+	public:
+		int m_age;
+	};
+};
+
+
+namespace GH {
+	int no;
+	class Person {
+	public:
+		int m_height;
+	};
+
+	void test() {
+
+	};
+};
+
+void test1() {
+	GX::Person person;
+	person.m_age = 10;
+	GX::g_no = 1;
+
+	GH::Person person2;
+	person2.m_height = 10;
+	GH::Person* person3 = new GH::Person();
+	person3-&gt;m_height = 11;
+	GH::test();
+};
+
+// 命名空间可以嵌套
+namespace GG {
+	namespace HH {
+		int m_age;
+	};
+};
+
+void test11() {};
+
+namespace G1 {
+	int m_age;
+};
+
+namespace G1 {
+	int m_height;
+};
+
+// =&gt; 合并命名空间, 和上面是等效的
+namespace G1 {
+	int m_age;
+	int m_height;
+};
+
+int main() {
+	GG::HH::m_age = 10;
+
+	using namespace GG::HH;
+	m_age = 11;
+
+	::test11(); // 空的，就是最大的命名空间
+
+	return 0;
+};
+</code></pre>
+<ul>
+<li>C++ 关于继承</li>
+</ul>
+<pre><code class="language-c++">// C++ 里面没有想Java/Object-C里面一样有基类
+int main() {
+	
+	GoodStudent gs;
+	gs.m_age = 20;
+	gs.m_no = 1;
+	gs.m_money = 2000;
+
+	cout &lt;&lt; sizeof(Person) &lt;&lt; endl;
+	cout &lt;&lt; sizeof(Student) &lt;&lt; endl;
+	cout &lt;&lt; sizeof(GoodStudent) &lt;&lt; endl;
+
+	// 内存排布
+	// 父类的成员变量在前面，子类的成员变量在后面
+	cout &lt;&lt; &amp;gs &lt;&lt; endl;
+	cout &lt;&lt; &amp;gs.m_age &lt;&lt; endl;
+	cout &lt;&lt; &amp;gs.m_no &lt;&lt; endl;
+	cout &lt;&lt; &amp;gs.m_money &lt;&lt; endl;
+
+	return 0;
+};
+</code></pre>
+<ul>
+<li>成员访问权限的问题：</li>
+</ul>
+<pre><code class="language-c++">/*
+子类内部访问父类成员的权限，是取以下2个权限最小的那个一个
+1. 成员本身的访问权限
+2. 上一级父类的继承方式
+*/
+// 开发中的继承都是要用public关键字，这样可以保证父类的权限特性
+
+struct Person {
+protected: // 子类内部/当前类内部可以访问
+	int m_age;
+};
+
+struct Student: public Person {
+private:// 只有当前类内部可以访问（class默认）
+	int m_score;
+};
+
+struct GoodsStudent: public Student {
+public: // 任何地方都可以访问 （struct默认）
+	int m_money;
+};
+</code></pre>
+<ul>
+<li>初始化列表</li>
+</ul>
+<pre><code class="language-c++">struct Person {
+	int m_age;
+	int m_height;
+
+	Person() {
+		// ！！直接调用构造函数，会创建一个临时对象，传入一个临时的地址给this指针
+		// ！！构造函数的互相调用必须要在初始化列表中调用
+		Person(0, 0);
+		/*this-&gt;m_age = 0;
+		this-&gt;m_height = 0;*/
+	}
+
+	// 初始化列表 : m_age(age), m_height(height) // 语法糖
+	// 1. 只能用在构造函数中
+	// 2. 初始化列表中的顺序只和 成员变量声明的顺序有关【跟内存的排布】
+	Person(int age, int height) : m_age(age), m_height(height) {}
+	/*Person(int age, int height) {
+		this-&gt;m_age = age;
+		this-&gt;m_height = height;
+	}*/
+
+	void display() {
+		cout &lt;&lt; &quot;age is &quot; &lt;&lt; this-&gt;m_age &lt;&lt; endl;
+		cout &lt;&lt; &quot;height is &quot; &lt;&lt; this-&gt;m_height &lt;&lt; endl;
+	}
+};
+</code></pre>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -523,6 +781,7 @@ var dsqjs = new DisqusJS(options)
 <li><a href="#%E7%AC%AC%E4%B8%89%E5%A4%A9">第三天</a></li>
 <li><a href="#%E7%AC%AC%E5%9B%9B%E5%A4%A9">第四天</a></li>
 <li><a href="#%E7%AC%AC%E4%BA%94%E5%A4%A9">第五天</a></li>
+<li><a href="#%E7%AC%AC%E5%85%AD%E5%A4%A9">第六天</a></li>
 </ul>
 </li>
 </ul>
