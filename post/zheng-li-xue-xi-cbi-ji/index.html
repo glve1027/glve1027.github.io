@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 16 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 19 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -87,25 +87,25 @@ getchar() 等待键盘输入。
 <!-- more -->
 <h2 id="学习c">学习C++</h2>
 <h3 id="第一天">第一天</h3>
-<ul>
-<li>c++ 中是不能同时存在两个<code>main</code>函数。</li>
-<li><code>getchar()</code> 等待键盘输入。</li>
-<li>输出: <code>cout &lt;&lt; &quot;xx&quot;</code>。</li>
-<li><code>endl</code>: 换行的意思。</li>
-<li>键盘赋值给： <code>cin &gt;&gt; xx</code>。</li>
-<li>C语言不支持函数重载。【重载 -&gt; 函数名相同，参数的个数，参数的类型，参数的顺序不同。】</li>
-<li>extern &quot;C&quot;/ extern &quot;C&quot; { } -&gt; 按照C语言的方式编译。</li>
-<li>extern &quot;C&quot;/ extern &quot;C&quot; { } 使用在函数声明的地方。</li>
-<li>c++ 支持默认参数，【默认参数只能从右边开始】</li>
-<li>c++ 函数中使用默认参数，既有<code>定义</code>，也有<code>实现</code>，只能将默认参数使用在<code>定义</code>中 【可是是<code>常量</code>，也可以是<code>全局变量</code>】</li>
-</ul>
+<blockquote>
+<p>c++ 中是不能同时存在两个<code>main</code>函数。<br>
+<code>getchar()</code> 等待键盘输入。<br>
+输出: <code>cout &lt;&lt; &quot;xx&quot;</code>。<br>
+<code>endl</code>: 换行的意思。<br>
+键盘赋值给： <code>cin &gt;&gt; xx</code>。<br>
+C语言不支持函数重载。【重载 -&gt; 函数名相同，参数的个数，参数的类型，参数的顺序不同。】<br>
+extern &quot;C&quot;/ extern &quot;C&quot; { } -&gt; 按照C语言的方式编译。<br>
+extern &quot;C&quot;/ extern &quot;C&quot; { } 使用在函数声明的地方。<br>
+c++ 支持默认参数，【默认参数只能从右边开始】<br>
+c++ 函数中使用默认参数，既有<code>定义</code>，也有<code>实现</code>，只能将默认参数使用在<code>定义</code>中 【可是是<code>常量</code>，也可以是<code>全局变量</code>】</p>
+</blockquote>
 <h3 id="第二天">第二天</h3>
-<ul>
-<li><code>inline</code> -&gt; 1. 函数代码不多  2. 函数调用频率比较频繁【可以修饰函数<code>声明</code>、也可以修饰函数<code>实现</code>】</li>
-<li><code>inline</code>和<code>宏</code>的区别：<code>inline</code>还是有<code>语法检测</code>和<code>函数检测</code></li>
-<li><code>#pragma once</code>：防止整个文件内容被重复引入。【#ifndef,#define,#endif 不受任何编译器限制，也可以用于<code>部分代码</code>不被重复引用】</li>
-<li>引用：1. <code>定义了一个引用,相当于变量的别名</code>, 2. <code>对引用做计算，就相当于对引用的变量做计算</code> 3. <code>定义引用的时候必须要赋值，不能修改指向 【对比指针更加安全】</code> 4. <code>不存在引用的引用/引用的指针/引用数组</code></li>
-</ul>
+<blockquote>
+<p><code>inline</code> -&gt; 1. 函数代码不多  2. 函数调用频率比较频繁【可以修饰函数<code>声明</code>、也可以修饰函数<code>实现</code>】<br>
+<code>inline</code>和<code>宏</code>的区别：<code>inline</code>还是有<code>语法检测</code>和<code>函数检测</code><br>
+<code>#pragma once</code>：防止整个文件内容被重复引入。【#ifndef,#define,#endif 不受任何编译器限制，也可以用于<code>部分代码</code>不被重复引用】<br>
+引用：1. <code>定义了一个引用,相当于变量的别名</code>, 2. <code>对引用做计算，就相当于对引用的变量做计算</code> 3. <code>定义引用的时候必须要赋值，不能修改指向 【对比指针更加安全】</code> 4. <code>不存在引用的引用/引用的指针/引用数组</code></p>
+</blockquote>
 <pre><code class="language-c++">int a = 10;
 int b = 20;
 
@@ -117,9 +117,9 @@ rp = &amp;b;      // rp的指针指向变量b/相当于变量b的指针赋值给
 int array[] = { 10, 20, 30 };
 int (&amp;rArray)[3] = array;
 </code></pre>
-<ul>
-<li><code>const</code>: 1. 常量的意思，被修饰的变量不可修改。 2. 如果修饰的是<code>类</code>,<code>结构体（的指针）</code>其他的成员也不可以修改。3. 修饰的是其右边的内容 4. const 必须放在&amp;左边才能算是<code>常引用</code> 5. <code>常引用</code>可以用来修饰临时变量/表达式/函数返回值</li>
-</ul>
+<blockquote>
+<p><code>const</code>: 1. 常量的意思，被修饰的变量不可修改。 2. 如果修饰的是<code>类</code>,<code>结构体（的指针）</code>其他的成员也不可以修改。3. 修饰的是其右边的内容 4. const 必须放在&amp;左边才能算是<code>常引用</code> 5. <code>常引用</code>可以用来修饰临时变量/表达式/函数返回值</p>
+</blockquote>
 <pre><code class="language-c++">int age = 10;
 const int *p0 = &amp;age; // *p0是常量  p0不是常量
 int const *p1 = &amp;age; // *p1是常量  p1不是常量
@@ -136,10 +136,10 @@ rage = 30;
 int const *page = &amp;age;  // 不能通过指针修改所指向的内容
 int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过指针修改指向的内容
 </code></pre>
-<ul>
-<li>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.</li>
-<li>函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></li>
-</ul>
+<blockquote>
+<p>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.<br>
+函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></p>
+</blockquote>
 <h3 id="第三天">第三天</h3>
 <ul>
 <li>汇编基础</li>
@@ -153,22 +153,22 @@ int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过
 //									  |EAX.................|
 //		      |RAX.........................................|
 </code></pre>
-<ul>
-<li><code>R开头的寄存器是64位的，占8个字节</code>/ <code>E开头的寄存器是64位的，占4个字节</code></li>
-<li>[地址值]</li>
-<li><code>word</code> = <code>2</code>个字节  <code>dword</code> = <code>4</code>个字节(double)  <code>qword</code> = <code>8</code>个字节(quad)</li>
-<li><code>call</code>调用函数</li>
-<li>lea dest [地址值]</li>
-</ul>
+<blockquote>
+<p><code>R开头的寄存器是64位的，占8个字节</code>/ <code>E开头的寄存器是64位的，占4个字节</code><br>
+[地址值]<br>
+<code>word</code> = <code>2</code>个字节  <code>dword</code> = <code>4</code>个字节(double)  <code>qword</code> = <code>8</code>个字节(quad)<br>
+<code>call</code>调用函数<br>
+lea dest [地址值]</p>
+</blockquote>
 <pre><code class="language-c++">move eax, [0x12313..] // 将从地址 0x12313..取四个字节的值赋值给eax
 lea dest [0x12313..]  // 将地址 0x12313..  赋值给 dest
 </code></pre>
-<ul>
-<li><code>ret</code>函数返回</li>
-<li><code>xor</code>异或</li>
-<li><code>inc</code>自增/ <code>dec</code>自减</li>
-<li><code>j</code>开头的一般都是跳转，大多数的带条件的跳转，一般跟test/cmp等指令配合使用</li>
-</ul>
+<blockquote>
+<p><code>ret</code>函数返回<br>
+<code>xor</code>异或<br>
+<code>inc</code>自增/ <code>dec</code>自减<br>
+<code>j</code>开头的一般都是跳转，大多数的带条件的跳转，一般跟test/cmp等指令配合使用</p>
+</blockquote>
 <pre><code class="language-c++">jmp 0x12129.. // 无条件的跳转
 // 有条件的跳转
 cmp eax, ebx
@@ -176,30 +176,30 @@ jz 0x12129..
 mov eax, 1
 mov ebx, 2
 </code></pre>
-<ul>
-<li>开始开始调用前，<code>栈</code>空间已经分配好了，<code>栈</code>内存的特点：1. 由<code>CPU</code>自动创建和回收的</li>
-</ul>
+<blockquote>
+<p>开始开始调用前，<code>栈</code>空间已经分配好了，<code>栈</code>内存的特点：1. 由<code>CPU</code>自动创建和回收的</p>
+</blockquote>
 <blockquote>
 <p>从内存地址开始往高地址走，取几个字节，就是取到的值<br>
 一个变量的地址值是它所有字节中最小的地址值</p>
 </blockquote>
-<ul>
-<li><code>引用</code>的本质就是<code>地址</code></li>
-<li><code>引用不能修改</code>如何实现？ 【C++的规则】</li>
-</ul>
+<blockquote>
+<p><code>引用</code>的本质就是<code>地址</code><br>
+<code>引用不能修改</code>如何实现？ 【C++的规则】</p>
+</blockquote>
 <pre><code class="language-c++">int age = 10;
 int &amp;rage = age; // 相当于 int * const rage = &amp;age 作用一样
 </code></pre>
-<ul>
-<li><code>当引用指向了不同类型的数据时，会产生临时变量，即引用指向的并不是初始化的那个变量</code></li>
-<li><code>表达式</code>可以被<code>赋值</code> =&gt; <code>(a = b) = 4;</code></li>
-</ul>
+<blockquote>
+<p><code>当引用指向了不同类型的数据时，会产生临时变量，即引用指向的并不是初始化的那个变量</code><br>
+<code>表达式</code>可以被<code>赋值</code> =&gt; <code>(a = b) = 4;</code></p>
+</blockquote>
 <h3 id="第四天">第四天</h3>
-<ul>
-<li>C++中可以使用<code>struct</code>/<code>class</code>定义类.</li>
-<li><code>struct</code>默认属性都是<code>public</code></li>
-<li><code>class</code>默认属性都是<code>private</code></li>
-</ul>
+<blockquote>
+<p>C++中可以使用<code>struct</code>/<code>class</code>定义类.<br>
+<code>struct</code>默认属性都是<code>public</code><br>
+<code>class</code>默认属性都是<code>private</code></p>
+</blockquote>
 <pre><code class="language-c++">struct Person {
 	// 成员变量
 	int m_id;
@@ -283,9 +283,9 @@ public:
 4. 全局区 【全局变量，特点：整个程序运行过程中都存在】
 */
 </code></pre>
-<ul>
-<li>在c++的堆空间如何创建内存？</li>
-</ul>
+<blockquote>
+<p>在c++的堆空间如何创建内存？</p>
+</blockquote>
 <pre><code class="language-c++">/*
 1. malloc -&gt; free
 2. new -&gt; delete
@@ -367,9 +367,9 @@ int main() {
 	return 0;
 }
 </code></pre>
-<ul>
-<li>构造函数的注意事项：</li>
-</ul>
+<blockquote>
+<p>构造函数的注意事项：</p>
+</blockquote>
 <pre><code class="language-c++">#include &lt;iostream&gt;
 using namespace std;
 
@@ -416,9 +416,9 @@ int main() {
 	return 0;
 };
 </code></pre>
-<ul>
-<li>成员变量的初始化问题</li>
-</ul>
+<blockquote>
+<p>成员变量的初始化问题</p>
+</blockquote>
 <pre><code class="language-c++">#include &lt;iostream&gt;
 using namespace std;
 
@@ -450,9 +450,9 @@ int main() {
 };
 </code></pre>
 <h3 id="第六天">第六天</h3>
-<ul>
-<li>析构函数的特点：</li>
-</ul>
+<blockquote>
+<p>析构函数的特点：</p>
+</blockquote>
 <pre><code class="language-c++">struct Person {
 	int m_age;
 	// 对象创建完毕的时候调用
@@ -467,9 +467,9 @@ int main() {
 	};
 };
 </code></pre>
-<ul>
-<li>对象内存的管理</li>
-</ul>
+<blockquote>
+<p>对象内存的管理</p>
+</blockquote>
 <pre><code class="language-c++">#include &lt;iostream&gt;
 using namespace std;
 
@@ -511,10 +511,10 @@ int main() {
 	return 0;
 };
 </code></pre>
-<ul>
-<li>声明和实现分离的操作</li>
-<li><code>Person.h</code>文件  定义声明</li>
-</ul>
+<blockquote>
+<p>声明和实现分离的操作<br>
+<code>Person.h</code>文件  定义声明</p>
+</blockquote>
 <pre><code class="language-c++">#pragma once
 
 // 声明
@@ -527,9 +527,9 @@ public:
 	int getAge();
 };
 </code></pre>
-<ul>
-<li><code>Person.cpp</code>文件  实现内容</li>
-</ul>
+<blockquote>
+<p><code>Person.cpp</code>文件  实现内容</p>
+</blockquote>
 <pre><code class="language-c++">#include &quot;Person.h&quot;
 #include &lt;iostream&gt;
 
@@ -550,9 +550,9 @@ int Person::getAge() {
 	return this-&gt;m_age;
 };
 </code></pre>
-<ul>
-<li>命名空间的概念</li>
-</ul>
+<blockquote>
+<p>命名空间的概念</p>
+</blockquote>
 <pre><code class="language-c++">#include &lt;iostream&gt;
 #include &quot;Person.h&quot;
 using namespace G2;
@@ -627,9 +627,9 @@ int main() {
 	return 0;
 };
 </code></pre>
-<ul>
-<li>C++ 关于继承</li>
-</ul>
+<blockquote>
+<p>C++ 关于继承</p>
+</blockquote>
 <pre><code class="language-c++">// C++ 里面没有想Java/Object-C里面一样有基类
 int main() {
 	
@@ -652,9 +652,9 @@ int main() {
 	return 0;
 };
 </code></pre>
-<ul>
-<li>成员访问权限的问题：</li>
-</ul>
+<blockquote>
+<p>成员访问权限的问题：</p>
+</blockquote>
 <pre><code class="language-c++">/*
 子类内部访问父类成员的权限，是取以下2个权限最小的那个一个
 1. 成员本身的访问权限
@@ -677,9 +677,9 @@ public: // 任何地方都可以访问 （struct默认）
 	int m_money;
 };
 </code></pre>
-<ul>
-<li>初始化列表</li>
-</ul>
+<blockquote>
+<p>初始化列表</p>
+</blockquote>
 <pre><code class="language-c++">struct Person {
 	int m_age;
 	int m_height;
@@ -705,6 +705,143 @@ public: // 任何地方都可以访问 （struct默认）
 		cout &lt;&lt; &quot;age is &quot; &lt;&lt; this-&gt;m_age &lt;&lt; endl;
 		cout &lt;&lt; &quot;height is &quot; &lt;&lt; this-&gt;m_height &lt;&lt; endl;
 	}
+};
+</code></pre>
+<h3 id="第七天">第七天</h3>
+<blockquote>
+<p>构造函数列表的功能</p>
+</blockquote>
+<pre><code class="language-c++">class Person {
+	int m_age;
+	int m_height;
+public:
+	//Person(int age = 0, int height = 0) :m_age(age), m_height(height) {}
+	// 定义，默认参数只能写在函数的声明中
+	Person(int age = 0, int height = 0);
+};
+
+// 实现分离
+// 构造函数的初始化列表只能写在实现中
+Person::Person(int age, int height) :m_age(age), m_height(height) {}
+
+int main() {
+	Person person;
+	Person person1(10);
+	Person person2(10, 180);
+
+	return 0;
+};
+</code></pre>
+<blockquote>
+<p>父类的构造函数<br>
+子类默认会调用父类的无参构造函数<br>
+子类默认会调用父类的无参构造函数<br>
+子类的构造函数显式调用父类的有参构造函数，就不会区调用父类的无参构造函数<br>
+如果父类里面没有无参的构造函数，子类必须调用有参的构造函数</p>
+</blockquote>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+// 子类默认会调用父类的无参构造函数
+// 子类的构造函数显式调用父类的有参构造函数，就不会区调用父类的无参构造函数
+// 如果父类里面没有无参的构造函数，子类必须调用有参的构造函数
+class Person {
+	int m_age;
+public:
+	//Person() {
+	//	cout &lt;&lt; &quot;Person()&quot; &lt;&lt; endl;
+	//};
+
+	Person(int age) : m_age(age) {
+		cout &lt;&lt; &quot;Person(int age)&quot; &lt;&lt; endl;
+	}
+};
+
+class Student :public Person {
+	int m_score;
+public:
+	Student(): Person(0) {
+		cout &lt;&lt; &quot;Student()&quot; &lt;&lt; endl;
+	}
+
+	//Student(int age, int score): m_score(score), Person(age) {
+	//	cout &lt;&lt; &quot;Student(int age, int score)&quot; &lt;&lt; endl;
+	//}
+};
+</code></pre>
+<blockquote>
+<p>父类指针的问题</p>
+</blockquote>
+<pre><code class="language-c++">// 父类指针可以指向子类对象， 这个是安全的，开发中经常用到
+Person* stu = new Student();
+// 子类指针指向父类对象，这个是不安全的
+Student* person = (Student *)new Person();
+</code></pre>
+<blockquote>
+<p>如果子类继承父类的方式不是<code>public</code>, 那么就不能用父类指针指向子类对象<br>
+多态的要素：1. 子类重写父类成员函数 2. 父类指针指向子类对象 3. 利用父类指针调用重写的成员函数【必须是虚函数】</p>
+</blockquote>
+<blockquote>
+<p>虚表的内存排布</p>
+</blockquote>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+class Animal {
+public:
+	int m_age;
+	virtual void speak() {
+		cout &lt;&lt; &quot;Animal::Speak()&quot; &lt;&lt; endl;
+	}
+	virtual void run() {
+		cout &lt;&lt; &quot;Animal::run()&quot; &lt;&lt; endl;
+	}
+};
+
+class Cat : public Animal {
+public:
+	int m_life;
+	void speak() {
+		cout &lt;&lt; &quot;Cat::Speak()&quot; &lt;&lt; endl;
+	}
+	void run() {
+		cout &lt;&lt; &quot;Cat::run()&quot; &lt;&lt; endl;
+	}
+};
+
+int main() {
+
+	Animal* cat = new Cat();
+	cat-&gt;m_age = 20;
+	cat-&gt;speak();
+	cat-&gt;run();
+	/*
+	// 取出cat指针变量里面的存储的地址值
+	// eax里面存放的是Cat对象的地址值
+	mov         eax,dword ptr [cat]  
+
+	// 取出cat对象的前面4个字节内容给edx
+	// edx里面存储的是虚表的地址
+	mov         edx,dword ptr [eax] 
+
+	mov         esi,esp  
+	mov         ecx,dword ptr [cat]  
+
+	// 取出虚表地址（再偏移4个字节）取前4个字节的内容给eax
+	// eax里面存储的是Cat::run的函数地址
+	mov         eax,dword ptr [edx+4]  
+
+	call        eax  
+	*/
+
+	/*
+	同一个类的虚表的都是同一的
+	*/
+	Animal* a1 = new Animal(); // 虚表地址：84 9d f9 00 -&gt; 这个是小端(从右往左读)  0xf99d84
+	Animal* a2 = new Animal(); // 虚表地址：84 9d f9 00
+	Animal* a3 = new Animal(); // 虚表地址：84 9d f9 00
+
+	return 0;
 };
 </code></pre>
 
@@ -782,6 +919,7 @@ var dsqjs = new DisqusJS(options)
 <li><a href="#%E7%AC%AC%E5%9B%9B%E5%A4%A9">第四天</a></li>
 <li><a href="#%E7%AC%AC%E4%BA%94%E5%A4%A9">第五天</a></li>
 <li><a href="#%E7%AC%AC%E5%85%AD%E5%A4%A9">第六天</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%83%E5%A4%A9">第七天</a></li>
 </ul>
 </li>
 </ul>
