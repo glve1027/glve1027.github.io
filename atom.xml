@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-05T13:23:13.547Z</updated>
+    <updated>2020-02-06T14:39:20.562Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -778,6 +778,51 @@ int main() {
 
 	return 0;
 };
+</code></pre>
+<h3 id="第八天">第八天</h3>
+<blockquote>
+<p>如果子类中没有覆写父类的的虚函数，那么它存放的就是父类的虚函数地址。<br>
+如果子类中没有任何覆写的函数，那么它还是存在虚表地址，子类和父类的虚表地址不一样，但是内容是一样的。<br>
+如何调用父类中的成员函数。<br>
+如果使用了多态，析构函数也要使用虚函数。这样才能保证正常销毁对象。<br>
+如果子类继承了抽象类，没有<code>完全</code>覆盖虚函数，则子类也属抽象类</p>
+</blockquote>
+<pre><code class="language-c++">父类::xxx
+</code></pre>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+// 含有纯虚函数的类，是抽象类 【不能直接实例化】
+class Animal {
+public:
+	// 纯虚函数 【没有函数体的函数，且初始化为0, 定义接口规范】
+	virtual void speak() = 0;
+	virtual void run() = 0;
+};
+
+// 如果子类继承了抽象类，没有完全覆盖虚函数，则子类也属抽象类
+class Dog : public Animal {
+public:
+	void speak() {
+		cout &lt;&lt; &quot;Dog speak()&quot; &lt;&lt; endl;
+	}
+
+	void run() {
+		cout &lt;&lt; &quot;Dog run()&quot; &lt;&lt; endl;
+	}
+};
+</code></pre>
+<blockquote>
+<p>多继承<br>
+如果子类继承的多个父类都有虚函数，那么子类对象就会产生对应的<code>多张虚表</code><br>
+如果是同名函数，想要调用指定函数的话，就在指定函数名前面加 <code>对象::</code> [<code>如果自己没有函数的话，就会报错，因为二意性</code>]<br>
+虚基类</p>
+</blockquote>
+<pre><code class="language-c++">/*
+1. 虚表地址  ---------------------------&gt;  1. 0: 虚表指针与本类起始的偏移量 （一般为0）
+2. m_score                                2. 8：虚基类成员与本类的偏移量
+3. m_age    // 虚基类的属性值放在最后
+*/
 </code></pre>
 ]]></content>
     </entry>
