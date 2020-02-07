@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 23 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 24 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -998,6 +998,37 @@ private:
 
 Rocket* Rocket::ms_rocket = NULL;
 
+</code></pre>
+<blockquote>
+<p>如果子类父类中存在同名的<code>静态成员变量</code>，是可以的，并且不存在继承功能</p>
+</blockquote>
+<pre><code class="language-c++">class Person {
+public:
+	static int m_age;
+};
+
+int Person::m_age = 1;
+
+class Student : public Person {
+public:
+	static int m_age;
+};
+
+int Student::m_age = 2;
+
+int main() {
+	Person* p1 = new Person();
+	Student* s1 = new Student();
+	
+	/*
+	Person location is 0094C034
+   Student location is 0094C038
+	*/
+	cout &lt;&lt; &quot;Person location is &quot; &lt;&lt; &amp;p1-&gt;m_age &lt;&lt; endl;
+	cout &lt;&lt; &quot;Student location is &quot; &lt;&lt; &amp;s1-&gt;m_age &lt;&lt; endl;
+
+	return 0;
+}
 </code></pre>
 
         </div>

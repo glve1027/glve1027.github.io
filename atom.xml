@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-07T07:05:41.696Z</updated>
+    <updated>2020-02-07T07:24:50.185Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -933,6 +933,37 @@ private:
 
 Rocket* Rocket::ms_rocket = NULL;
 
+</code></pre>
+<blockquote>
+<p>如果子类父类中存在同名的<code>静态成员变量</code>，是可以的，并且不存在继承功能</p>
+</blockquote>
+<pre><code class="language-c++">class Person {
+public:
+	static int m_age;
+};
+
+int Person::m_age = 1;
+
+class Student : public Person {
+public:
+	static int m_age;
+};
+
+int Student::m_age = 2;
+
+int main() {
+	Person* p1 = new Person();
+	Student* s1 = new Student();
+	
+	/*
+	Person location is 0094C034
+   Student location is 0094C038
+	*/
+	cout &lt;&lt; &quot;Person location is &quot; &lt;&lt; &amp;p1-&gt;m_age &lt;&lt; endl;
+	cout &lt;&lt; &quot;Student location is &quot; &lt;&lt; &amp;s1-&gt;m_age &lt;&lt; endl;
+
+	return 0;
+}
 </code></pre>
 ]]></content>
     </entry>
