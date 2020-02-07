@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 20 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 23 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -889,6 +889,116 @@ public:
 3. m_age    // 虚基类的属性值放在最后
 */
 </code></pre>
+<h3 id="第九天">第九天</h3>
+<blockquote>
+<p><code>static</code>相关知识<br>
+静态成员：</p>
+<ol>
+<li>存储在数据段 （全局区，类似全局变量） 2. 整个程序运行过程中只有有一份内存<br>
+与下面的全局静态变量相比，它可以设置访问权限（private,protected,public）,达到局部共享的目的</li>
+<li>静态成员必须初始化  2. 必须在类外面初始化  3. 初始化的时候不能带static<br>
+如果类的定义和实现都分开的话，需要将static定义的属性值初始化的是步骤放在.cpp中<br>
+1.直接通过类来获取  2.直接通过对象来获取  3.直接通过指针来获取</li>
+</ol>
+</blockquote>
+<hr>
+<blockquote>
+<p>静态成员函数：<br>
+静态函数内部不能使用<code>this</code>（<code>this</code>指针只能用在非静态成员函数内部）<br>
+不能用虚函数<br>
+内部不能访问非静态成员变量，只能访问静态成员变量/函数<br>
+非静态成员函数可以访问 静态成员函数和静态成员变量<br>
+构造函数和析构函数不能是静态函数<br>
+<code>声明</code>和<code>实现</code>分离的时候，<code>实现</code>中不能出现<code>static</code></p>
+</blockquote>
+<pre><code class="language-c++">class Person1 {
+	static int getAge();
+};
+
+int Person1::getAge() {
+	return 1;
+}
+</code></pre>
+<pre><code class="language-c++">/*
+	静态成员变量 
+	1. 存储在数据段 （全局区，类似全局变量）
+	2. 整个程序运行过程中只有有一份内存
+*/
+
+// 与下面的全局静态变量相比，它可以设置访问权限（private,protected,public）,达到局部共享的目的
+
+/*
+	1. 静态成员必须初始化
+	2. 必须在类外面初始化
+	3. 初始化的时候不能带static
+*/
+
+// 如果类的定义和实现都分开的话，需要将static定义的属性值初始化的是步骤放在.cpp中
+
+int main() {
+	// 1.直接通过类来获取
+	Car::m_price = 30;
+	// 2.直接通过对象来获取
+	Car car3;
+	cout &lt;&lt; car3.m_price &lt;&lt; endl;
+	// 3.直接通过指针来获取
+	Car* p = new Car();
+	cout &lt;&lt; p-&gt;m_price &lt;&lt; endl;
+}
+</code></pre>
+<blockquote>
+<p>单例模式</p>
+</blockquote>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+/*
+	我们希望某些类的实例对象永远只有一个
+	单例模式
+	条件：
+
+	1. 构造函数私有化
+	2. 定义一个私有的静态成员变量指针，用于指向单例对象
+	3. 提供一个公共的返回单例对象的静态成员函数
+*/
+
+#include &lt;iostream&gt;
+using namespace std;
+
+/*
+	我们希望某些类的实例对象永远只有一个
+	单例模式
+	条件：
+
+	1. 构造函数私有化
+	2. 定义一个私有的静态成员变量指针，用于指向单例对象
+	3. 提供一个公共的返回单例对象的静态成员函数
+*/
+
+class Rocket {
+public:
+	static Rocket* sharedRocket() {
+		// p_thread
+		if (ms_rocket == NULL) {
+			ms_rocket = new Rocket();
+		}
+		return ms_rocket;
+	}
+	static void freeRocket() {
+		if (ms_rocket == NULL) return;
+		delete ms_rocket;
+		ms_rocket = NULL; // 回收内存、抹掉数据
+	}
+private:
+	static Rocket *ms_rocket;
+	Rocket() {
+		cout &lt;&lt; &quot;Rocket()&quot; &lt;&lt; endl;
+	}
+};
+
+Rocket* Rocket::ms_rocket = NULL;
+
+</code></pre>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -966,6 +1076,7 @@ var dsqjs = new DisqusJS(options)
 <li><a href="#%E7%AC%AC%E5%85%AD%E5%A4%A9">第六天</a></li>
 <li><a href="#%E7%AC%AC%E4%B8%83%E5%A4%A9">第七天</a></li>
 <li><a href="#%E7%AC%AC%E5%85%AB%E5%A4%A9">第八天</a></li>
+<li><a href="#%E7%AC%AC%E4%B9%9D%E5%A4%A9">第九天</a></li>
 </ul>
 </li>
 </ul>
