@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 24 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 25 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -1030,6 +1030,44 @@ int main() {
 	return 0;
 }
 </code></pre>
+<h3 id="第十天">第十天</h3>
+<ul>
+<li>const 成员</li>
+</ul>
+<blockquote>
+<p>被<code>const</code>修饰的成员变量、非静态成员变量</p>
+</blockquote>
+<ul>
+<li>const成员变量</li>
+</ul>
+<blockquote>
+<p>必须初始化（类内部初始化），可以在声明的时候<code>直接</code>初始化赋值/也可以<code>初始化列表</code>赋值</p>
+</blockquote>
+<ul>
+<li>const成员函数（非静态）</li>
+</ul>
+<blockquote>
+<p>函数的<code>声明</code>和<code>实现</code>都必须要带<code>const</code><br>
+不能在函数内部修改<code>当前</code>对象的成员变量（非<code>static</code>）<br>
+内部只能调用<code>const</code>成员函数,<code>static</code>成员函数<br>
+非<code>const</code>成员函数可以调用<code>const</code>成员函数<br>
+函数通过添加<code>const</code>和<code>非const</code>，可以构成重载<br>
+<code>非const</code>对象（指针）优先调用<code>非const</code>成员函数、<code>const</code>对象（指针）只能调用<code>const</code>成员函数</p>
+</blockquote>
+<ul>
+<li>
+<p>拷贝构造函数</p>
+</li>
+<li>
+<p>如果函数的入参是字符常量</p>
+</li>
+</ul>
+<blockquote>
+<p><code>Car(int price, char *name = NULL) :m_price(price) {}</code></p>
+</blockquote>
+<ul>
+<li>使用对象类型作为函数的参数或者返回值，可能会产生一些不必要的中间对象</li>
+</ul>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -1108,6 +1146,7 @@ var dsqjs = new DisqusJS(options)
 <li><a href="#%E7%AC%AC%E4%B8%83%E5%A4%A9">第七天</a></li>
 <li><a href="#%E7%AC%AC%E5%85%AB%E5%A4%A9">第八天</a></li>
 <li><a href="#%E7%AC%AC%E4%B9%9D%E5%A4%A9">第九天</a></li>
+<li><a href="#%E7%AC%AC%E5%8D%81%E5%A4%A9">第十天</a></li>
 </ul>
 </li>
 </ul>
