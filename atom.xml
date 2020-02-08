@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-08T06:47:07.660Z</updated>
+    <updated>2020-02-08T15:15:19.326Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,49 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[C中那些被遗忘的知识点：]]></title>
+        <id>https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian</id>
+        <link href="https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian">
+        </link>
+        <updated>2020-02-08T15:13:26.000Z</updated>
+        <summary type="html"><![CDATA[<p>因为最近在看C++的知识点，发现很多C中的知识点有点不记得了，又把书拿出来翻了一下，整理了一些容易忽略的知识点。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>因为最近在看C++的知识点，发现很多C中的知识点有点不记得了，又把书拿出来翻了一下，整理了一些容易忽略的知识点。</p>
+<!-- more -->
+<ul>
+<li>函数的<code>定义</code>和<code>实现</code>可以分类，定义的时候可以省略<code>形参的参数名</code>，例如下面的代码：</li>
+</ul>
+<pre><code class="language-c">int minus(int, int); // 定义
+int minus(int a, int b) { return a - b; } // 实现
+</code></pre>
+<ul>
+<li>
+<p>如果函数只有<code>定义</code>，没有<code>实现</code>的时候, 编译器在编译的时候就会报错。</p>
+</li>
+<li>
+<p>如果声明了一个<code>局部变量</code>, 但是没有<code>赋值</code>, 可能在不同的平台上会有不同的表现，目前在MAC OS上，会打印<code>0</code>, 而在Windows上则会直接报错，也会随机打印一个<code>垃圾数据</code>, 如果是全局<code>变量</code>, 例如<code>int a</code>, 默认会赋值<code>0</code>。</p>
+</li>
+<li>
+<p><code>汉字</code>或者<code>字符串</code>, 必须要用字符数组来表示，因为<code>1个汉字</code> = <code>2个字符</code>。</p>
+</li>
+<li>
+<p>同时使用两种修饰符</p>
+</li>
+</ul>
+<pre><code class="language-c">signed short int a;
+unsigned long long int a;
+</code></pre>
+<ul>
+<li>
+<p>在64位编译器环境下，short占2个字节(16位)，int占4个字节(32位)，long占8个字节(64位</p>
+</li>
+<li>
+<p>signed代表有符号，包括正数、负数和0；unsigned代表无符号，只包括正数和0。比如，signed的取值范围是-32768<sub>32767，那么unsigned的取值范围是0</sub>65535</p>
+</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[整理C++笔记]]></title>
         <id>https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji</id>
