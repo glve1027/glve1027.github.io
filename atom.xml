@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-08T15:18:24.856Z</updated>
+    <updated>2020-02-09T11:10:21.132Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -1045,6 +1045,120 @@ int main() {
 </blockquote>
 <ul>
 <li>使用对象类型作为函数的参数或者返回值，可能会产生一些不必要的中间对象</li>
+</ul>
+<h3 id="第十一天">第十一天</h3>
+<ul>
+<li>匿名对象</li>
+</ul>
+<pre><code class="language-c++">// 匿名函数
+Person().display();
+</code></pre>
+<ul>
+<li>参数传入对象时：</li>
+</ul>
+<pre><code class="language-c++">Person person; // 构造一次
+test1(person); // 作为参数传去进去的时候，会再创建一个Person对象（所以这里会有一个拷贝构造）
+
+test1(Person()); // 调用匿名构造函数，只会调用一次构造函数，不会调用拷贝构造
+</code></pre>
+<ul>
+<li>隐式构造</li>
+</ul>
+<pre><code class="language-c++">/*
+	Person(int age), age = 10,this = 00EFFCE0 - 创建一个新的对象1
+	Person(int age), age = 20,this = 00EFFC14 - 隐式构造创建一个临时对象2，并且把它的属性值赋值给对象1的属性值
+	~Person(), age = 20,this = 00EFFC14       - 析构对象2
+	~Person(), age = 20,this = 00EFFCE0       - 析构对象1
+*/
+Person person(10);  //!! 如果没有单参数构造函数，则会报错
+person = 20; // 隐式构造：Person(20)
+
+// 禁止隐式构造
+explicit Person(int age) : m_age(age) {}
+</code></pre>
+<ul>
+<li>编译器自动生成的构造函数</li>
+<li>C++的编译器会在默些特定的情况下，为类自动生成无参的构造函数，例如：</li>
+</ul>
+<ol>
+<li>成员变量在声明的同时进行了初始化。【需要进行赋值】</li>
+<li>有定义虚函数。 【需要创建虚表】</li>
+<li>虚继承其他类。 【需要创建虚表】</li>
+<li>包含了对象类型的成员（如果是指针类型则不需要调用构造函数），且这个成员有构造函数 【需要调用子类的构造函数】</li>
+<li>父类有构造函数。【需要先创建父类】</li>
+</ol>
+<blockquote>
+<p>对象创建后，需要做一些额外操作时（比如内存操作，函数调用），编译器一般都会为其生成构造函数。</p>
+</blockquote>
+<ul>
+<li>友元 [编译器行为]</li>
+</ul>
+<blockquote>
+<p>如果将函数<code>A</code>（非成员函数）声明为类<code>C</code>的友元函数，那么函数<code>A</code>就能直接访问类<code>C</code>对象的所有成员。</p>
+</blockquote>
+<pre><code class="language-c++">class Point {
+	friend Point add(const Point&amp;, const Point&amp;); // 定义友元函数 【全局的】
+	friend class Math; // 定义友元类
+private:
+	int m_x;
+	int m_y;
+public:
+	Point(int x, int y) :m_x(x), m_y(y) {}
+	int getX() const { return this-&gt;m_x; }
+	int getY() const { return this-&gt;m_y; }
+};
+
+Point add(const Point&amp; point1, const Point&amp; point2) {
+	return Point(point1.m_x + point2.m_x, point1.m_y + point2.m_y);
+}
+
+class Math {
+public:
+	Point add(const Point&amp; point1, const Point&amp; point2) {
+		return Point(point1.m_x + point2.m_x, point1.m_y + point2.m_y);
+	}
+};
+</code></pre>
+<ul>
+<li>
+<p>内部类/局部类【定义在函数内部】</p>
+</li>
+<li>
+<p>运算符重载</p>
+</li>
+</ul>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+class Point {
+	friend Point operator+(const Point&amp;, const Point&amp;);
+private:
+	int m_x;
+	int m_y;
+public:
+	Point(int x, int y) : m_x(x), m_y(y) {}
+	static void display(const Point &amp;point) {
+		cout &lt;&lt; &quot;(x: &quot; &lt;&lt; point.m_x &lt;&lt; &quot;, y: &quot; &lt;&lt; point.m_y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+	}
+};
+
+// 操作符重载
+Point operator+(const Point &amp;p1, const Point &amp;p2) {
+	return Point(p1.m_x + p2.m_x, p1.m_y + p2.m_y);
+}
+
+int main() {
+	
+	Point::display(Point(1, 2) + Point(2, 3)); // 等价 =&gt;  display(operator(Point(1, 2), Point(2, 3)));
+	Point::display(operator+(Point(1, 2), Point(2, 3)));
+
+
+	return 0;
+}
+</code></pre>
+<ul>
+<li>通过指针<code>this</code>获取对象 =&gt; '*this'</li>
+<li><code>const</code>对象只能调用<code>const</code>的成员函数</li>
 </ul>
 ]]></content>
     </entry>
