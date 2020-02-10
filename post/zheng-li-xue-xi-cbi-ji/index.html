@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 28 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 29 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -1182,6 +1182,61 @@ int main() {
 <li>通过指针<code>this</code>获取对象 =&gt; '*this'</li>
 <li><code>const</code>对象只能调用<code>const</code>的成员函数</li>
 </ul>
+<h3 id="第十二天">第十二天</h3>
+<ul>
+<li>操作符重载</li>
+</ul>
+<pre><code class="language-c++">// ++x
+void operator++() {
+	this-&gt;m_x++;
+	this-&gt;m_y++;
+}
+
+// x++
+void operator++(int) {
+	this-&gt;m_x++;
+	this-&gt;m_y++;
+}
+</code></pre>
+<ul>
+<li><code>a++</code>与<code>++a</code>运算符的汇编解析</li>
+</ul>
+<blockquote>
+<p>a++ 会返回a以前的值进行运算，运算完毕之后才会让a的值加1。【不能进行赋值】<br>
+++a 会直接让a的值加1，并且作为最新的a进行运算。【可以进行赋值】</p>
+</blockquote>
+<pre><code class="language-c++">int b = a++ + 8;
+// eax = a
+mov         eax,dword ptr [a]  
+// eax += 8
+add         eax,8  
+// b = eax [此时a的值没有发生改变]
+mov         dword ptr [b],eax  
+
+// ecx = a
+mov         ecx,dword ptr [a]  
+// ecx += 1
+add         ecx,1  
+// a = ecx [a++] 
+mov         dword ptr [a],ecx  
+
+
+int c = ++a + 8;
+// 先将a的值加1，然后覆盖a的值
+// eax = a
+mov         eax,dword ptr [a]  
+// eax += 1
+add         eax,1  
+// a = eax [a++] 
+mov         dword ptr [a],eax  
+
+// ecx = a [a = 9]
+mov         ecx,dword ptr [a]  
+// ecx += 8
+add         ecx,8  
+// c = exc
+mov         dword ptr [c],ecx 
+</code></pre>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -1262,6 +1317,7 @@ var dsqjs = new DisqusJS(options)
 <li><a href="#%E7%AC%AC%E4%B9%9D%E5%A4%A9">第九天</a></li>
 <li><a href="#%E7%AC%AC%E5%8D%81%E5%A4%A9">第十天</a></li>
 <li><a href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9">第十一天</a></li>
+<li><a href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E5%A4%A9">第十二天</a></li>
 </ul>
 </li>
 </ul>

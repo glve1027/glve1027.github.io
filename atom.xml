@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-09T11:10:21.132Z</updated>
+    <updated>2020-02-10T15:42:58.529Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -1160,6 +1160,61 @@ int main() {
 <li>通过指针<code>this</code>获取对象 =&gt; '*this'</li>
 <li><code>const</code>对象只能调用<code>const</code>的成员函数</li>
 </ul>
+<h3 id="第十二天">第十二天</h3>
+<ul>
+<li>操作符重载</li>
+</ul>
+<pre><code class="language-c++">// ++x
+void operator++() {
+	this-&gt;m_x++;
+	this-&gt;m_y++;
+}
+
+// x++
+void operator++(int) {
+	this-&gt;m_x++;
+	this-&gt;m_y++;
+}
+</code></pre>
+<ul>
+<li><code>a++</code>与<code>++a</code>运算符的汇编解析</li>
+</ul>
+<blockquote>
+<p>a++ 会返回a以前的值进行运算，运算完毕之后才会让a的值加1。【不能进行赋值】<br>
+++a 会直接让a的值加1，并且作为最新的a进行运算。【可以进行赋值】</p>
+</blockquote>
+<pre><code class="language-c++">int b = a++ + 8;
+// eax = a
+mov         eax,dword ptr [a]  
+// eax += 8
+add         eax,8  
+// b = eax [此时a的值没有发生改变]
+mov         dword ptr [b],eax  
+
+// ecx = a
+mov         ecx,dword ptr [a]  
+// ecx += 1
+add         ecx,1  
+// a = ecx [a++] 
+mov         dword ptr [a],ecx  
+
+
+int c = ++a + 8;
+// 先将a的值加1，然后覆盖a的值
+// eax = a
+mov         eax,dword ptr [a]  
+// eax += 1
+add         eax,1  
+// a = eax [a++] 
+mov         dword ptr [a],eax  
+
+// ecx = a [a = 9]
+mov         ecx,dword ptr [a]  
+// ecx += 8
+add         ecx,8  
+// c = exc
+mov         dword ptr [c],ecx 
+</code></pre>
 ]]></content>
     </entry>
     <entry>
