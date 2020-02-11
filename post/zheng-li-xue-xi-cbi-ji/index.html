@@ -74,7 +74,7 @@ getchar() 等待键盘输入。
           <img src="https://glve1027.github.io//post-images/zheng-li-xue-xi-cbi-ji.jpg" alt="整理C++笔记" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 29 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-01-28 · 31 min read</div>
           
             <a href="https://glve1027.github.io/tag/l65AawOOY" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -1236,6 +1236,92 @@ mov         ecx,dword ptr [a]
 add         ecx,8  
 // c = exc
 mov         dword ptr [c],ecx 
+</code></pre>
+<ul>
+<li>重载</li>
+</ul>
+<pre><code class="language-c++">// 操作符重载
+Point operator+(const Point &amp;p1, const Point &amp;p2) {
+	return Point(p1.m_x + p2.m_x, p1.m_y + p2.m_y);
+}
+
+// 重载 cout &lt;&lt; Point;
+ostream&amp; operator&lt;&lt;(ostream&amp; cout, const Point&amp; point) {
+	return cout &lt;&lt; &quot;(x: &quot; &lt;&lt; point.m_x &lt;&lt; &quot;, y: &quot; &lt;&lt; point.m_y &lt;&lt; &quot;)&quot;;
+}
+</code></pre>
+<ul>
+<li>字符串重载实战</li>
+<li>重写<code>String</code>类</li>
+</ul>
+<pre><code class="language-c++">// String.h
+#pragma once
+#include &lt;iostream&gt;
+using namespace std;
+
+class String {
+	friend ostream&amp; operator&lt;&lt; (ostream&amp;, const String&amp;);
+public:
+	String&amp; operator=(const char* cstring);
+	String&amp; operator=(const String &amp;string);
+	String(const String &amp;string);
+	String(const char* cstring);
+	~String();
+private:
+	char* m_cstring;
+	String&amp; assign(const char* cstring);
+};
+
+// String.cpp
+#include &quot;String.h&quot;
+
+String::String(const char* cstring) {
+	assign(cstring);
+}
+
+String::String(const String&amp; string) {
+	assign(string.m_cstring);
+}
+
+String::~String() {
+	assign(NULL);
+}
+
+String&amp; String::operator=(const String&amp; string) {
+	return assign(string.m_cstring);
+}
+
+String&amp; String::operator=(const char* cstring) {
+	return assign(cstring);
+}
+
+String&amp; String::assign(const char* cstring) {
+	// 如果指向一样的堆空间
+	if (this-&gt;m_cstring == cstring) return *this;
+
+	// 如果传入进来的cstring == NULL的话就会达到释放指针的效果
+	// 释放旧的字符串
+	if (this-&gt;m_cstring != NULL) {
+		cout &lt;&lt; &quot;operator=(const char* cstring) - delete[] String: &quot; &lt;&lt; this-&gt;m_cstring &lt;&lt; endl;
+		delete[] this-&gt;m_cstring;
+		this-&gt;m_cstring = NULL;
+	}
+	if (cstring != NULL) {
+		// 创建字符串空间
+		this-&gt;m_cstring = new char[strlen(cstring) + 1]{};
+		// copy赋值
+		strcpy(this-&gt;m_cstring, cstring);
+
+		cout &lt;&lt; &quot;operator=(const char* cstring) - new - String: &quot; &lt;&lt; cstring &lt;&lt; endl;
+	}
+
+	return *this;
+}
+
+ostream&amp; operator&lt;&lt; (ostream &amp; cout, const String &amp; string) {
+	if (string.m_cstring == NULL) { return cout; }
+	return cout &lt;&lt; string.m_cstring;
+}
 </code></pre>
 
         </div>
