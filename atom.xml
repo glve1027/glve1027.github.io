@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-11T15:58:01.378Z</updated>
+    <updated>2020-02-12T15:58:37.443Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -50,7 +50,72 @@ unsigned long long int a;
 <li>
 <p>signed代表有符号，包括正数、负数和0；unsigned代表无符号，只包括正数和0。比如，signed的取值范围是-32768<sub>32767，那么unsigned的取值范围是0</sub>65535</p>
 </li>
+<li>
+<p>输出格式占位符号</p>
+</li>
 </ul>
+<blockquote>
+<p><code>%d</code> = <code>带符号的十进制形式输出整数（正数不带+）</code><br>
+<code>%c</code> = <code>输出一个字符</code><br>
+<code>%s</code> = <code>输出一个或者多个字符</code></p>
+</blockquote>
+<ul>
+<li>
+<p><code>printf(&quot;The price is %4d.&quot;, 14);</code> =&gt; <code>4d</code>可能会有空格来控制宽度（从左边开始算宽度） 【<code>-4d</code>则会从右边开始控制宽度】</p>
+</li>
+<li>
+<p><code>printf(&quot;My height is %f&quot;, 179.95f);</code>默认会输出6位小数 【控制小数的位数<code>%8.2f</code> =&gt; <code>2位小数</code>，<code>宽度为8</code>】</p>
+</li>
+<li>
+<p>逗号表达式：<code>表达式1, 表达式2, … …, 表达式n</code> = 【从左到右的顺序，先计算表达式1，接着计算表达式2，...，最后计算表达式n，<code>整个逗号表达式的值是最后一个表达式的值</code>】</p>
+</li>
+<li>
+<p>数组的定义： <code>类型 数组名[数组个数]</code></p>
+</li>
+</ul>
+<blockquote>
+<p>数组的个数也可以是常量表达式<code>int a[3+4]</code>, 也可以是字符常量<code>int a['A']</code><br>
+<code>a = &amp;a[0]</code><br>
+<code>初始化: 类型 数组名[数组个数] = { 元素1，元素2 ...}</code> = <code>int a[2] = { 2, 3 }</code><br>
+<code>c语言中对数组的越界不会检查</code><br>
+当数组都赋值了，可以省略个数<code>int a[] = { 1, 2, 3 }</code>✅<br>
+<code>int a[3] = {1,2,3};</code> =&gt; <code>a是数组名，代表数组的地址，它是常量</code><br>
+二维数组<code>a[1][1]</code>中<code>a[0]、a[1]</code>也是数组，是一维数组，而且<code>a[0]、a[1]</code>就是数组名，因此<code>a[0]、a[1]</code>就代表着这个<code>一维数组的地址</code></p>
+</blockquote>
+<ul>
+<li><code>puts</code>函数的使用</li>
+</ul>
+<pre><code class="language-c">char name[] = &quot;gonghuan&quot;
+puts(name) // 从name的首地址开始一直输出到`\0`为止
+</code></pre>
+<ul>
+<li><code>scanf</code>函数</li>
+</ul>
+<pre><code class="language-c">char name[10];
+scanf(&quot;%s&quot;, name) // !! 这里不需要&amp;name 因为name就已经代表了数组的地址了
+</code></pre>
+<ul>
+<li><code>putchar</code>字符输出</li>
+</ul>
+<pre><code class="language-c">putchar(65) = A
+putchar('A') = A
+</code></pre>
+<ul>
+<li>指针的定义：<code>类名标识符 * 指针变量名</code></li>
+</ul>
+<pre><code class="language-c">int a = 10; // 定义一个int变量a
+int *p; // 定义一个指针类型p
+p = &amp;a; // 将变量a的地址赋值给指针变量p
+</code></pre>
+<ul>
+<li>指针赋值</li>
+</ul>
+<pre><code class="language-c">int a = 10;
+int *p = &amp;a; // 将变量a的地址复制给指针变量p
+*p = 9;      // 通过p存储的地址值，找到地址指向的具体指，将指修改为9, 同时a也就为9
+
+int value = *p; // *p的意思是：根据p值(即变量a的地址)访问对应的存储空间，并取出存储的内容(即取出变量a的值)，赋值给value
+</code></pre>
 ]]></content>
     </entry>
     <entry>
