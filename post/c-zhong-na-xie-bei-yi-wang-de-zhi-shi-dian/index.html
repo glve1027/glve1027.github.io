@@ -116,7 +116,8 @@ unsigned long long int a;
 <blockquote>
 <p><code>%d</code> = <code>带符号的十进制形式输出整数（正数不带+）</code><br>
 <code>%c</code> = <code>输出一个字符</code><br>
-<code>%s</code> = <code>输出一个或者多个字符</code></p>
+<code>%s</code> = <code>输出一个或者多个字符</code><br>
+<code>%p</code> = <code>地址内存</code></p>
 </blockquote>
 <ul>
 <li>
@@ -174,6 +175,23 @@ int *p = &amp;a; // 将变量a的地址复制给指针变量p
 *p = 9;      // 通过p存储的地址值，找到地址指向的具体指，将指修改为9, 同时a也就为9
 
 int value = *p; // *p的意思是：根据p值(即变量a的地址)访问对应的存储空间，并取出存储的内容(即取出变量a的值)，赋值给value
+</code></pre>
+<ul>
+<li>遍历数组</li>
+</ul>
+<pre><code class="language-c">int a[4] = { 1, 2, 3, 4 };
+    
+for (int i = 0; i &lt; 4 ; i++) {
+    printf(&quot;%p\n&quot;, &amp;a[i]);
+}
+    
+printf(&quot;====\n&quot;);
+    
+int *p = a;
+for (int i = 0 ; i &lt; 4; i++) {
+    printf(&quot;%p\n&quot;, p);
+    p +=1;
+}
 </code></pre>
 
         </div>
