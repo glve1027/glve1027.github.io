@@ -122,18 +122,18 @@ if (![[url absoluteString] hasSuffix:@&quot;/&quot;]) { url = [url URLByAppendin
 <li>在初始化<code>AFURLSessionManager</code>的时候，为了重新初始化<code>session</code>, 还存在一些之前的请求未完成，所以可以根据<code>Session</code>来获取相应的请求：</li>
 </ul>
 <pre><code class="language-objectivec">[self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        // 获取之前的请求
-        for (NSURLSessionDataTask *task in dataTasks) {
-            [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
-        }
+    // 获取之前的请求
+    for (NSURLSessionDataTask *task in dataTasks) {
+        [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
+    }
 
-        for (NSURLSessionUploadTask *uploadTask in uploadTasks) {
-            [self addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
-        }
+    for (NSURLSessionUploadTask *uploadTask in uploadTasks) {
+        [self addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
+    }
 
-        for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
-            [self addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
-        }
+    for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+        [self addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
+    }
 }];
 </code></pre>
 <ul>
@@ -152,7 +152,7 @@ if (![[url absoluteString] hasSuffix:@&quot;/&quot;]) { url = [url URLByAppendin
 <ul>
 <li>关闭自动KVO，手动触发</li>
 </ul>
-<pre><code>// 关闭KVO
+<pre><code class="language-objectivec">// 关闭KVO
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
     if ([AFHTTPRequestSerializerObservedKeyPaths() containsObject:key] {
         return NO;
