@@ -1,0 +1,398 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>学习优秀的iOS代码(AFNetworking) - Ghcoder</title>
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://glve1027.github.io//media/tailwind.css">
+<link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="学习优秀的iOS代码(AFNetworking) - Ghcoder - Atom Feed" href="https://glve1027.github.io//atom.xml">
+
+    
+
+  <meta name="description" content="学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。
+
+
+AFHTTPSessionManager
+
+
+如何在NS..." />
+  <meta property="og:title" content="学习优秀的iOS代码(AFNetworking) - Ghcoder">
+  <meta property="og:description" content="学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。
+
+
+AFHTTPSessionManager
+
+
+如何在NS..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking" />
+  <meta property="og:image" content="https://glve1027.github.io//post-images/xue-xi-you-xiu-de-ios-dai-ma-afnetworking.jpg">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="学习优秀的iOS代码(AFNetworking) - Ghcoder">
+  <meta name="twitter:description" content="学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。
+
+
+AFHTTPSessionManager
+
+
+如何在NS...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://glve1027.github.io//media/css/prism-synthwave84.css">
+  
+
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://glve1027.github.io/" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      Ghcoder
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          学习优秀的iOS代码(AFNetworking)
+        </h1>
+        
+          <img src="https://glve1027.github.io//post-images/xue-xi-you-xiu-de-ios-dai-ma-afnetworking.jpg" alt="学习优秀的iOS代码(AFNetworking)" class="block w-full mb-8">
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-02-15 · 3 min read</div>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <h2 id="学习优秀的代码总是能让我们得到不同的反思afnetworking一直作为网络请求的标杆很多ios开发者不知道nsurlsession但是他肯定知道afnetworking">学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。</h2>
+<!-- more -->
+<ul>
+<li><code>AFHTTPSessionManager</code></li>
+</ul>
+<blockquote>
+<p>如何在<code>NSURL</code>中添加<code>/</code>的字符：<br>
+添加<code>/</code>的原因：</p>
+</blockquote>
+<ol>
+<li><code>重定向</code> - <code>如果没有/就会重定向，这样会浪费带宽</code></li>
+<li>表示目录、信息的拼接</li>
+<li>SEO</li>
+</ol>
+<pre><code class="language-objectivec">NSURL *url = [NSURL URLWithString:@&quot;www.xxx.com&quot;];
+if (![[url absoluteString] hasSuffix:@&quot;/&quot;]) { url = [url URLByAppendingPathComponent:@&quot;&quot;]; }
+</code></pre>
+<ul>
+<li>配置文件的东西，都是统一写在父类<code>AFURLSessionManager</code>中</li>
+</ul>
+<pre><code class="language-objectivec">// 所有的子类需要创建的时候，是这样创建的
+- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration
+{
+    self = [super initWithSessionConfiguration:configuration]; // 统一在父类中配置
+    if (!self) {
+        return nil;
+    }
+    // ...
+}
+</code></pre>
+<ul>
+<li>在创建<code>NSURLSession</code>的时候，需要注意<code>delegateQueue</code>必须是串行的</li>
+</ul>
+<blockquote>
+<p>queue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue, in order to ensure the correct ordering of callbacks. If nil, the session creates a serial operation queue for performing all delegate method calls and completion handler calls.</p>
+</blockquote>
+<pre><code class="language-objectivec">_session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
+</code></pre>
+<ul>
+<li>在初始化<code>AFURLSessionManager</code>的时候，为了重新初始化<code>session</code>, 还存在一些之前的请求未完成，所以可以根据<code>Session</code>来获取相应的请求：</li>
+</ul>
+<pre><code class="language-objectivec">[self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        // 获取之前的请求
+        for (NSURLSessionDataTask *task in dataTasks) {
+            [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
+        }
+
+        for (NSURLSessionUploadTask *uploadTask in uploadTasks) {
+            [self addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
+        }
+
+        for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+            [self addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
+        }
+}];
+</code></pre>
+<ul>
+<li>请求头参数的封装：<code>只会有一份、并且是全局的、并且线程安全</code>代码如下：</li>
+</ul>
+<pre><code class="language-objectivec">static NSArray * AFHTTPRequestSerializerObservedKeyPaths() {
+    static NSArray *_AFHTTPRequestSerializerObservedKeyPaths = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _AFHTTPRequestSerializerObservedKeyPaths = @[NSStringFromSelector(@selector(allowsCellularAccess)), NSStringFromSelector(@selector(cachePolicy)), NSStringFromSelector(@selector(HTTPShouldHandleCookies)), NSStringFromSelector(@selector(HTTPShouldUsePipelining)), NSStringFromSelector(@selector(networkServiceType)), NSStringFromSelector(@selector(timeoutInterval))];
+    });
+
+    return _AFHTTPRequestSerializerObservedKeyPaths;
+}
+</code></pre>
+<ul>
+<li>关闭自动KVO，手动触发</li>
+</ul>
+<pre><code>// 关闭KVO
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
+    if ([AFHTTPRequestSerializerObservedKeyPaths() containsObject:key] {
+        return NO;
+    }
+
+    return [super automaticallyNotifiesObserversForKey:key];
+}
+
+// 手动触发KVO
+- (void)setCachePolicy:(NSURLRequestCachePolicy)cachePolicy {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
+    _cachePolicy = cachePolicy;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
+}
+</code></pre>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+        
+
+        
+          <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script type="application/javascript" src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script type="application/javascript">
+
+var options = {
+  shortname: 'https-glve1027-github-io',
+  apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+        
+      
+
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E4%BC%98%E7%A7%80%E7%9A%84%E4%BB%A3%E7%A0%81%E6%80%BB%E6%98%AF%E8%83%BD%E8%AE%A9%E6%88%91%E4%BB%AC%E5%BE%97%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84%E5%8F%8D%E6%80%9Dafnetworking%E4%B8%80%E7%9B%B4%E4%BD%9C%E4%B8%BA%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E6%A0%87%E6%9D%86%E5%BE%88%E5%A4%9Aios%E5%BC%80%E5%8F%91%E8%80%85%E4%B8%8D%E7%9F%A5%E9%81%93nsurlsession%E4%BD%86%E6%98%AF%E4%BB%96%E8%82%AF%E5%AE%9A%E7%9F%A5%E9%81%93afnetworking">学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://glve1027.github.io//media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://glve1027.github.io//media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+</body>
+
+</html>

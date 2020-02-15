@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-15T11:35:12.615Z</updated>
+    <updated>2020-02-15T11:41:01.309Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,104 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[学习优秀的iOS代码(AFNetworking)]]></title>
+        <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking</id>
+        <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking">
+        </link>
+        <updated>2020-02-15T11:35:32.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="学习优秀的代码总是能让我们得到不同的反思afnetworking一直作为网络请求的标杆很多ios开发者不知道nsurlsession但是他肯定知道afnetworking">学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。</h2>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="学习优秀的代码总是能让我们得到不同的反思afnetworking一直作为网络请求的标杆很多ios开发者不知道nsurlsession但是他肯定知道afnetworking">学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。</h2>
+<!-- more -->
+<ul>
+<li><code>AFHTTPSessionManager</code></li>
+</ul>
+<blockquote>
+<p>如何在<code>NSURL</code>中添加<code>/</code>的字符：<br>
+添加<code>/</code>的原因：</p>
+</blockquote>
+<ol>
+<li><code>重定向</code> - <code>如果没有/就会重定向，这样会浪费带宽</code></li>
+<li>表示目录、信息的拼接</li>
+<li>SEO</li>
+</ol>
+<pre><code class="language-objectivec">NSURL *url = [NSURL URLWithString:@&quot;www.xxx.com&quot;];
+if (![[url absoluteString] hasSuffix:@&quot;/&quot;]) { url = [url URLByAppendingPathComponent:@&quot;&quot;]; }
+</code></pre>
+<ul>
+<li>配置文件的东西，都是统一写在父类<code>AFURLSessionManager</code>中</li>
+</ul>
+<pre><code class="language-objectivec">// 所有的子类需要创建的时候，是这样创建的
+- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration
+{
+    self = [super initWithSessionConfiguration:configuration]; // 统一在父类中配置
+    if (!self) {
+        return nil;
+    }
+    // ...
+}
+</code></pre>
+<ul>
+<li>在创建<code>NSURLSession</code>的时候，需要注意<code>delegateQueue</code>必须是串行的</li>
+</ul>
+<blockquote>
+<p>queue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue, in order to ensure the correct ordering of callbacks. If nil, the session creates a serial operation queue for performing all delegate method calls and completion handler calls.</p>
+</blockquote>
+<pre><code class="language-objectivec">_session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
+</code></pre>
+<ul>
+<li>在初始化<code>AFURLSessionManager</code>的时候，为了重新初始化<code>session</code>, 还存在一些之前的请求未完成，所以可以根据<code>Session</code>来获取相应的请求：</li>
+</ul>
+<pre><code class="language-objectivec">[self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        // 获取之前的请求
+        for (NSURLSessionDataTask *task in dataTasks) {
+            [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
+        }
+
+        for (NSURLSessionUploadTask *uploadTask in uploadTasks) {
+            [self addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
+        }
+
+        for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+            [self addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
+        }
+}];
+</code></pre>
+<ul>
+<li>请求头参数的封装：<code>只会有一份、并且是全局的、并且线程安全</code>代码如下：</li>
+</ul>
+<pre><code class="language-objectivec">static NSArray * AFHTTPRequestSerializerObservedKeyPaths() {
+    static NSArray *_AFHTTPRequestSerializerObservedKeyPaths = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _AFHTTPRequestSerializerObservedKeyPaths = @[NSStringFromSelector(@selector(allowsCellularAccess)), NSStringFromSelector(@selector(cachePolicy)), NSStringFromSelector(@selector(HTTPShouldHandleCookies)), NSStringFromSelector(@selector(HTTPShouldUsePipelining)), NSStringFromSelector(@selector(networkServiceType)), NSStringFromSelector(@selector(timeoutInterval))];
+    });
+
+    return _AFHTTPRequestSerializerObservedKeyPaths;
+}
+</code></pre>
+<ul>
+<li>关闭自动KVO，手动触发</li>
+</ul>
+<pre><code>// 关闭KVO
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
+    if ([AFHTTPRequestSerializerObservedKeyPaths() containsObject:key] {
+        return NO;
+    }
+
+    return [super automaticallyNotifiesObserversForKey:key];
+}
+
+// 手动触发KVO
+- (void)setCachePolicy:(NSURLRequestCachePolicy)cachePolicy {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
+    _cachePolicy = cachePolicy;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[C中那些被遗忘的知识点：]]></title>
         <id>https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian</id>
