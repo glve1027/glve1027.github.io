@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-19T13:54:08.984Z</updated>
+    <updated>2020-02-20T12:24:42.911Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -12,8 +12,8 @@
     <rights>All rights reserved 2020, Ghcoder</rights>
     <entry>
         <title type="html"><![CDATA[学习优秀的iOS代码(AFNetworking)]]></title>
-        <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking</id>
-        <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking">
+        <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking/</id>
+        <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking/">
         </link>
         <updated>2020-02-15T11:35:32.000Z</updated>
         <summary type="html"><![CDATA[<h2 id="学习优秀的代码总是能让我们得到不同的反思afnetworking一直作为网络请求的标杆很多ios开发者不知道nsurlsession但是他肯定知道afnetworking">学习优秀的代码总是能让我们得到不同的反思，AFNetworking一直作为网络请求的标杆，很多iOS开发者不知道NSURLSession，但是他肯定知道AFNetworking。</h2>
@@ -106,12 +106,101 @@ if (![[url absoluteString] hasSuffix:@&quot;/&quot;]) { url = [url URLByAppendin
     [self didChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
 }
 </code></pre>
+<blockquote>
+<p>这里关于如何在配置选项中设置值的操作还是挺不错的，运用响应式的操作模式。【具体可以详见类<code>AFHTTPRequestSerializer</code>中的第377行左右，运用KVO设置属性值的操作】</p>
+</blockquote>
+<ul>
+<li>关于如何将<code>NSDictionary</code>的数据结构转化为<code>GET请求中需要拼接在URL中</code>/<code>POST请求中需要将请求放入的请求体中</code></li>
+</ul>
+<blockquote>
+<p>核心的将<code>NSDictionary</code>转化为<code>NSArray</code>的数据的函数：</p>
+</blockquote>
+<pre><code class="language-objectivec">NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
+    
+}
+</code></pre>
+<blockquote>
+<p>上面的函数中运用了递归的方式来处理参数，有以下几点是亮点：</p>
+</blockquote>
+<ol>
+<li>传入<code>NSDictionary</code>首先需要对key按照<code>ASCII</code>值进行排序，作者使用了<code>NSSortDescriptor</code>, 关于这个类的使用我下面给出一个范例。</li>
+<li>具体讲数组中的对象拼接城<code>NSString *</code>的时候，核心的处理转译等细节处理放在函数<code>AFPercentEscapedStringFromString</code>中 【运用这点功能，其实我们就能实现一个自定义的路由功能】</li>
+<li>这一点我有点没有想明白，作者为什么这里大量运用了<code>C语言函数</code>而不是<code>OC函数</code> 【！！不解】</li>
+<li>关于<code>URL</code>对象中是否存在<code>?</code>，这个细节将决定我们改如何拼接之前已经处理好的参数，这里如果是我来处理的话，就会直接通过字符串的功能，直接查找的<code>?</code>这个符号，但是作者却没有这样使用，作者是这样的判断的：</li>
+</ol>
+<pre><code class="language-objectivec">mutableRequest.URL.query ? @&quot;&amp;%@&quot; : @&quot;?%@&quot;, query
+</code></pre>
+<blockquote>
+<p>关于query的解释如下：This property contains the query string. Any percent-encoded characters are not unescaped. If the receiver does not conform to RFC 1808, this property contains nil. For example, in the URL http://www.example.com/index.php?key1=value1&amp;key2=value2, the query string is key1=value1&amp;key2=value2.</p>
+</blockquote>
+<ul>
+<li>关于<code>NSSortDescriptor</code>的使用，我写了个Demo:</li>
+</ul>
+<pre><code class="language-objectivec">// Person.h
+@interface Person : NSObject
+@property (strong, nonatomic) Salary *salary;
+@property (copy, nonatomic) NSString *firstName;
+@property (copy, nonatomic) NSString *lastName;
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last;
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last salary:(NSInteger)salary;
+@end
+
+// Person.m
+@implementation Person
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last {
+    Person *p = [Person new];
+    p.firstName = first;
+    p.lastName  = last;
+    return p;
+}
+
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last salary:(NSInteger)salary {
+    Person *p = [Person initWithFirstName:first lastName:last];
+    if (p != nil) {
+        Salary *s = [Salary new];
+        s.amount = salary;
+        p.salary = s;
+    }
+    return p;
+}
+
+- (NSString *)description {
+    return self.salary == nil ? [NSString stringWithFormat:@&quot;firstName:%@-lastName:%@&quot;, self.firstName, self.lastName] : [NSString stringWithFormat:@&quot;firstName:%@-lastName:%@-salary:%ld&quot;, self.firstName, self.lastName, (long)self.salary.amount];
+}
+@end
+
+// Salary.h
+@interface Salary : NSObject
+@property (nonatomic, assign) NSInteger amount;
+@end
+
+// Test
+NSMutableArray &lt;Person *&gt; *persons = [NSMutableArray new];
+[persons addObject:[Person initWithFirstName:@&quot;1&quot; lastName:@&quot;100&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;2&quot; lastName:@&quot;99&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;98&quot; lastName:@&quot;3&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;98&quot; lastName:@&quot;4&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;97`&quot; lastName:@&quot;4&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;96`&quot; lastName:@&quot;4&quot; salary:1]];
+[persons addObject:[Person initWithFirstName:@&quot;96`&quot; lastName:@&quot;4&quot; salary:2]];
+
+// 创建排序条件
+NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@&quot;firstName&quot; ascending:YES];
+NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@&quot;lastName&quot; ascending:NO];
+NSSortDescriptor *sd3 = [[NSSortDescriptor alloc] initWithKey:@&quot;salary.amount&quot; ascending:NO]; // 这里的key, 类似于KVO中的键值d观察，可以具体观察某个对象的属性值
+
+NSArray *sortedDatas = [persons sortedArrayUsingDescriptors:@[sd1, sd2, sd3]];
+
+for (id data in sortedDatas) {
+    NSLog(@&quot;%@&quot;, data);
+}
+</code></pre>
 ]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[C中那些被遗忘的知识点：]]></title>
-        <id>https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian</id>
-        <link href="https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian">
+        <id>https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian/</id>
+        <link href="https://glve1027.github.io/post/c-zhong-na-xie-bei-yi-wang-de-zhi-shi-dian/">
         </link>
         <updated>2020-02-08T15:13:26.000Z</updated>
         <summary type="html"><![CDATA[<p>因为最近在看C++的知识点，发现很多C中的知识点有点不记得了，又把书拿出来翻了一下，整理了一些容易忽略的知识点。</p>
@@ -401,8 +490,8 @@ typedef struct {
     </entry>
     <entry>
         <title type="html"><![CDATA[整理C++笔记]]></title>
-        <id>https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji</id>
-        <link href="https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji">
+        <id>https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji/</id>
+        <link href="https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji/">
         </link>
         <updated>2020-01-28T15:54:39.000Z</updated>
         <summary type="html"><![CDATA[<h2 id="学习c-的重要性不言而喻春节在家没事就整理了一下c的知识点">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</h2>
@@ -1651,8 +1740,8 @@ ostream&amp; operator&lt;&lt; (ostream &amp; cout, const String &amp; string) {
     </entry>
     <entry>
         <title type="html"><![CDATA[学习优秀的iOS代码(SDWebImage)]]></title>
-        <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi</id>
-        <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi">
+        <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi/</id>
+        <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi/">
         </link>
         <updated>2020-01-22T13:31:58.000Z</updated>
         <summary type="html"><![CDATA[<p><a href="https://github.com/SDWebImage/SDWebImage">SDWebImage</a>,一个iOS图片加载库，在iOS界，一直是标杆的存在，本篇博客不去讨论他的具体代码架构、设计、算法，而是从一个个小的tips来发现这些代码的闪光点。</p>
@@ -1774,8 +1863,8 @@ typedef NSMutableDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageMutable
     </entry>
     <entry>
         <title type="html"><![CDATA[DFS&BFS 解题心得]]></title>
-        <id>https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de</id>
-        <link href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de">
+        <id>https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de/</id>
+        <link href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de/">
         </link>
         <updated>2019-12-26T02:12:29.000Z</updated>
         <summary type="html"><![CDATA[<blockquote>
@@ -2040,8 +2129,8 @@ class Solution {
     </entry>
     <entry>
         <title type="html"><![CDATA[iOS多线程操作]]></title>
-        <id>https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo</id>
-        <link href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo">
+        <id>https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo/</id>
+        <link href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo/">
         </link>
         <updated>2019-12-18T07:39:14.000Z</updated>
         <summary type="html"><![CDATA[<p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
@@ -2066,8 +2155,8 @@ dispatch_sync(globalQueue, ^{ });
     </entry>
     <entry>
         <title type="html"><![CDATA[App主题换肤功能]]></title>
-        <id>https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng</id>
-        <link href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng">
+        <id>https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng/</id>
+        <link href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng/">
         </link>
         <updated>2019-12-17T16:19:47.000Z</updated>
         <summary type="html"><![CDATA[<p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>

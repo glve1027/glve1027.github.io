@@ -30,7 +30,7 @@ AFHTTPSessionManager
 
 如何在NS..." />
   <meta property="og:type" content="articles">
-  <meta property="og:url" content="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking" />
+  <meta property="og:url" content="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking/" />
   <meta property="og:image" content="https://glve1027.github.io//post-images/xue-xi-you-xiu-de-ios-dai-ma-afnetworking.jpg">
   <meta property="og:image:height" content="630">
   <meta property="og:image:width" content="1200">
@@ -43,7 +43,7 @@ AFHTTPSessionManager
 
 如何在NS...">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking">
+  <link rel="canonical" href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking/">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
@@ -71,9 +71,9 @@ AFHTTPSessionManager
           <img src="https://glve1027.github.io//post-images/xue-xi-you-xiu-de-ios-dai-ma-afnetworking.jpg" alt="学习优秀的iOS代码(AFNetworking)" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-02-15 · 3 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-02-15 · 6 min read</div>
           
-            <a href="https://glve1027.github.io/tag/9qkBdYSPa" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+            <a href="https://glve1027.github.io/tag/9qkBdYSPa/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
               Objective-C
             </a>
@@ -166,6 +166,95 @@ if (![[url absoluteString] hasSuffix:@&quot;/&quot;]) { url = [url URLByAppendin
     [self willChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
     _cachePolicy = cachePolicy;
     [self didChangeValueForKey:NSStringFromSelector(@selector(cachePolicy))];
+}
+</code></pre>
+<blockquote>
+<p>这里关于如何在配置选项中设置值的操作还是挺不错的，运用响应式的操作模式。【具体可以详见类<code>AFHTTPRequestSerializer</code>中的第377行左右，运用KVO设置属性值的操作】</p>
+</blockquote>
+<ul>
+<li>关于如何将<code>NSDictionary</code>的数据结构转化为<code>GET请求中需要拼接在URL中</code>/<code>POST请求中需要将请求放入的请求体中</code></li>
+</ul>
+<blockquote>
+<p>核心的将<code>NSDictionary</code>转化为<code>NSArray</code>的数据的函数：</p>
+</blockquote>
+<pre><code class="language-objectivec">NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
+    
+}
+</code></pre>
+<blockquote>
+<p>上面的函数中运用了递归的方式来处理参数，有以下几点是亮点：</p>
+</blockquote>
+<ol>
+<li>传入<code>NSDictionary</code>首先需要对key按照<code>ASCII</code>值进行排序，作者使用了<code>NSSortDescriptor</code>, 关于这个类的使用我下面给出一个范例。</li>
+<li>具体讲数组中的对象拼接城<code>NSString *</code>的时候，核心的处理转译等细节处理放在函数<code>AFPercentEscapedStringFromString</code>中 【运用这点功能，其实我们就能实现一个自定义的路由功能】</li>
+<li>这一点我有点没有想明白，作者为什么这里大量运用了<code>C语言函数</code>而不是<code>OC函数</code> 【！！不解】</li>
+<li>关于<code>URL</code>对象中是否存在<code>?</code>，这个细节将决定我们改如何拼接之前已经处理好的参数，这里如果是我来处理的话，就会直接通过字符串的功能，直接查找的<code>?</code>这个符号，但是作者却没有这样使用，作者是这样的判断的：</li>
+</ol>
+<pre><code class="language-objectivec">mutableRequest.URL.query ? @&quot;&amp;%@&quot; : @&quot;?%@&quot;, query
+</code></pre>
+<blockquote>
+<p>关于query的解释如下：This property contains the query string. Any percent-encoded characters are not unescaped. If the receiver does not conform to RFC 1808, this property contains nil. For example, in the URL http://www.example.com/index.php?key1=value1&amp;key2=value2, the query string is key1=value1&amp;key2=value2.</p>
+</blockquote>
+<ul>
+<li>关于<code>NSSortDescriptor</code>的使用，我写了个Demo:</li>
+</ul>
+<pre><code class="language-objectivec">// Person.h
+@interface Person : NSObject
+@property (strong, nonatomic) Salary *salary;
+@property (copy, nonatomic) NSString *firstName;
+@property (copy, nonatomic) NSString *lastName;
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last;
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last salary:(NSInteger)salary;
+@end
+
+// Person.m
+@implementation Person
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last {
+    Person *p = [Person new];
+    p.firstName = first;
+    p.lastName  = last;
+    return p;
+}
+
++ (instancetype)initWithFirstName:(NSString *)first lastName:(NSString *)last salary:(NSInteger)salary {
+    Person *p = [Person initWithFirstName:first lastName:last];
+    if (p != nil) {
+        Salary *s = [Salary new];
+        s.amount = salary;
+        p.salary = s;
+    }
+    return p;
+}
+
+- (NSString *)description {
+    return self.salary == nil ? [NSString stringWithFormat:@&quot;firstName:%@-lastName:%@&quot;, self.firstName, self.lastName] : [NSString stringWithFormat:@&quot;firstName:%@-lastName:%@-salary:%ld&quot;, self.firstName, self.lastName, (long)self.salary.amount];
+}
+@end
+
+// Salary.h
+@interface Salary : NSObject
+@property (nonatomic, assign) NSInteger amount;
+@end
+
+// Test
+NSMutableArray &lt;Person *&gt; *persons = [NSMutableArray new];
+[persons addObject:[Person initWithFirstName:@&quot;1&quot; lastName:@&quot;100&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;2&quot; lastName:@&quot;99&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;98&quot; lastName:@&quot;3&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;98&quot; lastName:@&quot;4&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;97`&quot; lastName:@&quot;4&quot;]];
+[persons addObject:[Person initWithFirstName:@&quot;96`&quot; lastName:@&quot;4&quot; salary:1]];
+[persons addObject:[Person initWithFirstName:@&quot;96`&quot; lastName:@&quot;4&quot; salary:2]];
+
+// 创建排序条件
+NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@&quot;firstName&quot; ascending:YES];
+NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@&quot;lastName&quot; ascending:NO];
+NSSortDescriptor *sd3 = [[NSSortDescriptor alloc] initWithKey:@&quot;salary.amount&quot; ascending:NO]; // 这里的key, 类似于KVO中的键值d观察，可以具体观察某个对象的属性值
+
+NSArray *sortedDatas = [persons sortedArrayUsingDescriptors:@[sd1, sd2, sd3]];
+
+for (id data in sortedDatas) {
+    NSLog(@&quot;%@&quot;, data);
 }
 </code></pre>
 
