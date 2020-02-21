@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-21T03:38:05.313Z</updated>
+    <updated>2020-02-21T11:53:48.445Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,110 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[重拾算法(Java)]]></title>
+        <id>https://glve1027.github.io/post/chong-shi-suan-fa-java/</id>
+        <link href="https://glve1027.github.io/post/chong-shi-suan-fa-java/">
+        </link>
+        <updated>2020-02-21T11:46:55.000Z</updated>
+        <summary type="html"><![CDATA[<p>最近买了几本算法方面的数，都是Java写的，其实算法重在思维方式，其实用什么语言去实现是无所谓的，之前都是用Swift来实现的，正好抽个机会学习一下Java。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>最近买了几本算法方面的数，都是Java写的，其实算法重在思维方式，其实用什么语言去实现是无所谓的，之前都是用Swift来实现的，正好抽个机会学习一下Java。</p>
+<!-- more -->
+<ul>
+<li>通过Java实现一个动态数组的功能：</li>
+</ul>
+<pre><code class="language-java">package com.gh;
+
+public class ArrayList {
+	/*
+	 * 元素的数量
+	 */
+	private int size;
+	
+	/*
+	 * 所有的元素
+	 */
+	private int[] elements;
+	
+	/*
+	 * 默认容量
+	 */
+	private static final int DEFAULT_CAPACITY = 10;
+	private static final int ELEMENT_NOT_FOUND = -1;
+	
+	/*
+	 * 构造函数
+	 */
+	public ArrayList(int capacity) {
+		elements = capacity &lt; DEFAULT_CAPACITY ? new int[DEFAULT_CAPACITY] : new int[capacity];
+	} 
+	
+	/*
+	 * 默认构造函数
+	 */
+	public ArrayList() {
+		this(DEFAULT_CAPACITY);
+	}
+	
+	/*
+	 * 数组的容量
+	 */
+	public int size() {
+		return size;
+	}
+	
+	/*
+	 * 数组是否为空
+	 */
+	public boolean isEmpty() {
+		return size == 0;
+	}
+	
+	/*
+	 * 根据index返回元素
+	 */
+	public int get(int index) {
+		if (index &lt; 0 || index &gt;= size) throw new IndexOutOfBoundsException(&quot;数组越界 Index = &quot; + index + &quot;, Size = &quot; + size);
+		return elements[index];
+	}
+	
+	/*
+	 * 设置新的值
+	 */
+	public int set(int index, int element) {
+		int old = get(index);
+		elements[index] = element;
+		return old;
+	}
+	
+	/*
+	 * 查看元素在数组中的位置
+	 */
+	public int indexOf(int elememt) {
+		for (int i = 0; i &lt; size; i++) {
+			if (elements[i] == elememt) return i;
+		}
+		return ELEMENT_NOT_FOUND;
+	}
+	
+	/*
+	 * 是否包含元素
+	 */
+	public boolean contains(int element) {
+		return indexOf(element) != ELEMENT_NOT_FOUND;
+	}
+	
+	/*
+	 * 清除所有的元素
+	 */
+	public void clear() {
+		size = 0;
+	}
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[学习优秀的iOS代码(AFNetworking)]]></title>
         <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-afnetworking/</id>
