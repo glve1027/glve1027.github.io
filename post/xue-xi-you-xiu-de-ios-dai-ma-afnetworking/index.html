@@ -71,7 +71,7 @@ AFHTTPSessionManager
           <img src="https://glve1027.github.io//post-images/xue-xi-you-xiu-de-ios-dai-ma-afnetworking.jpg" alt="学习优秀的iOS代码(AFNetworking)" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-02-15 · 6 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-02-15 · 9 min read</div>
           
             <a href="https://glve1027.github.io/tag/9qkBdYSPa/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -255,6 +255,89 @@ NSArray *sortedDatas = [persons sortedArrayUsingDescriptors:@[sd1, sd2, sd3]];
 
 for (id data in sortedDatas) {
     NSLog(@&quot;%@&quot;, data);
+}
+</code></pre>
+<ul>
+<li>通过<code>NSURLSession</code>和<code>NSURLRequest</code>来创建<code>NSURLSessionDataTask</code>的过程，<code>AFNetworking</code>做了一个版本兼容的处理，操作如下：</li>
+</ul>
+<pre><code class="language-objectivec">__block NSURLSessionDataTask *dataTask = nil;
+url_session_manager_create_task_safely(^{
+    dataTask = [self.session dataTaskWithRequest:request];
+});
+
+static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull block) {
+    if (block != NULL) {
+        if (NSFoundationVersionNumber &lt; NSFoundationVersionNumber_With_Fixed_5871104061079552_bug) {
+            // Fix of bug
+            // Open Radar:http://openradar.appspot.com/radar?id=5871104061079552 (status: Fixed in iOS8)
+            // Issue about:https://github.com/AFNetworking/AFNetworking/issues/2093
+            dispatch_sync(url_session_manager_creation_queue(), block);
+        } else {
+            block();
+        }
+    }
+}
+
+static dispatch_queue_t url_session_manager_creation_queue() {
+    static dispatch_queue_t af_url_session_manager_creation_queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        af_url_session_manager_creation_queue = dispatch_queue_create(&quot;com.alamofire.networking.session.manager.creation&quot;, DISPATCH_QUEUE_SERIAL);
+    });
+
+    return af_url_session_manager_creation_queue;
+}
+</code></pre>
+<blockquote>
+<p>因为<code>AFNetworking</code>的<code>taskIdentifier</code>和<code>回调代理</code>一一绑定的<br>
+首先这里创建队列以及操作的函数作者还是封装成了<code>static</code>的函数<br>
+可以看到这里是为了处理在iOS8以下版本下的一个bug，具体解释可以看这个<a href="https://github.com/AFNetworking/AFNetworking/issues/2093">issue</a>,解释如下：<br>
+Summary:<br>
+taskIdentifiers on an NSURLSessionDataTask should be unique per NSURLSession, as the documentation states. The attached projects demonstrates an issue where tasks that are created concurrently can end up with the same taskIdentifier.<br>
+Steps to Reproduce:</p>
+</blockquote>
+<ol>
+<li>Dispatch 100 data tasks on the default priority queue.</li>
+<li>Monitor the taskIdentifiers returned by the task.</li>
+<li>Observe that they are occasionally the same — likely, since the queue is concurrent, this is when two tasks end up getting created on different threads around the same time.<br>
+Expected Results:<br>
+Task Identifiers should be unique per NSURLSession, as the documentation states.<br>
+Actual Results:<br>
+Task Identifiers are not always unique. The popular AFNetworking framework depends on this uniqueness, and can end up calling incorrect completionHandlers.<br>
+Version:<br>
+iOS 7.1.1</li>
+</ol>
+<blockquote>
+<p>简单来说就是在通过并行的方式来创建task的时候，会偶尔出现<code>taskIdentifier</code>和之前的一模一样，这样就会导致之前的回调如果还没有回调回来，就会将之前那个回调强制remove掉</p>
+</blockquote>
+<ul>
+<li>回调代理<code>AFURLSessionManagerTaskDelegate</code>和task<code>NSURLSessionTask</code>形成绑定关系，但是这里有一点不是很确定【！！不确定，只是自己的猜测】</li>
+</ul>
+<blockquote>
+<p>作者这里并没有直接监听task对象的<code>countOfBytesReceived</code>/<code>countOfBytesSent</code>/<code>countOfBytesExpectedToSend</code>等等【我看之前有个版本的AF是直接监听task的这些属性值】，而是现在是直接创建了一个<code>NSProgress</code>对象，然后每次在代理回调的时候，赋值。<br>
+这里猜测，是因为有可能上传文件的<code>totalUnitCount</code>会一直发生变化，不是说起初设置了之后就不会再发生变化了。关于如何使用<code>NSProgess</code>,我写了个Demo,如下:</p>
+</blockquote>
+<pre><code class="language-objectivec">- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.progress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+    self.progress.totalUnitCount = 100;
+    [self.progress addObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event {
+    //self.progress.completedUnitCount += 10;// 这里就算超出了也没有问题，但是这里最好不要这么做，做一下判断
+    if (self.progress.completedUnitCount &lt; self.progress.totalUnitCount) {
+        self.progress.completedUnitCount = (self.progress.completedUnitCount + 10) &gt;= self.progress.totalUnitCount
+                                            ? self.progress.totalUnitCount
+                                            : self.progress.completedUnitCount + 10;
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary&lt;NSKeyValueChangeKey,id&gt; *)change context:(void *)context {
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(fractionCompleted))]) {
+        NSLog(@&quot;---&gt;%@&quot;, object);
+    }
 }
 </code></pre>
 
