@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-21T11:57:15.226Z</updated>
+    <updated>2020-02-22T11:16:06.481Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -382,6 +382,82 @@ iOS 7.1.1</li>
     }
 }
 </code></pre>
+<ul>
+<li><code>AFNetworking</code>如何实现一个简单的<code>工作流</code></li>
+</ul>
+<blockquote>
+<p>这里所谓的<code>工作流</code>,只是简单地顺序流程，例如：<code>流程A做完-&gt;流程B做完-&gt;流程C做完</code><br>
+具体的操作就是类<code>NSInputStream</code>流的操作：【具体参照AFNetworking多表单的发送中类<code>AFHTTPBodyPart</code>的操作】</p>
+</blockquote>
+<pre><code class="language-objectivec">- (BOOL)transitionToNextPhase {
+    // 保证在主线程操作
+    if (![[NSThread currentThread] isMainThread]) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self transitionToNextPhase];
+        });
+        return YES;
+    }
+
+    switch (_phase) {
+        case AFEncapsulationBoundaryPhase:
+            _phase = AFHeaderPhase; // 跳转的下一个流程
+            break;
+        case AFHeaderPhase:
+            [self.inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+            [self.inputStream open];
+            _phase = AFBodyPhase;  // 跳转的下一个流程
+            break;
+        case AFBodyPhase:
+            [self.inputStream close];
+            _phase = AFFinalBoundaryPhase;  // 跳转的下一个流程
+            break;
+        case AFFinalBoundaryPhase:
+        default:
+            _phase = AFEncapsulationBoundaryPhase;  // 跳转第一个流程，准备下一次开始流程
+            break;
+    }
+    _phaseReadOffset = 0;
+
+    return YES;
+}
+</code></pre>
+<blockquote>
+<p>那么关键来了，在什么时候，需要调用这个方法呢？</p>
+</blockquote>
+<pre><code class="language-objectivec">// 1. 初始化的时候
+- (instancetype)init {
+    //...xxx
+    [self transitionToNextPhase];
+    //...xxx
+}
+
+// 2. 关闭、错误的时候需要扭转状态
+// 这里的代码写的很巧妙
+// 枚举值如下
+/*
+typedef NS_ENUM(NSUInteger, NSStreamStatus) {
+    NSStreamStatusNotOpen = 0,
+    NSStreamStatusOpening = 1,
+    NSStreamStatusOpen = 2,
+    NSStreamStatusReading = 3,
+    NSStreamStatusWriting = 4,
+    NSStreamStatusAtEnd = 5,
+    NSStreamStatusClosed = 6,
+    NSStreamStatusError = 7
+};
+*/
+if ([self.inputStream streamStatus] &gt;= NSStreamStatusAtEnd) {
+    [self transitionToNextPhase];
+}
+
+// 3. 正常读完数据的时候需要扭转状态
+if (((NSUInteger)_phaseReadOffset) &gt;= [data length]) {
+    [self transitionToNextPhase];
+}
+</code></pre>
+<blockquote>
+<p>上面的扭转，写的是很巧妙，但是却不适用很复杂，多情况的扭转，类似状态机，但是还是值得借鉴。</p>
+</blockquote>
 ]]></content>
     </entry>
     <entry>
