@@ -16,21 +16,19 @@
 
   <meta name="description" content="最近买了几本算法方面的数，都是Java写的，其实算法重在思维方式，其实用什么语言去实现是无所谓的，之前都是用Swift来实现的，正好抽个机会学习一下Java。
 
+重拾算法（Java）
 
 通过Java实现一个动态数组的功能：
 
-package com.gh;
-
-p..." />
+package..." />
   <meta property="og:title" content="重拾算法(Java) - Ghcoder">
   <meta property="og:description" content="最近买了几本算法方面的数，都是Java写的，其实算法重在思维方式，其实用什么语言去实现是无所谓的，之前都是用Swift来实现的，正好抽个机会学习一下Java。
 
+重拾算法（Java）
 
 通过Java实现一个动态数组的功能：
 
-package com.gh;
-
-p..." />
+package..." />
   <meta property="og:type" content="articles">
   <meta property="og:url" content="https://glve1027.github.io/post/chong-shi-suan-fa-java/" />
   <meta property="og:image" content="https://glve1027.github.io//post-images/chong-shi-suan-fa-java.jpg">
@@ -39,12 +37,11 @@ p..." />
   <meta name="twitter:title" content="重拾算法(Java) - Ghcoder">
   <meta name="twitter:description" content="最近买了几本算法方面的数，都是Java写的，其实算法重在思维方式，其实用什么语言去实现是无所谓的，之前都是用Swift来实现的，正好抽个机会学习一下Java。
 
+重拾算法（Java）
 
 通过Java实现一个动态数组的功能：
 
-package com.gh;
-
-p...">
+package...">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://glve1027.github.io/post/chong-shi-suan-fa-java/">
 
@@ -74,7 +71,7 @@ p...">
           <img src="https://glve1027.github.io//post-images/chong-shi-suan-fa-java.jpg" alt="重拾算法(Java)" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-02-21 · 2 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-02-21 · 4 min read</div>
           
             <a href="https://glve1027.github.io/tag/vFrOaJHIB/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -85,12 +82,14 @@ p...">
         <div class="markdown mb-8" v-pre>
           <p>最近买了几本算法方面的数，都是Java写的，其实算法重在思维方式，其实用什么语言去实现是无所谓的，之前都是用Swift来实现的，正好抽个机会学习一下Java。</p>
 <!-- more -->
+<h2 id="重拾算法java">重拾算法（Java）</h2>
 <ul>
 <li>通过Java实现一个动态数组的功能：</li>
 </ul>
 <pre><code class="language-java">package com.gh;
 
-public class ArrayList {
+@SuppressWarnings(&quot;unchecked&quot;)
+public class ArrayList&lt;E&gt; {
 	/*
 	 * 元素的数量
 	 */
@@ -99,7 +98,7 @@ public class ArrayList {
 	/*
 	 * 所有的元素
 	 */
-	private int[] elements;
+	private E[] elements;
 	
 	/*
 	 * 默认容量
@@ -111,7 +110,7 @@ public class ArrayList {
 	 * 构造函数
 	 */
 	public ArrayList(int capacity) {
-		elements = capacity &lt; DEFAULT_CAPACITY ? new int[DEFAULT_CAPACITY] : new int[capacity];
+		elements = capacity &lt; DEFAULT_CAPACITY ? (E[]) new Object[DEFAULT_CAPACITY] : (E[]) new Object[capacity];
 	} 
 	
 	/*
@@ -138,16 +137,16 @@ public class ArrayList {
 	/*
 	 * 根据index返回元素
 	 */
-	public int get(int index) {
-		if (index &lt; 0 || index &gt;= size) throw new IndexOutOfBoundsException(&quot;数组越界 Index = &quot; + index + &quot;, Size = &quot; + size);
+	public E get(int index) {
+		checkIndex(index);
 		return elements[index];
 	}
 	
 	/*
 	 * 设置新的值
 	 */
-	public int set(int index, int element) {
-		int old = get(index);
+	public E set(int index, E element) {
+		E old = get(index);
 		elements[index] = element;
 		return old;
 	}
@@ -155,9 +154,20 @@ public class ArrayList {
 	/*
 	 * 查看元素在数组中的位置
 	 */
-	public int indexOf(int elememt) {
-		for (int i = 0; i &lt; size; i++) {
-			if (elements[i] == elememt) return i;
+	public int indexOf(E elememt) {
+		if (null == elememt) {
+			for (int i = 0; i &lt; size; i++) {
+				if (elements[i] == null) return i;
+			}
+	 	} else {
+			for (int i = 0; i &lt; size; i++) {
+				/**
+				 * 如果 elements[i] == element 这样比较的是两个内存地址是否相同
+				 * 这里用.equals不会影响对int的判断
+				 * 因为这里的element肯定不会为null, 可以放心使用
+				 */
+				if (elememt.equals(elements[i])) return i;
+			}
 		}
 		return ELEMENT_NOT_FOUND;
 	}
@@ -165,7 +175,7 @@ public class ArrayList {
 	/*
 	 * 是否包含元素
 	 */
-	public boolean contains(int element) {
+	public boolean contains(E element) {
 		return indexOf(element) != ELEMENT_NOT_FOUND;
 	}
 	
@@ -173,10 +183,102 @@ public class ArrayList {
 	 * 清除所有的元素
 	 */
 	public void clear() {
+		// 清除指针内存
+		for (int i = 0; i &lt; size; i++) {
+			elements[i] = null;
+		}
 		size = 0;
 	}
+	
+	/*
+	 * 添加元素
+	 */
+	public void add(E element) {
+		add(size, element);
+	}
+	
+	/*
+	 * 删除元素
+	 */
+	public E remove(int index) {
+		checkIndex(index);
+		E originValue = elements[index];
+//		for (int i = index+1; i &lt; size; i++) {
+//			elements[i-1] = elements[i];
+//		}
+		while(index + 1 &lt; size) {
+			elements[index] = elements[index+1];
+			index ++;
+		}
+		// 1. 先减减 2. 再清空数据
+		elements[--size] = null;
+		return originValue;
+	}
+	
+	/*
+	 * 在某和节点位置添加元素
+	 */
+	public void add(int index, E element) {
+		if (index &lt; 0 || index &gt; size) return;
+		
+		ensureCapacity(size + 1);
+		
+		for (int i = size - 1; i &gt;= index ; i--) {
+			elements[i + 1] = elements[i];
+		}
+		elements[index] = element;
+		size ++; 
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		string.append(&quot;size=&quot;).append(size).append(&quot;, [&quot;);
+		for (int i = 0; i &lt; size; i++) {
+			string.append(elements[i]);
+			if (i != size - 1) { 
+				string.append(&quot;, &quot;);
+			}
+		}
+		string.append(&quot;]&quot;);
+		return string.toString();
+	}
+	
+	/**
+	 * 保证要有的capacity的容量
+	 * @param capacity
+	 */
+	private void ensureCapacity(int capacity) {
+		int oldCapacity = elements.length;
+		if (oldCapacity &gt;= capacity) return;
+		// 新的容量是旧容量的1.5倍
+		int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);
+		
+		E[] newElements = (E[]) new Object[newCapacity];
+		for (int i = 0; i &lt; size; i++) {
+			newElements[i] = elements[i];
+		}
+		elements = newElements;
+		
+		System.out.println(oldCapacity + &quot;扩容为:&quot; + newCapacity);
+	}
+	
+	/*
+	 * 检测Index的合法性
+	 */
+	private void checkIndex(int index) {
+		if (index &lt; 0 || index &gt;= size) {
+			throw new IndexOutOfBoundsException(&quot;数组越界 Index = &quot; + index + &quot;, Size = &quot; + size);
+		}
+	} 
 }
 </code></pre>
+<blockquote>
+<p>查看<code>Java</code>源码中可以发现，它的数组动态扩容用的是<code>1.5</code>倍, 这里的写法可以借鉴一下，很赞：<code>int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);</code>运用位运算来来实现。</p>
+</blockquote>
+<ul>
+<li>发现一个一直以来自己的不会的一个<code>Vim</code>命令,看源码的时候，我们正常需要<code>gd</code>到某个函数的定义或者实现里面去，这里就可以使用<code>control+o</code>就可以返回回去了【记录一下】。</li>
+</ul>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -240,7 +342,14 @@ var dsqjs = new DisqusJS(options)
         </div>
       </div>
       <div class="post-toc-container">
-        
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%87%8D%E6%8B%BE%E7%AE%97%E6%B3%95java">重拾算法（Java）</a></li>
+</ul>
+</li>
+</ul>
+
       </div>
     </div>
 
