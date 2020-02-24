@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-23T10:47:53.518Z</updated>
+    <updated>2020-02-24T08:33:12.905Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -563,6 +563,35 @@ if (((NSUInteger)_phaseReadOffset) &gt;= [data length]) {
 <blockquote>
 <p>上面的扭转，写的是很巧妙，但是却不适用很复杂，多情况的扭转，类似状态机，但是还是值得借鉴。</p>
 </blockquote>
+<ul>
+<li>如果通过多表单上传信息</li>
+</ul>
+<pre><code class="language-objectivec">AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+manager.requestSerializer.timeoutInterval = 5;
+manager.requestSerializer.allowsCellularAccess = 1;
+AFJSONResponseSerializer *ser = [AFJSONResponseSerializer serializer];
+manager.responseSerializer = ser;
+ser.removesKeysWithNullValues = YES;// 遇到空值是否移除 null
+NSDictionary *dic = @{ @&quot;name&quot;: @&quot;gh&quot;, @&quot;age&quot;: @(12), @&quot;info&quot;: @{ @&quot;address&quot;: @&quot;hangzhou&quot; }};
+[manager POST:@&quot;https://www.baidu.com&quot; parameters:dic headers:@{} constructingBodyWithBlock:^(id&lt;AFMultipartFormData&gt;  _Nonnull formData) {
+    /*
+    // 在block中设置需要上传的文件
+    NSString *path = [[NSBundle mainBundle] pathForResource:@&quot;1&quot; ofType:@&quot;png&quot;];
+    // 将本地的数据拼接到formData中，指定name
+    [formData appendPartWithFileURL:[NSURL fileURLWithPath:path] name:@&quot;file&quot; error:nil];
+    
+    // 或者使用这个接口拼接 指定name和filename
+    NSData *picData = [NSData dataWithContentsOfFile:path];
+    [formData appendPartWithFileData:picData name:@&quot;image&quot; fileName:@&quot;image.jpg&quot; mimeType:@&quot;image/jpeg&quot;];
+    */
+} progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    
+} failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    
+}];
+</code></pre>
 ]]></content>
     </entry>
     <entry>
