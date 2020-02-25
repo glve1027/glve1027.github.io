@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-25T11:29:04.809Z</updated>
+    <updated>2020-02-25T11:29:41.330Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -11,7 +11,7 @@
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
     <entry>
-        <title type="html"><![CDATA[关于链表（LinkedList）解题套路]]></title>
+        <title type="html"><![CDATA[关于链表LinkedList解题心得]]></title>
         <id>https://glve1027.github.io/post/guan-yu-lian-biao-linkedlistjie-ti-tao-lu/</id>
         <link href="https://glve1027.github.io/post/guan-yu-lian-biao-linkedlistjie-ti-tao-lu/">
         </link>
