@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-25T11:29:41.330Z</updated>
+    <updated>2020-02-25T11:32:07.100Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -16,9 +16,9 @@
         <link href="https://glve1027.github.io/post/guan-yu-lian-biao-linkedlistjie-ti-tao-lu/">
         </link>
         <updated>2020-02-25T11:17:24.000Z</updated>
-        <summary type="html"><![CDATA[<p>##关于链表，近期在刷题的时候发现，它还是有操作的套路可言的，不见得所有的题目都能套上模板，但是已经能解决60-70%的链表体型了。套路模板如下：</p>
+        <summary type="html"><![CDATA[<p>关于链表，近期在刷题的时候发现，它还是有操作的套路可言的，不见得所有的题目都能套上模板，但是已经能解决60-70%的链表体型了。套路模板如下：</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>##关于链表，近期在刷题的时候发现，它还是有操作的套路可言的，不见得所有的题目都能套上模板，但是已经能解决60-70%的链表体型了。套路模板如下：</p>
+        <content type="html"><![CDATA[<p>关于链表，近期在刷题的时候发现，它还是有操作的套路可言的，不见得所有的题目都能套上模板，但是已经能解决60-70%的链表体型了。套路模板如下：</p>
 <!-- more -->
 <ol>
 <li>入参给你个<code>ListNode</code>, 也可以有其他参数，根据条件返回他指定类型的链表。</li>
