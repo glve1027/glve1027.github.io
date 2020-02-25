@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-24T08:33:12.905Z</updated>
+    <updated>2020-02-25T11:29:04.809Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,251 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[关于链表（LinkedList）解题套路]]></title>
+        <id>https://glve1027.github.io/post/guan-yu-lian-biao-linkedlistjie-ti-tao-lu/</id>
+        <link href="https://glve1027.github.io/post/guan-yu-lian-biao-linkedlistjie-ti-tao-lu/">
+        </link>
+        <updated>2020-02-25T11:17:24.000Z</updated>
+        <summary type="html"><![CDATA[<p>##关于链表，近期在刷题的时候发现，它还是有操作的套路可言的，不见得所有的题目都能套上模板，但是已经能解决60-70%的链表体型了。套路模板如下：</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>##关于链表，近期在刷题的时候发现，它还是有操作的套路可言的，不见得所有的题目都能套上模板，但是已经能解决60-70%的链表体型了。套路模板如下：</p>
+<!-- more -->
+<ol>
+<li>入参给你个<code>ListNode</code>, 也可以有其他参数，根据条件返回他指定类型的链表。</li>
+<li>需要临界值的判断。</li>
+<li>（可以建立一个dummp节点），为了简化操作</li>
+<li>遍历循环 【4.1: 先报值保留下来  4.2:迭代】</li>
+<li>返回<code>dummp.next</code>节点</li>
+</ol>
+<pre><code class="language-java">public ListNode xx(ListNode head, int val) {
+        if (head == null) { return head; } // 如第二点
+        // 这里是个假数据，简化判断用的 - 如第三点
+        ListNode dummy = new ListNode(-1);
+        ListNode node = dummy;
+        while (head != null) {
+            // 先把值保留下来 - 如4.1
+            ListNode temp = head;
+            // 在迭代 - 如4.2
+            head = head.next;
+            // 也可以根据条件提前返回
+
+            if (temp.val != val) {
+                node.next = temp;
+                temp.next = null;
+
+                node = node.next;
+            }
+        }
+        return dummy.next; // 如5
+    }
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://glve1027.github.io//post-images/1582629524044.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-java">class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null) { return head; }
+        // 这里是个假数据，简化判断用的
+        ListNode dummy = new ListNode(-1);
+        ListNode node = dummy;
+        int lastValue = -1;
+        boolean first = true;
+        while (head != null) {
+            // 先把值保留下来
+            ListNode temp = head;
+            // 在迭代
+            head = head.next;
+
+            if (first || lastValue != temp.val) {
+                node.next = temp;
+                temp.next = null;
+                if (first) { first = false; }
+
+                lastValue = temp.val;
+                node = node.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://glve1027.github.io//post-images/1582629779038.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-java">/**
+     * LeetCode 203
+     * @param head
+     * @param val
+     * @return
+     */
+    public ListNode removeElements(ListNode head, int val) {
+        if (head == null) { return head; }
+        // 这里是个假数据，简化判断用的
+        ListNode dummy = new ListNode(-1);
+        ListNode node = dummy;
+        while (head != null) {
+            // 先把值保留下来
+            ListNode temp = head;
+            // 在迭代
+            head = head.next;
+
+            if (temp.val != val) {
+                node.next = temp;
+                temp.next = null;
+
+                node = node.next;
+            }
+        }
+        return dummy.next;
+    }
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://glve1027.github.io//post-images/1582629898087.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-java">/**
+     * LeetCode 206 翻转链表 - 利用之前节点的值重新创建节点拼接
+     * @param head
+     * @return
+     */
+    public ListNode reverseList(ListNode head) {
+        if (head == null) { return null; }
+        ListNode resultNode = null;
+        while (head != null) {
+            if (resultNode == null) {
+                resultNode = new ListNode(head.val);
+            } else {
+                ListNode temp = new ListNode(head.val);
+                temp.next = resultNode;
+
+                resultNode = temp;
+            }
+            head = head.next;
+        }
+        return resultNode;
+    }
+
+    /**
+     * LeetCode 206 翻转链表 - 不重新创建节点
+     * @param head
+     * @return
+     */
+    public ListNode reverseList_01(ListNode head) {
+        if (head == null || head.next == null) return head;
+
+        ListNode resultNode = null;
+        while (head != null) {
+            ListNode temp = head;
+
+            head = head.next;
+
+            if (resultNode == null) {
+                temp.next = null;
+                resultNode = temp;
+            } else {
+                temp.next = resultNode;
+                resultNode = temp;
+            }
+        }
+        return resultNode;
+    }
+
+    /**
+     * LeetCode 206
+     * @param head
+     * @return
+     */
+    public ListNode reverseList_02(ListNode head) {
+        if (head == null || head.next == null) { return head; }
+
+        ListNode newHead = null;
+        while (head != null) {
+            ListNode temp = head.next;
+
+            head.next = newHead;
+            newHead = head;
+
+            head = temp;
+        }
+        return newHead;
+    }
+    /**
+     * LeetCode 206 递归的解法
+     * @param head
+     * @return
+     */
+    public ListNode reverseList_03(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode newNode = reverseList_03(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newNode;
+    }
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://glve1027.github.io//post-images/1582629978222.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-java">/**
+     * LeetCode 237 删除一个节点
+     * @param node
+     */
+    public void _237_deleteNode(ListNode node) {
+        if (node.next == null) {
+            node = null;
+        } else {
+            node.val = node.next.val;
+            node.next = node.next.next;
+        }
+    }
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://glve1027.github.io//post-images/1582629595539.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-java">class Solution {
+    public ListNode middleNode(ListNode head) {
+        if (head == null || head.next == null) { return head; }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (fast != null) {
+            if (fast.next == null) { return slow.next; }
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://glve1027.github.io//post-images/1582629688771.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-java"> /**
+     * LeetCode 141 判断链表是否存在环
+     * @param head
+     * @return
+     */
+    public boolean _141_hasCycle(ListNode head) {
+        if (null == head || null == head.next) { return false; }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (slow != null &amp;&amp; fast != null) {
+            if (slow.equals(fast)) return true;
+            if (fast.next == null) { return false; }
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return false;
+    }
+
+    /**
+     * LeetCode 141 配合HashMap解题
+     * @param head
+     * @return
+     */
+    public boolean _141_hasCycle_01(ListNode head) {
+        if (null == head || null == head.next) { return false; }
+        HashMap&lt;ListNode, Integer&gt; map = new HashMap&lt;&gt;();
+
+        while (head != null) {
+            if (map.containsKey(head)) { return true; }
+            map.put(head, 1);
+            head = head.next;
+        }
+
+        return false;
+    }
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[重拾算法(Java)]]></title>
         <id>https://glve1027.github.io/post/chong-shi-suan-fa-java/</id>
