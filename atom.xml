@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-27T10:07:39.648Z</updated>
+    <updated>2020-02-29T15:36:07.322Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,117 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[都已经iOS13了，UICollectionView应该这么写了！！]]></title>
+        <id>https://glve1027.github.io/post/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao/</id>
+        <link href="https://glve1027.github.io/post/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao/">
+        </link>
+        <updated>2020-02-29T15:31:38.000Z</updated>
+        <summary type="html"><![CDATA[<p>最近看到<a href="https://www.raywenderlich.com/">ios ray</a>一篇关于iOS新特性的一篇文章，感觉还是挺有收获的，以此记录一下，iOS13 新出的一些关于<code>UICollectionView</code>最新的API使用的问题：</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>最近看到<a href="https://www.raywenderlich.com/">ios ray</a>一篇关于iOS新特性的一篇文章，感觉还是挺有收获的，以此记录一下，iOS13 新出的一些关于<code>UICollectionView</code>最新的API使用的问题：</p>
+<!-- more -->
+<h3 id="1-概念">1. 概念</h3>
+<blockquote>
+<p>iOS13, 重新梳理的关于<code>CollectionView</code>的一些概念性的东西，我觉得这个是非常核心的以此重构设计。现在整个<code>UICollectionView</code>分为下面三级结构: <code>Section &gt; Group &gt; Item</code> (层次以此减小，解释：一个<code>Section</code>包含一个或者多个<code>Group</code>, 一个<code>Group</code>包含多个<code>Item</code>)</p>
+</blockquote>
+<h3 id="2-关于如何设置比例尺寸">2. 关于如何设置比例，尺寸</h3>
+<blockquote>
+<p>其实这个问题，还是挺重要的，它可以节省很多不必要的逻辑和代码判断，这边引入了一个<code>NSCollectionLayoutDimension</code>, 通过类的实例化，可以实现三种尺寸：</p>
+</blockquote>
+<ol>
+<li>absolute 【绝对尺寸】</li>
+<li>estimated 【这是一个预估的尺寸，会更加内容实际的尺寸，会变化】</li>
+<li>fractionalWidth 【尺寸和宽度的比例，有效值0~1，例如0.2，就是这个尺寸，是<code>父层级</code>宽度的0.2倍，！！注意这里不是屏幕尺寸，而是父层级】</li>
+</ol>
+<ul>
+<li>结合上面两个，配置<code>UICollectionViewLayout</code>用的是一个最新的子类<code>UICollectionViewCompositionalLayout</code></li>
+</ul>
+<pre><code class="language-swift">// Swift版本
+func configureLayout() -&gt; UICollectionViewCompositionalLayout {
+    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2), heightDimension: .fractionalHeight(1.0))
+    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+    item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 1, bottom: 2, trailing: 1)
+    
+    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.2))
+    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+    
+    let section = NSCollectionLayoutSection(group: group)
+    return UICollectionViewCompositionalLayout(section: section)
+}
+</code></pre>
+<pre><code class="language-objectivec">// OC版本
+- (UICollectionViewCompositionalLayout *)configureLayout {
+    NSCollectionLayoutSize *itemSize = [NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:0.2] heightDimension:[NSCollectionLayoutDimension fractionalHeightDimension:1.0]];
+    NSCollectionLayoutItem *item = [NSCollectionLayoutItem itemWithLayoutSize:itemSize];
+    item.contentInsets = NSDirectionalEdgeInsetsMake(5, 5, 5, 5);
+
+    NSCollectionLayoutSize *groupSize = [NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:1.0] heightDimension:[NSCollectionLayoutDimension fractionalWidthDimension:0.2]];
+    NSCollectionLayoutGroup *group = [NSCollectionLayoutGroup horizontalGroupWithLayoutSize:groupSize subitems:@[item]];
+    
+    NSCollectionLayoutSection *section = [NSCollectionLayoutSection sectionWithGroup:group];
+    
+    return [[UICollectionViewCompositionalLayout alloc] initWithSection:section];
+}
+</code></pre>
+<h3 id="3-使用">3. 使用</h3>
+<blockquote>
+<p>关于使用，iOS这次摒弃了使用代理的方式来进行配置，而是创建一个新对象，持有<code>UICollectionView</code>，返回<code>Block</code>给用户来配置的方式，这样确实简便很多，看代码：</p>
+</blockquote>
+<pre><code class="language-swift">// Swift版本
+func configureDatasource() {
+        collectionDataSource = UICollectionViewDiffableDataSource&lt;Section, Int&gt;(collectionView: self.collectionView) {
+            (collect, indexPath, number) -&gt; UICollectionViewCell? in
+            
+            guard let cell = collect.dequeueReusableCell(withReuseIdentifier: NumberCell.reuseIdentifier, for: indexPath) as? NumberCell else {
+                fatalError(&quot;Cannot create new cell&quot;)
+            }
+            cell.label.text = number.description
+            return cell
+        }
+        
+        var initialSnapshot = NSDiffableDataSourceSnapshot&lt;Section, Int&gt;()
+        initialSnapshot.appendSections([.main])
+        initialSnapshot.appendItems(Array(1...100), toSection: .main)
+        
+        collectionDataSource.apply(initialSnapshot, animatingDifferences: false)
+    }
+</code></pre>
+<pre><code class="language-objectivec">// OC版本
+- (void)configureDatasource {
+    NSDiffableDataSourceSnapshot *initialSnapshot = [NSDiffableDataSourceSnapshot new];
+    [initialSnapshot appendSectionsWithIdentifiers:@[@&quot;main&quot;]];
+    
+    NSMutableArray *datas = [NSMutableArray new];
+    for (int i = 0 ; i &lt; 100; i++) {
+        [datas addObject:[NSNumber numberWithInt:i]];
+    }
+    [initialSnapshot appendItemsWithIdentifiers:[datas copy]];
+    
+    [self.dataSource applySnapshot:initialSnapshot animatingDifferences:NO completion:nil];
+}
+
+- (UICollectionViewDiffableDataSource&lt;NSString *,NSNumber *&gt; *)dataSource {
+    if (_dataSource == nil) {
+        _dataSource = [[UICollectionViewDiffableDataSource alloc] initWithCollectionView:self.collectionView cellProvider:^UICollectionViewCell * _Nullable(UICollectionView * _Nonnull collect, NSIndexPath * _Nonnull index, id _Nonnull obj) {
+            
+            NumberCell *cell = [collect dequeueReusableCellWithReuseIdentifier:NSStringFromClass([NumberCell class]) forIndexPath:index];
+            cell.label.text = [obj description];
+            
+            return cell;
+        }];
+    }
+    return _dataSource;
+}
+</code></pre>
+<h3 id="3-关于类nsdiffabledatasourcesnapshot的一些理解">3. 关于类NSDiffableDataSourceSnapshot的一些理解：</h3>
+<blockquote>
+<p>就相当于装饰器模式一样，对同一份数据源，我们可以经过不同的加工操作，得到我们想要的数据。<br>
+这样做的另一个操作，就是我们不需要，把这些耗时的操作，放到需要的数据的时候才去处理。<br>
+第三部分就是关于名字叫Diff，我猜想对于同一份数据，在内存尽量小的前提下，能够高效的处理数据【！！猜测】</p>
+</blockquote>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[被遗忘的Git命令参数]]></title>
         <id>https://glve1027.github.io/post/bei-yi-wang-de-git-ming-ling-can-shu/</id>
@@ -2882,212 +2993,6 @@ dispatch_barrier_async(globalQueue, ^{ });
 // 对于&quot;读&quot;的操作, 同步的获取值
 dispatch_sync(globalQueue, ^{ });
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[App主题换肤功能]]></title>
-        <id>https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng/</id>
-        <link href="https://glve1027.github.io/post/app-zhu-ti-huan-fu-gong-neng/">
-        </link>
-        <updated>2019-12-17T16:19:47.000Z</updated>
-        <summary type="html"><![CDATA[<p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。</p>
-<!-- more -->
-<h2 id="主题皮肤切换模块">主题皮肤切换模块</h2>
-<h3 id="gcttheme配置篇">GCTTheme配置篇</h3>
-<ul>
-<li>调用<code>GCTThemeManager</code>之前需要注册配置数据, 调用的时机目前是在<code>didFinishLaunchingWithOptions</code>的时候 （这个后期可以修改！！）</li>
-</ul>
-<pre><code class="language-objectivec">// 1. GCTThemeSwitchObject 控制开关的类，灵活控制开关就可以配置这个类 （面向协议）
-GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
-[switchObj setGCTThemeSwitch:YES];
-// 2. GCTThemeData 数据源的类，目前只读取本地数据，后期远程数据只需要配置它（面向协议）
-[[GCTThemeManager sharedInstanceWithThemeData:[GCTThemeData new]] switchBaseOn:switchObj];
-</code></pre>
-<h3 id="gcttheme使用篇">GCTTheme使用篇</h3>
-<ul>
-<li>方法1：如果要修改的控件是<strong>UIView或者是它的子类</strong>并且这个<strong>UIView不等于nil</strong>，可以直接调用方法</li>
-</ul>
-<pre><code class="language-objectivec">- (void)configSkinWithModule:(GCTThemeModuleTypes)module skinDatas:(NSDictionary&lt;NSString *, NSString *&gt; *)skinDatas;
-</code></pre>
-<ul>
-<li>方法2：如果上面的条件有其中一个不满足，可以直接调用单例<code>GCTThemeManager</code></li>
-</ul>
-<pre><code class="language-objectivec">// 需要配置皮肤替换功能的，图片获取需要 1. moduleName  2. imgKey
-- (UIImage *)getImageByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
-- (NSString *)getImageNameByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
-// 需要配置皮肤替换功能的，颜色获取需要 1. moduleName  2. colorKey
-- (UIColor *)getColorByKey:(NSString *)colorKey from:(GCTThemeModuleTypes)module;
-// 需要配置皮肤替换功能的，文字获取需要 1. moduleName  2. titleKey
-- (NSString *)getTitleByKey:(NSString *)titleKey from:(GCTThemeModuleTypes)module;
-</code></pre>
-<h4 id="实际使用情况">实际使用情况</h4>
-<ul>
-<li>直接配置TabBarController图片、文字。【<strong>因为tabBarItem默认是懒加载的，所以只能通过GCTThemeManager去实现</strong>】</li>
-</ul>
-<pre><code class="language-objectivec">navController.tabBarItem.title = [[GCTThemeManager sharedInstance] getTitleByKey:model.titleKey from:GCTThemeModuleTypeHomeTabbar];
-navController.tabBarItem.image = [UIImage imageMakeWithName:model.imageName type:@&quot;png&quot;];
-NSString *imageName = [[GCTThemeManager sharedInstance] getImageNameByKey:model.imageSelectedKey from:GCTThemeModuleTypeHomeTabbar];
-navController.tabBarItem.selectedImage = [[UIImage imageMakeWithName:imageName type:@&quot;png&quot;] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-</code></pre>
-<ol>
-<li><strong>在默认情况下，使用的是背景色</strong>。</li>
-<li><strong>在春节皮肤的配置下使用的是图片</strong> 【这里可以以此类推，某种皮肤下面使用的属性1，在另一种皮肤下使用的是属性2，因为当找不到对应的属性值的时候返回nil，也就是不实现】</li>
-</ol>
-<pre><code class="language-objectivec">self.tipsView.homeBG.image = [[GCTThemeManager sharedInstance] getImageByKey:@&quot;home_wifi_scaning_unconnected&quot; from:GCTThemeModuleTypeHomeWifi];
-self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@&quot;home_wifi_found_scaning&quot; from:GCTThemeModuleTypeHomeWifi];
-</code></pre>
-<h3 id="gcttheme原理篇">GCTTheme原理篇</h3>
-<ul>
-<li>GCTThemeSwitchObject遵循的协议</li>
-</ul>
-<pre><code class="language-objectivec">@protocol GCTThemeSwitchProtocol &lt;NSObject&gt;
-
-- (void)setGCTThemeSwitch:(BOOL)isOpen;
-- (BOOL)GCTThemeSwitchIsOpen;
-
-@end
-</code></pre>
-<ul>
-<li>数据源GCTThemeData遵循的协议</li>
-</ul>
-<pre><code class="language-objectivec">typedef enum : NSUInteger {
-    GCTThemeDefaultData,
-    GCTThemeFestivalData
-} GCTThemeDataTypes;
-
-NS_ASSUME_NONNULL_BEGIN
-
-@protocol GCTThemeDataProtocol &lt;NSObject&gt;
-
-// Getter Method
-- (NSDictionary *)skinDataFor:(GCTThemeDataTypes)themeType;
-
-// Setter Method
-- (void)setSkinData:(NSDictionary *)data for:(GCTThemeDataTypes)themeType;
-
-@end
-</code></pre>
-<ul>
-<li><strong>GCTThemeManager核心代码</strong></li>
-</ul>
-<pre><code class="language-objectivec">- (NSString *)findResourceBy:(NSString *)key from:(GCTThemeModuleTypes)module with:(NSString *)subKey {
-    // 切换数据
-    NSDictionary *resourcesData = self.switchIsOpen ? self.tempSkinData : self.skinData;
-    NSString *moduleString = [self convertThemeType2String:module];
-    if (moduleString == nil || [moduleString isEqualToString:@&quot;&quot;] || resourcesData == nil || ![resourcesData.allKeys containsObject:moduleString]) return nil;
-    NSDictionary *moduleDic = resourcesData[moduleString];
-    if (![moduleDic.allKeys containsObject:subKey]) { return nil; }
-    NSDictionary *Dic = moduleDic[subKey];
-    if (![Dic.allKeys containsObject:key]) { return nil; }
-    return Dic[key];
-}
-</code></pre>
-<h3 id="测试篇">测试篇</h3>
-<ul>
-<li>配置以及Mock数据</li>
-</ul>
-<pre><code class="language-objectivec">- (void)setUp {
-    self.themeData = [GCTThemeData new];
-    // Mock Data
-    [self.themeData setSkinData:@{@&quot;home_tabbar&quot;: @{@&quot;images&quot;: @{@&quot;image_home_button_selected&quot;: @&quot;Home_Selected&quot;,
-                                                                 @&quot;image_video_button_selected&quot;: @&quot;Provider_Selected&quot;,
-                                                                 @&quot;image_discovery_button_selected&quot;: @&quot;Discovery_Selected&quot;,
-                                                                 @&quot;image_mine_button_selected&quot;: @&quot;Mine_Selected&quot;}}} for:GCTThemeDefaultData];
-    [self.themeData setSkinData:@{@&quot;home_middle&quot;: @{@&quot;colors&quot;: @{@&quot;color_before_background&quot;: @&quot;#cccccc&quot;},
-                                                    @&quot;values&quot;: @{@&quot;value_home_title&quot;: @&quot;测试&quot;}
-                                                    }} for:GCTThemeFestivalData];
-    
-    
-    // Mock Switch
-    self.switchObject = [GCTThemeSwitchObject new];
-    [self.switchObject setGCTThemeSwitch:NO];
-    
-    self.manager = [GCTThemeManager sharedInstanceWithThemeData:self.themeData];
-    [self.manager switchBaseOn:self.switchObject];
-}
-
-/*
- ** 测试是否为单例
- */
-- (void)testGCTThemeManagerIsSingle {
-    NSMutableArray *managers = [NSMutableArray array];
-    
-    for (int i = 0; i &lt; 3; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            GCTThemeManager *tempManager = [[GCTThemeManager alloc] init];
-            [managers addObject:tempManager];
-        });
-    }
-   
-    [managers enumerateObjectsUsingBlock:^(GCTThemeManager *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        XCTAssertEqual(self.manager, obj, @&quot;GCTThemeManager is not single&quot;);
-    }];
-}
-
-/*
- ** 测试开关
- */
-- (void)testGCTThemeSwitch {
-    XCTAssertFalse(self.manager.switchIsOpen, &quot;default switch is closed&quot;);
-    
-    [self.switchObject setGCTThemeSwitch:YES];
-    [self.manager switchBaseOn:self.switchObject];
-    XCTAssertTrue(self.manager.switchIsOpen, &quot;switch is open&quot;);
-}
-
-/*
- ** 初始化后数据是否正确
- */
-- (void)testGCTThemeInitNoMockDataIsNotNil {
-    XCTAssertNotNil(self.manager.skinData, &quot;default data is not to be nil&quot;);
-    XCTAssertTrue(self.manager.skinData.count != 0, &quot;default data is not to be nil&quot;);
-    XCTAssertNotNil(self.manager.tempSkinData, &quot;temp data is not to be nil&quot;);
-    XCTAssertTrue(self.manager.tempSkinData.count != 0, &quot;temp data is not be nil&quot;);
-}
-
-/*
- ** 通过key来获取图片
- */
-- (void)testGCTThemeGetImageByKey {
-    XCTAssertNil([self.manager getImageByKey:@&quot;&quot; from:GCTThemeModuleTypeHomeTabbar], &quot;key is nil image should be nil&quot;);
-    XCTAssertNil([self.manager getImageByKey:@&quot;image_home_button_selected_error&quot; from:GCTThemeModuleTypeHomeTabbar], &quot;key error image should be nil&quot;);
-    XCTAssertNil([self.manager getImageByKey:@&quot;image_home_button_selected&quot; from:GCTThemeModuleTypeHomeWifi], @&quot;type is error image should be nil&quot;);
-    XCTAssertNotNil([self.manager getImageByKey:@&quot;image_home_button_selected&quot; from:GCTThemeModuleTypeHomeTabbar], &quot;key and type is right and data has value, image should not be nil&quot;);
-}
-
-/*
- ** 通过key来获取图片名字
- */
-- (void)testGCTThemeGetImageNameByKey {
-    XCTAssertEqual([self.manager getImageNameByKey:@&quot;image_home_button_selected&quot; from:GCTThemeModuleTypeHomeTabbar], @&quot;Home_Selected&quot;, &quot;image name should be equal&quot;);
-}
-
-/*
- ** 通过key来获取颜色
- */
-- (void)testGetColorByKey {
-    // 从春节主题中获取
-    [self.switchObject setGCTThemeSwitch:YES];
-    [self.manager switchBaseOn:self.switchObject];
-    XCTAssertTrue([[self.manager getColorByKey:@&quot;color_before_background&quot; from:GCTThemeModuleTypeHomeMiddleContent] isEqual:[UIColor colorWithHexString:@&quot;#cccccc&quot;]], &quot;UIColor should be equal&quot;);
-}
-
-- (void)testGCTThemeGetTitleByKey {
-    // 从春节主题中获取
-    [self.switchObject setGCTThemeSwitch:YES];
-    [self.manager switchBaseOn:self.switchObject];
-    XCTAssertTrue([[self.manager getTitleByKey:@&quot;value_home_title&quot; from:GCTThemeModuleTypeHomeMiddleContent] isEqual:@&quot;测试&quot;], &quot;Title should be equal&quot;);
-}
-</code></pre>
-<h3 id="思考篇">思考篇</h3>
-<ul>
-<li>配置的时机，需要切换，尽量不要放到<code>AppDelegate</code>中，影响启动时间。</li>
-<li><code>GCTThemeManager</code>中的开关<code>GCTThemeSwitchObject</code>以及数据源<code>GCTThemeData</code>相应的属性都是同时又<code>Getter/Setter</code>方法的，<strong>数据不安全！！</strong></li>
-<li><strong>！！都要通过字符串去查找，编码不是很友好！（后期会通过R.Obj去修正这个问题。）</strong></li>
-<li>统一修改的时机每次启动只有一次，后期这里需要修改。</li>
-</ul>
 ]]></content>
     </entry>
 </feed>

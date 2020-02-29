@@ -1,0 +1,427 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>都已经iOS13了，UICollectionView应该这么写了！！ - Ghcoder</title>
+<link rel="shortcut icon" href="https://glve1027.github.io//favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://glve1027.github.io//media/tailwind.css">
+<link rel="stylesheet" href="https://glve1027.github.io//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="都已经iOS13了，UICollectionView应该这么写了！！ - Ghcoder - Atom Feed" href="https://glve1027.github.io//atom.xml">
+
+    
+
+  <meta name="description" content="最近看到ios ray一篇关于iOS新特性的一篇文章，感觉还是挺有收获的，以此记录一下，iOS13 新出的一些关于UICollectionView最新的API使用的问题：
+
+1. 概念
+
+iOS13, 重新梳理的关于CollectionVi..." />
+  <meta property="og:title" content="都已经iOS13了，UICollectionView应该这么写了！！ - Ghcoder">
+  <meta property="og:description" content="最近看到ios ray一篇关于iOS新特性的一篇文章，感觉还是挺有收获的，以此记录一下，iOS13 新出的一些关于UICollectionView最新的API使用的问题：
+
+1. 概念
+
+iOS13, 重新梳理的关于CollectionVi..." />
+  <meta property="og:type" content="articles">
+  <meta property="og:url" content="https://glve1027.github.io/post/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao/" />
+  <meta property="og:image" content="https://glve1027.github.io//post-images/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao.jpg">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta name="twitter:title" content="都已经iOS13了，UICollectionView应该这么写了！！ - Ghcoder">
+  <meta name="twitter:description" content="最近看到ios ray一篇关于iOS新特性的一篇文章，感觉还是挺有收获的，以此记录一下，iOS13 新出的一些关于UICollectionView最新的API使用的问题：
+
+1. 概念
+
+iOS13, 重新梳理的关于CollectionVi...">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://glve1027.github.io/post/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao/">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+ 
+  
+    <link rel="stylesheet" href="https://glve1027.github.io//media/css/prism-synthwave84.css">
+  
+
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+  
+</head>
+
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
+    <a href="https://glve1027.github.io/" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+      Ghcoder
+    </a>
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+          都已经iOS13了，UICollectionView应该这么写了！！
+        </h1>
+        
+          <img src="https://glve1027.github.io//post-images/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao.jpg" alt="都已经iOS13了，UICollectionView应该这么写了！！" class="block w-full mb-8">
+        
+        <div class="mb-8 flex flex-wrap">
+          <div class="text-gray-400 text-sm mr-4">2020-02-29 · 4 min read</div>
+          
+            <a href="https://glve1027.github.io/tag/qsZXsVgt2/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              iOS13
+            </a>
+          
+            <a href="https://glve1027.github.io/tag/CJqwkQc3d/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Swift
+            </a>
+          
+            <a href="https://glve1027.github.io/tag/9qkBdYSPa/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Objective-C
+            </a>
+          
+        </div>
+        <div class="markdown mb-8" v-pre>
+          <p>最近看到<a href="https://www.raywenderlich.com/">ios ray</a>一篇关于iOS新特性的一篇文章，感觉还是挺有收获的，以此记录一下，iOS13 新出的一些关于<code>UICollectionView</code>最新的API使用的问题：</p>
+<!-- more -->
+<h3 id="1-概念">1. 概念</h3>
+<blockquote>
+<p>iOS13, 重新梳理的关于<code>CollectionView</code>的一些概念性的东西，我觉得这个是非常核心的以此重构设计。现在整个<code>UICollectionView</code>分为下面三级结构: <code>Section &gt; Group &gt; Item</code> (层次以此减小，解释：一个<code>Section</code>包含一个或者多个<code>Group</code>, 一个<code>Group</code>包含多个<code>Item</code>)</p>
+</blockquote>
+<h3 id="2-关于如何设置比例尺寸">2. 关于如何设置比例，尺寸</h3>
+<blockquote>
+<p>其实这个问题，还是挺重要的，它可以节省很多不必要的逻辑和代码判断，这边引入了一个<code>NSCollectionLayoutDimension</code>, 通过类的实例化，可以实现三种尺寸：</p>
+</blockquote>
+<ol>
+<li>absolute 【绝对尺寸】</li>
+<li>estimated 【这是一个预估的尺寸，会更加内容实际的尺寸，会变化】</li>
+<li>fractionalWidth 【尺寸和宽度的比例，有效值0~1，例如0.2，就是这个尺寸，是<code>父层级</code>宽度的0.2倍，！！注意这里不是屏幕尺寸，而是父层级】</li>
+</ol>
+<ul>
+<li>结合上面两个，配置<code>UICollectionViewLayout</code>用的是一个最新的子类<code>UICollectionViewCompositionalLayout</code></li>
+</ul>
+<pre><code class="language-swift">// Swift版本
+func configureLayout() -&gt; UICollectionViewCompositionalLayout {
+    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2), heightDimension: .fractionalHeight(1.0))
+    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+    item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 1, bottom: 2, trailing: 1)
+    
+    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.2))
+    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+    
+    let section = NSCollectionLayoutSection(group: group)
+    return UICollectionViewCompositionalLayout(section: section)
+}
+</code></pre>
+<pre><code class="language-objectivec">// OC版本
+- (UICollectionViewCompositionalLayout *)configureLayout {
+    NSCollectionLayoutSize *itemSize = [NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:0.2] heightDimension:[NSCollectionLayoutDimension fractionalHeightDimension:1.0]];
+    NSCollectionLayoutItem *item = [NSCollectionLayoutItem itemWithLayoutSize:itemSize];
+    item.contentInsets = NSDirectionalEdgeInsetsMake(5, 5, 5, 5);
+
+    NSCollectionLayoutSize *groupSize = [NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:1.0] heightDimension:[NSCollectionLayoutDimension fractionalWidthDimension:0.2]];
+    NSCollectionLayoutGroup *group = [NSCollectionLayoutGroup horizontalGroupWithLayoutSize:groupSize subitems:@[item]];
+    
+    NSCollectionLayoutSection *section = [NSCollectionLayoutSection sectionWithGroup:group];
+    
+    return [[UICollectionViewCompositionalLayout alloc] initWithSection:section];
+}
+</code></pre>
+<h3 id="3-使用">3. 使用</h3>
+<blockquote>
+<p>关于使用，iOS这次摒弃了使用代理的方式来进行配置，而是创建一个新对象，持有<code>UICollectionView</code>，返回<code>Block</code>给用户来配置的方式，这样确实简便很多，看代码：</p>
+</blockquote>
+<pre><code class="language-swift">// Swift版本
+func configureDatasource() {
+        collectionDataSource = UICollectionViewDiffableDataSource&lt;Section, Int&gt;(collectionView: self.collectionView) {
+            (collect, indexPath, number) -&gt; UICollectionViewCell? in
+            
+            guard let cell = collect.dequeueReusableCell(withReuseIdentifier: NumberCell.reuseIdentifier, for: indexPath) as? NumberCell else {
+                fatalError(&quot;Cannot create new cell&quot;)
+            }
+            cell.label.text = number.description
+            return cell
+        }
+        
+        var initialSnapshot = NSDiffableDataSourceSnapshot&lt;Section, Int&gt;()
+        initialSnapshot.appendSections([.main])
+        initialSnapshot.appendItems(Array(1...100), toSection: .main)
+        
+        collectionDataSource.apply(initialSnapshot, animatingDifferences: false)
+    }
+</code></pre>
+<pre><code class="language-objectivec">// OC版本
+- (void)configureDatasource {
+    NSDiffableDataSourceSnapshot *initialSnapshot = [NSDiffableDataSourceSnapshot new];
+    [initialSnapshot appendSectionsWithIdentifiers:@[@&quot;main&quot;]];
+    
+    NSMutableArray *datas = [NSMutableArray new];
+    for (int i = 0 ; i &lt; 100; i++) {
+        [datas addObject:[NSNumber numberWithInt:i]];
+    }
+    [initialSnapshot appendItemsWithIdentifiers:[datas copy]];
+    
+    [self.dataSource applySnapshot:initialSnapshot animatingDifferences:NO completion:nil];
+}
+
+- (UICollectionViewDiffableDataSource&lt;NSString *,NSNumber *&gt; *)dataSource {
+    if (_dataSource == nil) {
+        _dataSource = [[UICollectionViewDiffableDataSource alloc] initWithCollectionView:self.collectionView cellProvider:^UICollectionViewCell * _Nullable(UICollectionView * _Nonnull collect, NSIndexPath * _Nonnull index, id _Nonnull obj) {
+            
+            NumberCell *cell = [collect dequeueReusableCellWithReuseIdentifier:NSStringFromClass([NumberCell class]) forIndexPath:index];
+            cell.label.text = [obj description];
+            
+            return cell;
+        }];
+    }
+    return _dataSource;
+}
+</code></pre>
+<h3 id="3-关于类nsdiffabledatasourcesnapshot的一些理解">3. 关于类NSDiffableDataSourceSnapshot的一些理解：</h3>
+<blockquote>
+<p>就相当于装饰器模式一样，对同一份数据源，我们可以经过不同的加工操作，得到我们想要的数据。<br>
+这样做的另一个操作，就是我们不需要，把这些耗时的操作，放到需要的数据的时候才去处理。<br>
+第三部分就是关于名字叫Diff，我猜想对于同一份数据，在内存尽量小的前提下，能够高效的处理数据【！！猜测】</p>
+</blockquote>
+
+        </div>
+        <!-- Share to Twitter, Weibo, Telegram -->
+        <div class="flex items-center">
+          <div class="mr-4 flex items-center">
+            <i class="ri-share-forward-line text-gray-500"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
+            <i class="ri-twitter-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
+            <i class="ri-weibo-line"></i>
+          </div>
+          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
+            <i class="ri-telegram-line"></i>
+          </div>
+        </div>
+      </div>
+
+      
+        
+
+        
+          <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script type="application/javascript" src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script type="application/javascript">
+
+var options = {
+  shortname: 'https-glve1027-github-io',
+  apikey: 'QFRNRle3MhCehLGrainA0vMIBxuFC1IyUsoaM3fXfGWuwyon3Cdw4l9um8qBGKeF',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+        
+      
+
+      
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  
+</footer>
+    </div>
+
+    <!-- TOC Container -->
+    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
+      <i class="ri-file-list-line"></i>
+    </div>
+
+    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
+      <div class="flex mb-4 justify-end">
+        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
+          <i class="ri-close-line text-lg"></i>
+        </div>
+      </div>
+      <div class="post-toc-container">
+        <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-%E6%A6%82%E5%BF%B5">1. 概念</a></li>
+<li><a href="#2-%E5%85%B3%E4%BA%8E%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E6%AF%94%E4%BE%8B%E5%B0%BA%E5%AF%B8">2. 关于如何设置比例，尺寸</a></li>
+<li><a href="#3-%E4%BD%BF%E7%94%A8">3. 使用</a></li>
+<li><a href="#3-%E5%85%B3%E4%BA%8E%E7%B1%BBnsdiffabledatasourcesnapshot%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3">3. 关于类NSDiffableDataSourceSnapshot的一些理解：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Back to top -->
+    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
+      <i class="ri-arrow-up-line"></i>
+    </div>
+  </div>
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe. 
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg">
+  </div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+      <div class="pswp__item">
+      </div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter">
+        </div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip">
+        </div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+      </button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+      </button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://glve1027.github.io//media/scripts/main.js"></script>
+  
+  <!-- Code Highlight -->
+  
+    <script src="https://glve1027.github.io//media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+  <script>
+    //拿到预览框架，也就是上面的html代码
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    //定义图片数组变量
+    var imgitems;
+    /**
+    * 用于显示预览界面
+    * @param index 图片数组下标
+    */
+    function viewImg(index) {
+      //其它选项这里不做过多阐述，详情见官网
+      var pswpoptions = {
+        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+        bgOpacity: 0.7, // 背景透明度，0-1
+        maxSpreadZoom: 3, // 缩放级别，不要太大
+      };
+      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
+      gallery.init()
+    }
+    /**
+    * 用于添加图片点击事件
+    * @param img 图片元素
+    * @param index 所属下标（在imgitems中的位置）
+    */
+    function addImgClick(img, index) {
+      img.onclick = function() {
+        viewImg(index)
+      }
+    }
+    /**
+    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+    * 异步加载图片可在图片元素创建完成后调用此方法
+    */
+    function initImg() {
+      //重置图片数组
+      imgitems = [];
+      //查找class:markdown 下的所有img元素并遍历
+      var imgs = document.querySelectorAll('.markdown img');
+      for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //本站相册初始为loading图片，真实图片放在data-src
+        var ds = img.getAttribute("data-src");
+        //创建image对象，用于获取图片宽高
+        var imgtemp = new Image();
+        //判断是否存在data-src
+        if (ds != null && ds.length > 0) {
+          imgtemp.src = ds
+        } else {
+          imgtemp.src = img.src
+        }
+        //判断是否存在缓存
+        if (imgtemp.complete) {
+          var imgobj = {
+            "src": imgtemp.src,
+            "w": imgtemp.width,
+            "h": imgtemp.height,
+          };
+          imgitems[i] = imgobj;
+          addImgClick(img, i);
+        } else {
+          console.log('进来了2')
+          imgtemp.index = i;
+          imgtemp.img = img;
+          imgtemp.onload = function() {
+            var imgobj = {
+              "src": this.src,
+              "w": this.width,
+              "h": this.height,
+            };
+            //不要使用push，因为onload前后顺序会不同
+            imgitems[this.index] = imgobj
+            //添加点击事件
+            addImgClick(this.img, this.index);
+          }
+        }
+      }
+    }
+    //初始化
+    initImg();
+  </script>
+</body>
+
+</html>
