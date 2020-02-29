@@ -180,11 +180,11 @@ func configureDatasource() {
 }
 </code></pre>
 <h3 id="3-关于类nsdiffabledatasourcesnapshot的一些理解">3. 关于类NSDiffableDataSourceSnapshot的一些理解：</h3>
-<blockquote>
-<p>就相当于装饰器模式一样，对同一份数据源，我们可以经过不同的加工操作，得到我们想要的数据。<br>
-这样做的另一个操作，就是我们不需要，把这些耗时的操作，放到需要的数据的时候才去处理。<br>
-第三部分就是关于名字叫Diff，我猜想对于同一份数据，在内存尽量小的前提下，能够高效的处理数据【！！猜测】</p>
-</blockquote>
+<ol>
+<li>就相当于装饰器模式一样，对同一份数据源，我们可以经过不同的加工操作，得到我们想要的数据。</li>
+<li>这样做的另一个操作，就是我们不需要，把这些耗时的操作，放到需要的数据的时候才去处理。</li>
+<li>第三部分就是关于名字叫Diff，我猜想对于同一份数据，在内存尽量小的前提下，能够高效的处理数据【！！猜测】</li>
+</ol>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
