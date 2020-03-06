@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-02-29T15:45:54.317Z</updated>
+    <updated>2020-03-06T15:53:23.063Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,104 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[最近读书的一些思考🤔]]></title>
+        <id>https://glve1027.github.io/post/zui-jin-du-shu-de-yi-xie-si-kao/</id>
+        <link href="https://glve1027.github.io/post/zui-jin-du-shu-de-yi-xie-si-kao/">
+        </link>
+        <updated>2020-03-06T15:49:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>闲来无事，最近没事会看看书，其实书有很多，但是能称得上好书却不是很多：啥事好书呢？</p>
+<blockquote>
+<p>我认为，好书能够给不同层次的人给予思考。因为这样思考出来的东西，就不仅仅是书面知识所传授的，</p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<p>闲来无事，最近没事会看看书，其实书有很多，但是能称得上好书却不是很多：啥事好书呢？</p>
+<blockquote>
+<p>我认为，好书能够给不同层次的人给予思考。因为这样思考出来的东西，就不仅仅是书面知识所传授的，</p>
+</blockquote>
+<!-- more -->
+<ul>
+<li>
+<p>下面会列举一下好书中好的东西【1. 当然这一点的理解很主观 2. 好书里面也会存在冗余】,以及一些我个人的思考🤔</p>
+</li>
+<li>
+<p>正常些OC的人肯定听过《Effective Objective-C2.0》【这本书里70-80%还都是不错的】</p>
+</li>
+<li>
+<p>关于第九点：<code>类族模式</code></p>
+</li>
+</ul>
+<blockquote>
+<p>我不是很建议这样去写一个类，但让可以换个方式，通过接口，而不是硬生生通过一个抽象类，并且生成一个子类的方式，这本的书的作者举的例子我觉得不是很好，如果用我可能会通过定义接口的形式来去做，但是这样的话，就超出这本的范畴。</p>
+</blockquote>
+<ul>
+<li>关于第十二点：<code>理解消息转发机制</code></li>
+</ul>
+<blockquote>
+<p>这事一个很入门，很具体有意义的例子，建议手敲一遍：</p>
+</blockquote>
+<pre><code class="language-objectivec">id autoDictionaryGetter(id self, SEL _cmd) {
+    // Get the backing stroe from the object
+    EOCAutoDictionary *typeSelf = (EOCAutoDictionary *)self;
+    NSMutableDictionary *backingStroe = typeSelf.backingStroe;
+    
+    // The key is simple the selector name
+    NSString *key = NSStringFromSelector(_cmd);
+    
+    // Return the value
+    return [backingStroe objectForKey:key];
+}
+
+void autoDictionarySetter(id self, SEL _cmd, id value) {
+    // Get the backing store from the object
+    EOCAutoDictionary *typeSelf = (EOCAutoDictionary *)self;
+    NSMutableDictionary *backingStroe = typeSelf.backingStroe;
+    
+    /** The selector will be for example: &quot;setOpaqueObject:&quot;.
+     *  We need to remove the &quot;set&quot;, &quot;:&quot; and lowercase the first
+     *  letter of the remainder
+     */
+    NSString *selectorString = NSStringFromSelector(_cmd);
+    NSMutableString *key = [selectorString mutableCopy];
+    
+    // Remove the &quot;:&quot; at the end
+    [key deleteCharactersInRange:NSMakeRange(key.length - 1, 1)];
+    
+    // Remove the 'set' prefix
+    [key deleteCharactersInRange:NSMakeRange(0, 3)];
+    
+    // Lowercase the first character
+    NSString *lowercaseFirstChar = [[key substringToIndex:1] lowercaseString];
+    [key replaceCharactersInRange:NSMakeRange(0, 1) withString:lowercaseFirstChar];
+    
+    if (value) {
+        [backingStroe setObject:value forKey:key];
+    } else {
+        [backingStroe removeObjectForKey:key];
+    }
+}
+
+@dynamic string, number, date, opaqueObject;
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _backingStroe = [NSMutableDictionary new];
+    }
+    return self;
+}
+
++ (BOOL)resolveInstanceMethod:(SEL)sel {
+    NSString *selectorString = NSStringFromSelector(sel);
+    if ([selectorString hasPrefix:@&quot;set&quot;]) {
+        class_addMethod(self, sel, (IMP)autoDictionarySetter, &quot;v:@:@&quot;);
+    } else {
+        class_addMethod(self, sel, (IMP)autoDictionaryGetter, &quot;@@:&quot;);
+    }
+    return YES;
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[都已经iOS13了，UICollectionView应该这么写了！！]]></title>
         <id>https://glve1027.github.io/post/du-yi-jing-ios13-liao-uicollectionview-ying-gai-zhe-me-xie-liao/</id>
@@ -2966,32 +3064,6 @@ class Solution {
         return false
     }
 }
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[iOS多线程操作]]></title>
-        <id>https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo/</id>
-        <link href="https://glve1027.github.io/post/ios-duo-xian-cheng-cao-zuo/">
-        </link>
-        <updated>2019-12-18T07:39:14.000Z</updated>
-        <summary type="html"><![CDATA[<p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>一旦项目中涉及到多线程操作，就会显得异常复杂，尤其是对数据的操作，如何保证高效的“多读单写”呢？</p>
-<!-- more -->
-<p>方案有很多种：</p>
-<ul>
-<li>可以使用<code>锁</code>[这里就不具体展开了，锁的实现太多了]，这里重点说一下第二个方案：</li>
-<li>利用GCD实现“多读单写”的功能</li>
-</ul>
-<pre><code class="language-objectivec">// 创建一个全局的自定义并行队列
-dispatch_queue_t globalQueue = dispatch_queue_create(&quot;xxx&quot;, DISPATCH_QUEUE_CONCURRENT);
-// 对于&quot;写&quot;的操作
-// 1. 保证在我写之前所有的操作已经完成。2. 也只有在我完成此次&quot;写&quot;的操作的时候，下面的操作才能继续执行。
-// 在AFNetworking中源码中，用于保护HTTPRequestHeaders的时候使用的是dispatch_barrier_sync(globalQueue, ^{ }); 
-dispatch_barrier_async(globalQueue, ^{ });  
-// 对于&quot;读&quot;的操作, 同步的获取值
-dispatch_sync(globalQueue, ^{ });
 </code></pre>
 ]]></content>
     </entry>
