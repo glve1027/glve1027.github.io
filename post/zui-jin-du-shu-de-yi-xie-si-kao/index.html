@@ -74,7 +74,7 @@
           <img src="https://glve1027.github.io//post-images/zui-jin-du-shu-de-yi-xie-si-kao.jpg" alt="最近读书的一些思考🤔" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-03-06 · 3 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-03-06 · 5 min read</div>
           
             <a href="https://glve1027.github.io/tag/9qkBdYSPa/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -167,6 +167,61 @@ void autoDictionarySetter(id self, SEL _cmd, id value) {
     }
     return YES;
 }
+</code></pre>
+<ul>
+<li>第15点：用前缀避免命名空间冲突</li>
+</ul>
+<blockquote>
+<p>这一点表面看上去学不到什么知识点，但是你可以看一下AFNetworking源码，你就会发现作者框架内部的很多静态的C函数，定义是完全符合这一点的、包括一些常量的定义【queue的定义】，从这一点反向来证明使用前缀的重要性。</p>
+</blockquote>
+<ul>
+<li>第16点：提供&quot;全能初始化方法&quot;</li>
+</ul>
+<blockquote>
+<p>这一条，看标题很唬人，其实作为以面向对象的代码而言，不仅仅初始化需要这样做，我们所有的函数，都应该这样做，抽象。【PS: 这一点特性，可以看到SDWebImage的库、AFNetworking的库到处都有这样的操作，值得学习】</p>
+</blockquote>
+<ul>
+<li>第17点： 实现description方法</li>
+</ul>
+<blockquote>
+<p>这一点其实说实话，不是很有用，因为现在的ide已经很强大了，根本不需要通过打印信息，你完全可以通过LLDB来调试 【冷门：LLDB命令<code>po</code>出的信息，是<code>debugDescription所打印的</code>，当然它默认调用的是<code>description</code>知道就行】</p>
+</blockquote>
+<ul>
+<li>第18点：很关键，这一点可以简化代码复杂度、减少产生bug的几率</li>
+</ul>
+<blockquote>
+<p>因为一个面向很多人<code>SDK</code>, 你可能需要的是每个属性、每个函数是否都是线程安全的，会不会出现异常？作者提出这一点很好的规避了这一点，属性只读，不要把可变的<code>collection</code>作为属性公开、经量创建不可变对象。【如果你一定要挑战自己，你就把属性都暴露出去，看看你<code>锁</code>、<code>线程</code>用的6不？】</p>
+</blockquote>
+<ul>
+<li>第19点：使用清晰而协调的命名方式</li>
+</ul>
+<blockquote>
+<p>说一个现象，从<code>Swift 1.0</code> -&gt; <code>Swift 5.0</code> 被开发者不断的吐槽一个点，就一个函数名，可能会变好几次，之前版本作废的函数名，在下一个版本又出现了，足以见得，取函数名是程序员最头痛的事情。【OC这样的命名方式不能说很完美，因为Swift以及现在很多主流的语言都在往一个方向房展，一个唯一的标准：“言简意赅”】</p>
+</blockquote>
+<ul>
+<li>第20点：为私有方法名加前缀</li>
+</ul>
+<blockquote>
+<p>这一点你就听你们组、以及自己公司的代码规范就行了，实在不行可以规范一套</p>
+</blockquote>
+<ul>
+<li>第21点：理解Object-C错误模型</li>
+</ul>
+<blockquote>
+<p>现有的框架库还都是沿用C语言的这一套，运用指针的方式来实现，但是你完全可以用<code>block</code>来实现，下面的代码可以学习一下，设计<code>SDK</code>的时候，也可以这么使用：</p>
+</blockquote>
+<pre><code class="language-objectivec">// EOCErrors.h
+extern NSString * const EOErrorDomain;
+
+typedef NS_ENUM(NSUInteger, EOCError) {
+    EOCErrorUnknow = -1,
+    EOCErrorInternalInconsistency = 100,
+    EOCErrorGeneralFault = 105,
+    EOCErrorBadInput = 500
+};
+
+// EOCErrors.m
+NSString *const EOErrorDomain = @&quot;EOCErrorDomain&quot;;
 </code></pre>
 
         </div>
