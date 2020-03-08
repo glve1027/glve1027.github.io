@@ -74,7 +74,7 @@
           <img src="https://glve1027.github.io//post-images/zui-jin-du-shu-de-yi-xie-si-kao.jpg" alt="最近读书的一些思考🤔" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2020-03-06 · 5 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2020-03-06 · 6 min read</div>
           
             <a href="https://glve1027.github.io/tag/9qkBdYSPa/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -222,6 +222,18 @@ typedef NS_ENUM(NSUInteger, EOCError) {
 
 // EOCErrors.m
 NSString *const EOErrorDomain = @&quot;EOCErrorDomain&quot;;
+</code></pre>
+<ul>
+<li>第22点：理解NSCoping协议</li>
+</ul>
+<blockquote>
+<p>这里关于<code>深</code>/<code>浅</code>拷贝没什么可说的，但是例子中提到的另一个问题值得注意，如果某个属性值并非属性，只是个在内部使用的实例变量，可以通过<code>-&gt;</code>来访问</p>
+</blockquote>
+<pre><code class="language-objectivec">- (id)copyWithZone:(NSZone *)zone {
+    EOCAutoDictionary *copy = [[self class] allocWithZone:zone];
+    copy -&gt; friends = [_friends copy];
+    return copy;
+}
 </code></pre>
 
         </div>
