@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-03-08T14:48:37.518Z</updated>
+    <updated>2020-06-07T07:03:53.503Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,79 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[二叉树/多叉树 层序遍历解题套路]]></title>
+        <id>https://glve1027.github.io/post/er-cha-shu-duo-cha-shu-ceng-xu-bian-li-jie-ti-tao-lu/</id>
+        <link href="https://glve1027.github.io/post/er-cha-shu-duo-cha-shu-ceng-xu-bian-li-jie-ti-tao-lu/">
+        </link>
+        <updated>2020-06-07T06:38:33.000Z</updated>
+        <summary type="html"><![CDATA[<p>二叉树、多叉树个人认为是最考验一个递归思考算法的一种题型，今天就总结一下关于<code>层序遍历</code>的总结吧！</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>二叉树、多叉树个人认为是最考验一个递归思考算法的一种题型，今天就总结一下关于<code>层序遍历</code>的总结吧！</p>
+<!-- more -->
+<h2 id=""></h2>
+<p>先看一下二叉树的定义：</p>
+<pre><code class="language-swift">/**
+ * Definition for a binary tree node.
+  */
+ public class TreeNode {
+     public var val: Int
+     public var left: TreeNode?
+     public var right: TreeNode?
+     public init(_ val: Int) {
+         self.val = val
+         self.left = nil
+         self.right = nil
+     }
+ }
+</code></pre>
+<h2 id="再看一下多叉树的定义">再看一下多叉树的定义：</h2>
+<pre><code class="language-swift">/**
+ * Definition for a Node.
+  */
+ public class Node {
+     public var val: Int
+     public var children: [Node]
+     public init(_ val: Int) {
+         self.val = val
+         self.children = []
+     }
+ }
+</code></pre>
+<h2 id="二叉树-多叉树套路模板">二叉树、多叉树套路模板</h2>
+<pre><code class="language-swift">func displayTreeNode(_ root: TreeNode) {
+    // 1: check data is right
+    guard let root = root else { return }
+
+    // 2: define a array
+    var queue: [TreeNode] = [root]
+    // 2.1: This value is tell you when will go to next level !!!!
+    var levelSize: Int = 1
+
+    while !queue.isEmpty {
+        // 3. remve the first node
+        let currentNode = queue.removeFirst()
+        levelSize -= 1
+
+        // 4. add currentNode's child nodes 
+        if let l = currentNode.left { queue.append(l) }
+        if let r = currentNode.right { queue.append(r) }
+        // 4.1 
+        let child = current.children
+        if !child.isEmpty {
+            queue = queue + child // queue = child + queue
+        }
+
+        // 5. when levelSize == 0 means that current level's nodes are all handled. will go to next level right now!!
+        if (levelSize == 0)  { levelSize = queue.count }
+    }
+}
+</code></pre>
+<blockquote>
+<p>当然这个只是一种套路，但是还有递归等其他的操作。后续慢慢补上吧！</p>
+</blockquote>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[最近读书的一些思考🤔]]></title>
         <id>https://glve1027.github.io/post/zui-jin-du-shu-de-yi-xie-si-kao/</id>
@@ -2865,272 +2938,6 @@ typedef NSMutableDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageMutable
 } else if (self.options &amp; SDWebImageDownloaderLowPriority) {
     self.dataTask.priority = NSURLSessionTaskPriorityLow;
 }      
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[DFS&BFS 解题心得]]></title>
-        <id>https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de/</id>
-        <link href="https://glve1027.github.io/post/dfsandbfs-jie-ti-xin-de/">
-        </link>
-        <updated>2019-12-26T02:12:29.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p>最近在一直在刷LeetCode, 一直在练习DFS与BFS的题，练多了发现有很多都是有固定套路的心得：</p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p>最近在一直在刷LeetCode, 一直在练习DFS与BFS的题，练多了发现有很多都是有固定套路的心得：</p>
-</blockquote>
-  <!-- more -->
-<ul>
-<li>先写一段伪代码，这段伪代码是下面套路的“白话文”</li>
-</ul>
-<pre><code class="language-swift">// 1. 这里的value 是初始值
-func start(value) {
-    // 2. 初始值的边界问题
-    if (value 不合法) { return }
-
-    // 3. !!关键，这里一定要新建一个函数，用于递归, 见下面的函数bfs
-    // 同时，bfs函数的入参，你可以自己不断的加
-    // 参数的理解， 如果bfs函数的终止条件 需要通过value 来计算出来，这里就有必要传入进去
-    let terminalValue = func handle(value)
-    // 参数1：
-    bfs(terminalValue, [value])
-    // 或者dfs
-    dfs(terminalValue, value, [])
-}
-
-private func bfs(terminalValue, [value]) {
-    // 4. 判断终止条件
-    if (terminalValue) { return }
-    // 5. 这里需要一个临时的集合，用数组Array
-    var tempArray = []
-
-    for v in [value] {
-        // 6. !!这里通过v来找到下一个需要遍历的量，这里既可以实现DFS, 也可以实现BFS
-        let nextV = func findNextV(v)
-        
-        tempArray.append(nextV)
-    }
-
-    // 递归调用
-    bfs(terminalValue, tempArray)
-}
-
-
-private func dfs(terminalValue, value, arr) {
-    // 4. 判断终止条件
-    if (terminalValue) { return }
-    
-    // 5. 这里是关键！！判断arr数组逻辑关系
-    
-    var arrLeftDatas = arr
-    if let leftNode = value.left {
-        arrLeftDatas.append(leftNode)
-        
-        dfs(terminalValue, value, arrLeftDatas)
-    }
-    
-    var arrRightDatas = arr
-    if let rightNode = value.right {
-        arrRightDatas.append(rightNode)
-        
-        dfs(terminalValue, value, arrRightDatas)
-    }
-}
-</code></pre>
-<ul>
-<li>
-<p>下面看两道题目：</p>
-</li>
-<li>
-<p>LeetCode 199题目</p>
-</li>
-</ul>
-<figure data-type="image" tabindex="1"><img src="https://glve1027.github.io//post-images/1577333311197.jpg" alt="" loading="lazy"></figure>
-<pre><code class="language-swift">import Foundation
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     public var val: Int
- *     public var left: TreeNode?
- *     public var right: TreeNode?
- *     public init(_ val: Int) {
- *         self.val = val
- *         self.left = nil
- *         self.right = nil
- *     }
- * }
- */
-class Solution {
-    func rightSideView(_ root: TreeNode?) -&gt; [Int] {
-        guard let root = root else { return [] }
-
-        var datas: [TreeNode] = [root]
-        var result: [Int] = [root.val]
-        var currentLevel: Int = 1
-
-        printRight(&amp;datas, &amp;result, &amp;currentLevel)
-        return result
-    }
-
-    private func printRight(_ datas: inout [TreeNode], _ result: inout [Int], _ level: inout Int) {
-        guard !datas.isEmpty else { return }
-
-        // 记录层数
-        level += 1
-
-        var tempDatas: [TreeNode] = []
-        for d in datas {
-            // 下一个循环要检查的子数，这里都要记录下来
-            if let r = d.right {
-                tempDatas.append(r)
-                if result.count &lt; level { result.append(r.val) }
-            }
-            if let l = d.left {
-                tempDatas.append(l)
-                if result.count &lt; level { result.append(l.val) }
-            }
-        }
-
-        printRight(&amp;tempDatas, &amp;result, &amp;level)
-    }
-}
-</code></pre>
-<ul>
-<li>LeetCode 994</li>
-</ul>
-<figure data-type="image" tabindex="2"><img src="https://glve1027.github.io//post-images/1577333441345.jpg" alt="" loading="lazy"></figure>
-<pre><code class="language-swift">
-import Foundation
-
-class Solution {
-    func orangesRotting(_ grid: [[Int]]) -&gt; Int {
-        guard !grid.isEmpty else { return 0 }
-
-        var bads: [[Int]] = []
-        var visited: [[Int]] = []
-        var grid = grid
-        var total: Int = 0
-        var maxY: Int = 0
-        let maxX: Int = grid.count - 1
-
-        for i in 0..&lt;grid.count {
-            let temp = grid[i]
-            maxY = max(maxY, temp.count - 1)
-            for j in 0..&lt;temp.count {
-                if (temp[j] == 2) {
-                    bads.append([i, j])
-                    visited.append([i, j])
-                }
-                total += 1
-            }
-        }
-
-        // 起始条件判断
-        if (bads.isEmpty) { return hasNoBad(grid) ? -1 : 0  }
-
-        var minu: Int = 0
-        countMinute(&amp;minu, maxX, maxY, &amp;grid, &amp;bads, &amp;visited, total)
-        return hasNoBad(grid) ?  -1 : minu
-    }
-
-    private func countMinute(_ minu: inout Int, _ maxX: Int, _ maxY: Int, _ grid: inout [[Int]], _ bads: inout [[Int]], _ visited: inout [[Int]], _ total: Int) {
-        guard !bads.isEmpty else { return }
-        guard visited.count &lt; total else { return }
-
-        // 临时收集坏的
-        var visited = visited
-        var tempBads: [[Int]] = []
-        // 遍历
-        for b in bads {
-            let currentX = b[0]
-            let currentY = b[1]
-            let currentIsBad = grid[currentX][currentY] == 2
-            // 四个方向进行判断
-            
-            // 1. 上
-            let upY = currentY - 1
-            if (upY &gt;= 0 &amp;&amp; upY &lt;= maxY &amp;&amp; !containsInDatas(visited, [currentX, upY])) {
-                visited.append([currentX, upY])
-                if (currentIsBad &amp;&amp; grid[currentX][upY] == 1) {
-                    // 已经腐烂
-                    grid[currentX][upY] = 2
-                    tempBads.append([currentX, upY])
-                }
-            }
-
-            // 2. 左
-            let leftX = currentX - 1
-            if (leftX &gt;= 0 &amp;&amp; leftX &lt;= maxX &amp;&amp; !containsInDatas(visited, [leftX, currentY])) {
-                visited.append([leftX, currentY])
-                if (currentIsBad &amp;&amp; grid[leftX][currentY] == 1) {
-                    // 已经腐烂
-                    grid[leftX][currentY] = 2
-                    tempBads.append([leftX, currentY])
-                }
-            }
-
-            // 3. 下
-            let downY = currentY + 1
-            if (downY &gt;= 0 &amp;&amp; downY &lt;= maxY &amp;&amp; !containsInDatas(visited, [currentX, downY])) {
-                visited.append([currentX, downY])
-                if (currentIsBad &amp;&amp; grid[currentX][downY] == 1) {
-                    // 已经腐烂
-                    grid[currentX][downY] = 2
-                    tempBads.append([currentX, downY])
-                }
-            }
-
-            // 4. 右
-            let rightX = currentX + 1
-            if (rightX &gt;= 0 &amp;&amp; rightX &lt;= maxX &amp;&amp; !containsInDatas(visited, [rightX, currentY])) {
-                visited.append([rightX, currentY])
-                if (currentIsBad &amp;&amp; grid[rightX][currentY] == 1) {
-                    // 已经腐烂
-                    grid[rightX][currentY] = 2
-                    tempBads.append([rightX, currentY])
-                }
-            }
-        }
-
-        // 如果已经没有坏橘子，就提前退出
-        guard noBads(tempBads, grid) == false else { return }
-        // 累计时间
-        minu += 1
-        countMinute(&amp;minu, maxX, maxY, &amp;grid, &amp;tempBads, &amp;visited, total)
-    }
-
-    private func hasNoBad(_ grid: [[Int]]) -&gt; Bool {
-        guard !grid.isEmpty else { return false }
-        for i in 0..&lt;grid.count {
-            let temp = grid[i]
-            for j in 0..&lt;temp.count {
-                if (temp[j] == 1) { return true }
-            }
-        }
-        return false
-    }
-
-    private func noBads(_ bads: [[Int]], _ grid: [[Int]]) -&gt; Bool {
-        guard !bads.isEmpty else { return true }
-        for b in bads {
-            let x = b[0]
-            let y = b[1]
-            if (grid[x][y] == 2) { return false }
-        }
-        return true
-    }
-
-    private func containsInDatas(_ datas: [[Int]], _ e: [Int]) -&gt; Bool {
-        guard !datas.isEmpty else { return false }
-        for d in datas where e == d {
-            return true
-        }
-        return false
-    }
-}
 </code></pre>
 ]]></content>
     </entry>
