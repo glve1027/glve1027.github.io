@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-06-07T07:10:52.547Z</updated>
+    <updated>2020-06-21T01:46:07.839Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,206 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[二叉搜索树的解题套路]]></title>
+        <id>https://glve1027.github.io/post/er-cha-sou-suo-shu-de-jie-ti-tao-lu/</id>
+        <link href="https://glve1027.github.io/post/er-cha-sou-suo-shu-de-jie-ti-tao-lu/">
+        </link>
+        <updated>2020-06-21T01:03:49.000Z</updated>
+        <summary type="html"><![CDATA[<p>二叉搜索树是一种很特别、又很常用的一种的一种数据结构，同时它也很简单，因为它的定义不需要考虑<code>平衡</code>，所以解二叉搜索树的题一般会存在一个或者多个答案，一般只需要我们保证二叉搜索树的特性就可以了。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>二叉搜索树是一种很特别、又很常用的一种的一种数据结构，同时它也很简单，因为它的定义不需要考虑<code>平衡</code>，所以解二叉搜索树的题一般会存在一个或者多个答案，一般只需要我们保证二叉搜索树的特性就可以了。</p>
+<!-- more -->
+<ol>
+<li>中序遍历</li>
+</ol>
+<p>为什么这里重点说一下<code>中序遍历</code>呢？由于二叉搜索树的特性所致，在对二叉搜索树中序遍历之后，会得到一个递增的数组，它的时间复杂度是<code>O(n)</code>, 中序遍历很简单，我就说一下模板：</p>
+<pre><code class="language-swift">var result: [Int] = []
+func inOrder(_ root: TreeNode?) {
+    guard let root = root else { return }
+    inOrder(root.left)
+    result.append(root.val)
+    inOrder(root.right)
+}
+</code></pre>
+<ol start="2">
+<li>删除节点【包含找前继、后续节点、删除、替换、遍历功能】</li>
+</ol>
+<p>其实个人认为在二叉搜索树中删除节点是最复杂的一个问题，基本上解决了这个问题之后，其他的问题都可以联系起来，并解决。</p>
+<pre><code class="language-swift">// 类型1：删除一个没有任何子节点的节点
+func deleteNoChildNodeFromBST(_ root: TreeNode?) {
+    // 这里是伪代码：1.1 首先获得当前节点的parent节点  1.2 而且还需要知道当前节点是parent节点的左节点还是右节点
+    let info = getNodeInfo(root)
+    info.direction == left ? info.parent?.left = nil : info.parent?.right = nil
+}
+
+// 类型2: 删除一个只有一个子节点的节点
+func deleteOneChildNodeFromBST(_ root: TreeNode?) {
+    let info = getNodeInfo(root)
+    if info.left != nil {
+        info.direction == left ? info.parent?.left = info.left : info.parent?.right = info.left
+    } else {
+        info.direction == left ? info.parent?.left = info.right : info.parent?.right = info.right
+    }
+}
+
+// 类型3: 删除一个有两个节点的节点
+func deleteTwoChildNodeFromBST(_ root: TreeNode?) {
+    // 1.1 找到当前节点的前序或者后继节点
+    let find = findProcessor(root)
+    // 1.2 赋值给当前节点
+    root.val = find.val
+    // 1.3 删除find节点【这里的find节点肯定是只有一个子节点或者没有子节点的】
+    (find.left == nil &amp;&amp; find.right == nil) ? deleteNoChildNodeFromBST(find) : deleteOneChildNodeFromBST(find)
+}
+
+enum TreeNodeDirection {
+    case left
+    case right
+}
+
+// 这里可以使用中序、前序、后续、层序、递归等等办法，时间复杂度为O(n)遍历一遍就可以了
+func getNodeInfo(_ root: TreeNode?) -&gt; (parent: TreeNode?, direction: TreeNodeDirection) {
+    //...
+}
+
+// 找前序节点【这里的操作和找后继节点是类似的】
+func findProcessor(_ root: TreeNode?) -&gt; TreeNode? {
+    // 前序节点的特点是：当前节点左子树中最大的
+    var leftChildNode = root.left
+
+    while leftChildNode != nil {
+        if (leftChildNode.right == nil) { // 找到了！！ }
+        leftChildNode = leftChildNode.right
+    }
+}
+</code></pre>
+<ol start="3">
+<li>说一道LeetCode题目450题<br>
+<img src="https://glve1027.github.io//post-images/1592703704745.jpg" alt="" loading="lazy"></li>
+</ol>
+<p>解题如下：</p>
+<pre><code class="language-swift">//
+//  LeetCode_450. 删除二叉搜索树中的节点_52.94% .swift
+//  Coding
+//
+//  Created by GH on 2020/6/14.
+//  Copyright © 2020 GH. All rights reserved.
+//
+import Foundation
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+class Solution {
+    func deleteNode(_ root: TreeNode?, _ key: Int) -&gt; TreeNode? {
+        // 1. find it
+        var find = findExactlyNode(root, nil, 0, key)
+        // 2. delete it
+        var root = root
+        deleteExactly(&amp;find, &amp;root)
+
+        return root
+    }
+
+    private func deleteExactly(_ root: inout (node: TreeNode?, parent: TreeNode?, direction: Int), _ before: inout TreeNode?) {
+        guard let selfNode = root.node else { return }
+        // has two children nodes
+        if (selfNode.left != nil &amp;&amp; selfNode.right != nil) {
+            // 1. find processor / next
+            let processor = findProcessor(selfNode)
+            guard let processNode = processor.node else { return }
+            // 2.  change value to process's value
+            selfNode.val = processNode.val
+            // 3. delete process node
+            if processNode.left != nil &amp;&amp; processNode.right != nil { return }
+
+            var d = 1
+            if let l = processor.parent?.left, let n = processor.node, l.val == n.val {
+                d = -1
+            }
+            var processInfos = (node: processor.node, parent: processor.parent, direction: d)
+            deleteExactly(&amp;processInfos, &amp;before)
+        } else {
+            guard let parentNode = root.parent else {
+                // delete root node
+                if selfNode.left != nil {
+                    before = selfNode.left
+                } else if(selfNode.right != nil) {
+                    before = selfNode.right
+                } else {
+                    before = nil
+                }
+                return
+            }
+            if (selfNode.left == nil &amp;&amp; selfNode.right == nil) {// has none of any child node
+                if (root.direction == 1) {
+                    parentNode.right = nil
+                } else {
+                    parentNode.left = nil
+                }
+            } else if (selfNode.left != nil) {
+                if (root.direction == 1) {
+                    parentNode.right = selfNode.left
+                } else {
+                    parentNode.left = selfNode.left
+                }
+            } else {
+                if (root.direction == 1) {
+                    parentNode.right = selfNode.right
+                } else {
+                    parentNode.left = selfNode.right
+                }
+            }
+        }
+    }
+    /**
+     * root: current node
+     * parent:parent node
+     * direction:
+     *             Int: 1 = right
+     *             Int: -1 = left
+     *             Int: 0
+     */
+    private func findExactlyNode(_ root: TreeNode?, _ parent: TreeNode?, _ direction: Int, _ key: Int) -&gt; (node: TreeNode?, parent: TreeNode?, direction: Int) {
+        guard let root = root else { return (node: nil, parent: nil, direction: 0) }
+
+        if (root.val == key) {
+            return (node: root, parent: parent, direction: direction)
+        } else if (root.val &gt; key) {
+            return findExactlyNode(root.left, root, -1, key)
+        } else {
+            return findExactlyNode(root.right,root, 1, key)
+        }
+    }
+
+    private func findProcessor(_ root: TreeNode?) -&gt; (node: TreeNode?, parent: TreeNode?) {
+        guard let root = root else { return (node: nil, parent: nil) }
+
+        var parentNode: TreeNode? = root
+        var result: TreeNode? = root.left
+
+        while result?.right != nil {
+            parentNode = result
+            result = result?.right
+        }
+
+        return (node: result, parent: parentNode)
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[二叉树/多叉树 层序遍历解题套路]]></title>
         <id>https://glve1027.github.io/post/er-cha-shu-duo-cha-shu-ceng-xu-bian-li-jie-ti-tao-lu/</id>
@@ -2815,129 +3015,6 @@ ostream&amp; operator&lt;&lt; (ostream &amp; cout, const String &amp; string) {
 	if (string.m_cstring == NULL) { return cout; }
 	return cout &lt;&lt; string.m_cstring;
 }
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[学习优秀的iOS代码(SDWebImage)]]></title>
-        <id>https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi/</id>
-        <link href="https://glve1027.github.io/post/xue-xi-you-xiu-de-ios-dai-ma-yi/">
-        </link>
-        <updated>2020-01-22T13:31:58.000Z</updated>
-        <summary type="html"><![CDATA[<p><a href="https://github.com/SDWebImage/SDWebImage">SDWebImage</a>,一个iOS图片加载库，在iOS界，一直是标杆的存在，本篇博客不去讨论他的具体代码架构、设计、算法，而是从一个个小的tips来发现这些代码的闪光点。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p><a href="https://github.com/SDWebImage/SDWebImage">SDWebImage</a>,一个iOS图片加载库，在iOS界，一直是标杆的存在，本篇博客不去讨论他的具体代码架构、设计、算法，而是从一个个小的tips来发现这些代码的闪光点。</p>
-<!-- more -->
-<h3 id="1-协议接口的使用">1. 协议(接口)的使用</h3>
-<ul>
-<li>自吹一下，作者的这一点写代码的风格和我还是很像的，都很喜欢<code>面向接口编程</code>，整个<code>SDWebImage</code>中存在很多这样的情况，比如：<code>SDImageCodersManager</code>， 光从这个名字就能看出这是一个关于给图片编码的类，再看定义：</li>
-</ul>
-<pre><code class="language-objectivec">@interface SDImageCodersManager : NSObject &lt;SDImageCoder&gt;
-@end
-
-@protocol SDImageCoder &lt;NSObject&gt;
-@end
-</code></pre>
-<ul>
-<li>这样代码风格遍布在整个项目中, 例如下面类中定义的<code>SDWebImageDownloaderRequestModifier</code>,<code>SDWebImageDownloaderResponseModifier</code>,<code>SDWebImageDownloaderDecryptor</code></li>
-</ul>
-<pre><code class="language-objectivec">@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderRequestModifier&gt; requestModifier;
-
-@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderResponseModifier&gt; responseModifier;
-
-@property (nonatomic, strong, nullable) id&lt;SDWebImageDownloaderDecryptor&gt; decryptor;
-</code></pre>
-<blockquote>
-<p>总结：如果后面我们也想实现一个功能可以模仿这种规范：1：定义一个接口  2：定义一个默认的类并且遵循相应的接口  3：暴露给外面的是一个id&lt;协议&gt;object。</p>
-</blockquote>
-<h3 id="2-宏的使用">2. 宏的使用</h3>
-<ul>
-<li>其实如果你正常看第三个优秀源码，你就会发现，很多代码存在很多优秀的宏定义，一方面使用起来很优雅，一方面也可以学习到关于编译器的一个参数的设置。在项目中，我经常看到下面的代码：</li>
-</ul>
-<pre><code class="language-objectivec">SD_LOCK(self.HTTPHeadersLock);
-[self.HTTPHeaders setValue:value forKey:field];
-SD_UNLOCK(self.HTTPHeadersLock);
-
-// 定义
-#ifndef SD_LOCK
-#define SD_LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-#endif
-
-#ifndef SD_UNLOCK
-#define SD_UNLOCK(lock) dispatch_semaphore_signal(lock);
-#endif
-
-// 用来区分平台的宏
-#if TARGET_OS_IOS || TARGET_OS_TV
-    #define SD_UIKIT 1
-#else
-    #define SD_UIKIT 0
-#endif
-
-#if TARGET_OS_IOS
-    #define SD_IOS 1
-#else
-    #define SD_IOS 0
-#endif
-</code></pre>
-<blockquote>
-<p>总结：没什么技术含量，大家都会这样去实现<code>锁</code>,但是代码未必有这么优雅，点赞。<br>
-说道<code>锁</code>的实现，代码中还存在另一个保证线程安全的就是<code>@synchronized(self)</code>, 这里在项目源码中，有时候作者用的是<code>@synchronized(self)</code>, 有时候用的又是一个临时变量：<code>@synchronized(xx)</code>, 网上之前也有一些关于这样<code>性能不是很好的传闻</code>。关于这个我特意去查阅了一些资料，大家可以看一下<a href="http://mrpeak.cn/blog/synchronized/">FaceBook大神的这篇文章</a></p>
-</blockquote>
-<h3 id="3-关于函数定义规范的问题">3. 关于函数定义规范的问题</h3>
-<ul>
-<li>在项目中关于下载图片的<code>api</code>，可以说是核心的代码，在看看内部函数定义，代码如下：</li>
-</ul>
-<pre><code class="language-objectivec">// 参数类型的定义
-typedef void(^SDWebImageNoParamsBlock)(void);
-typedef NSString * SDWebImageContextOption NS_EXTENSIBLE_STRING_ENUM;
-typedef NSDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageContext;
-typedef NSMutableDictionary&lt;SDWebImageContextOption, id&gt; SDWebImageMutableContext;
-
-
-- (void)sd_setImageWithURL:(nullable NSURL *)url {
-    [self sd_setImageWithURL:url placeholderImage:nil options:0 progress:nil completed:nil];
-}
-
-- (void)sd_setImageWithURL:(nullable NSURL *)url placeholderImage:(nullable UIImage *)placeholder {
-    [self sd_setImageWithURL:url placeholderImage:placeholder options:0 progress:nil completed:nil];
-}
-
-- (void)sd_setImageWithURL:(nullable NSURL *)url placeholderImage:(nullable UIImage *)placeholder options:(SDWebImageOptions)options {
-    [self sd_setImageWithURL:url placeholderImage:placeholder options:options progress:nil completed:nil];
-}
-
-- (void)sd_setImageWithURL:(nullable NSURL *)url placeholderImage:(nullable UIImage *)placeholder options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context
-</code></pre>
-<ul>
-<li>后期定义函数也可以这样，最后收拢到一个核心的函数上。</li>
-<li>关于参数的类型，是否需要提前定义，这个从规整的角度来看，还是需要的。</li>
-<li>关于函数类型是否为<code>nil</code>，还是需要<code>nullable</code>来标识。</li>
-</ul>
-<blockquote>
-<p>越是规范的东西，越是在写代码的时候可以的去实现，时间长了，也可以学习到优秀代码的规范。</p>
-</blockquote>
-<h3 id="4-关于网络请求的实现">4. 关于网络请求的实现</h3>
-<ul>
-<li>这里用自定义的<code>NSOperation</code>, 这里要说一下，自定义<code>NSOperation</code>有两种实现，一种是<code>从写start方法</code>【需要自己去管理isFinish/isExecuting】, 领一种是<code>从写main方法</code>【不需要管理状态值】</li>
-<li>并且这里上来就用了<code>@synchronized</code>保证线程安全。</li>
-<li>并且这里使用了一个自定义的串行队列来管理<code>_coderQueue = dispatch_queue_create(&quot;com.hackemist.SDWebImageDownloaderOperationCoderQueue&quot;, DISPATCH_QUEUE_SERIAL);</code></li>
-</ul>
-<pre><code class="language-objectivec">- (void)start {
-    @synchronized (self) {
-        ...
-    }
-}
-</code></pre>
-<h3 id="5-关于代码设计开闭原则">5. 关于代码设计：<code>开闭原则</code></h3>
-<ul>
-<li>其实在设计<code>Framework</code>的时候，需要时刻记着，哪些东西不应该暴露给用户，哪些需要暴露给用户修改的，这里作者大量使用枚举来实现外部自定义配置：</li>
-</ul>
-<pre><code class="language-objectivec">if (self.options &amp; SDWebImageDownloaderHighPriority) {
-    self.dataTask.priority = NSURLSessionTaskPriorityHigh;
-} else if (self.options &amp; SDWebImageDownloaderLowPriority) {
-    self.dataTask.priority = NSURLSessionTaskPriorityLow;
-}      
 </code></pre>
 ]]></content>
     </entry>
