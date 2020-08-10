@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://glve1027.github.io/</id>
     <title>Ghcoder</title>
-    <updated>2020-06-21T01:46:07.839Z</updated>
+    <updated>2020-08-10T09:47:40.901Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://glve1027.github.io/"/>
     <link rel="self" href="https://glve1027.github.io/atom.xml"/>
@@ -10,6 +10,246 @@
     <logo>https://glve1027.github.io/images/avatar.png</logo>
     <icon>https://glve1027.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Ghcoder</rights>
+    <entry>
+        <title type="html"><![CDATA[二叉堆解决的问题]]></title>
+        <id>https://glve1027.github.io/post/er-cha-dui-jie-jue-de-wen-ti/</id>
+        <link href="https://glve1027.github.io/post/er-cha-dui-jie-jue-de-wen-ti/">
+        </link>
+        <updated>2020-08-10T09:33:43.000Z</updated>
+        <summary type="html"><![CDATA[<h3 id="二叉堆能解决什么问题-还是要有几个先决条件的">二叉堆能解决什么问题？ 还是要有几个先决条件的。</h3>
+<ol>
+<li>需要数据之间是可以比较的。</li>
+<li>解决类似找到第K个问题的。</li>
+</ol>
+]]></summary>
+        <content type="html"><![CDATA[<h3 id="二叉堆能解决什么问题-还是要有几个先决条件的">二叉堆能解决什么问题？ 还是要有几个先决条件的。</h3>
+<ol>
+<li>需要数据之间是可以比较的。</li>
+<li>解决类似找到第K个问题的。</li>
+</ol>
+<!-- more -->
+<ul>
+<li>
+<p>二叉堆的两个问题，需要注意。</p>
+<ol>
+<li>如何生成二叉堆，是有一定规律的，这个规律就是：<code>如果是大顶堆，那就是父 &gt; 子 | 小顶堆则 反过来</code>。</li>
+<li>这里我将这个过程叫做<code>Heapify</code>，这个规律就是<code>1. 从上而下上滤 2.从下而上下滤</code> [两个在时间复杂度上有细微的差别，可以参考下面的代码，推荐2]</li>
+</ol>
+</li>
+</ul>
+<pre><code class="language-swift">    /**
+     * 1. 自上而下上滤
+     * 2. 自下而上下滤
+     */
+    private func heapify() {
+        /* for i in 0..&lt;elements.count { shiftUp(index: i) } */
+        let firstNoChildIndex = (self.elements.count &gt;&gt; 1) - 1
+        for i in (0...firstNoChildIndex).reversed() { shifDown(index: i) }
+    }
+</code></pre>
+<ol>
+<li>至于上面提到的如何<code>上滤</code>/<code>下滤</code>就是另一个重点，需要不断的<strong>比较</strong>、<strong>覆盖值</strong>、<strong>修改索引</strong>，代码如下: <code>这里有个关键点，就是不要每次在循环的时候，就完成父与子之间的值交换，只需要记住就行了</code></li>
+</ol>
+<pre><code class="language-swift"> /**
+     * 上滤
+     * 参数为index索引
+     */
+    private func shiftUp(index: Int) {
+        guard index &lt; self.elements.count &amp;&amp; index &gt;= 0 else { return }
+        let currentValue: E = self.elements[index];
+        var index = index
+        
+        while index &gt; 0 {
+            // 找到parentIndex
+            let parentIndex = (index - 1) &gt;&gt; 1;
+            if (parentIndex &lt; 0) { break }
+            
+            let parentValue = self.elements[parentIndex]
+            // 如果子 &lt;= parent的话，就直接退出
+            if (currentValue &lt;= parentValue) { break }
+            
+            // 否则就替换值
+            self.elements[index] = parentValue
+            // 并且替换索引
+            index = parentIndex
+        }
+        
+        self.elements[index] = currentValue
+    }
+    
+    /**
+     * 下滤
+     * 参数为index索引
+     */
+    private func shifDown(index: Int) {
+        guard index &lt; self.elements.count &amp;&amp; index &gt;= 0 else { return }
+        let currentValue = self.elements[index]
+        var index = index
+        
+        // 找到第一个没有子节点的节点坐标
+        let half = self.elements.count &gt;&gt; 1
+        
+        while (index &lt; half) {
+            // 找到子节点
+            // 两种情况
+            // 1. 只有左子节点
+            // 2. 有左右两个子节点
+            var childIndex = (index &lt;&lt; 1) + 1
+            guard childIndex &lt; self.elements.count else { break }
+            
+            var childValue = self.elements[childIndex]
+            // 找出子节点中较大的那个
+            if (childIndex + 1 &lt;= self.elements.count - 1  &amp;&amp; self.elements[childIndex + 1] &gt; childValue) {
+                childValue = self.elements[childIndex + 1]
+                childIndex += 1
+            }
+            
+            // 判断大小
+            if (currentValue &gt;= childValue) { break }
+            
+            // 替换
+            self.elements[index] = childValue
+            // 修改索引
+            index = childIndex
+        }
+        self.elements[index] = currentValue
+    }
+</code></pre>
+<ul>
+<li>
+<p>参考一道LeeCode<br>
+<img src="https://glve1027.github.io//post-images/1597052570350.jpg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>解题如下</p>
+</li>
+</ul>
+<pre><code class="language-swift">class Solution {
+    func findKthLargest(_ nums: [Int], _ k: Int) -&gt; Int {
+        let binary = BinaryHeap(e: nums)
+        var index = 1
+        guard index &lt;= k else { return -1 }
+        while index &lt; k {
+            _ = binary.remove()
+            index += 1
+        }
+        return binary.remove() ?? -1
+    }
+}
+
+class BinaryHeap&lt;E: Comparable&gt; {
+    public var elements: [E] = []
+    // Heapify
+    init(e: [E]) {
+        guard !e.isEmpty else { return }
+        e.forEach { elements.append($0) }
+        guard elements.count &gt; 1 else { return }
+        heapify()
+    }
+    
+    // add
+    public func add(element: E) {
+        // 1. append element
+        elements.append(element)
+        // 2. shift up
+        shiftUp(index: elements.count - 1)
+    }
+    
+    /**
+     * 1. 自上而下上滤
+     * 2. 自下而上下滤
+     */
+    private func heapify() {
+        /* for i in 0..&lt;elements.count { shiftUp(index: i) } */
+        let firstNoChildIndex = (self.elements.count &gt;&gt; 1) - 1
+        for i in (0...firstNoChildIndex).reversed() { shifDown(index: i) }
+    }
+    
+    /**
+     * 上滤
+     * 参数为index索引
+     */
+    private func shiftUp(index: Int) {
+        guard index &lt; self.elements.count &amp;&amp; index &gt;= 0 else { return }
+        let currentValue: E = self.elements[index];
+        var index = index
+        
+        while index &gt; 0 {
+            // 找到parentIndex
+            let parentIndex = (index - 1) &gt;&gt; 1;
+            if (parentIndex &lt; 0) { break }
+            
+            let parentValue = self.elements[parentIndex]
+            // 如果子 &lt;= parent的话，就直接退出
+            if (currentValue &lt;= parentValue) { break }
+            
+            // 否则就替换值
+            self.elements[index] = parentValue
+            // 并且替换索引
+            index = parentIndex
+        }
+        
+        self.elements[index] = currentValue
+    }
+    
+    /**
+     * 下滤
+     * 参数为index索引
+     */
+    private func shifDown(index: Int) {
+        guard index &lt; self.elements.count &amp;&amp; index &gt;= 0 else { return }
+        let currentValue = self.elements[index]
+        var index = index
+        
+        // 找到第一个没有子节点的节点坐标
+        let half = self.elements.count &gt;&gt; 1
+        
+        while (index &lt; half) {
+            // 找到子节点
+            // 两种情况
+            // 1. 只有左子节点
+            // 2. 有左右两个子节点
+            var childIndex = (index &lt;&lt; 1) + 1
+            guard childIndex &lt; self.elements.count else { break }
+            
+            var childValue = self.elements[childIndex]
+            // 找出子节点中较大的那个
+            if (childIndex + 1 &lt;= self.elements.count - 1  &amp;&amp; self.elements[childIndex + 1] &gt; childValue) {
+                childValue = self.elements[childIndex + 1]
+                childIndex += 1
+            }
+            
+            // 判断大小
+            if (currentValue &gt;= childValue) { break }
+            
+            // 替换
+            self.elements[index] = childValue
+            // 修改索引
+            index = childIndex
+        }
+        self.elements[index] = currentValue
+    }
+    
+    // remove
+    public func remove() -&gt; E? {
+        guard !self.elements.isEmpty else { return nil }
+        let firstElement = self.elements.removeFirst()
+        guard !self.elements.isEmpty else { return firstElement }
+        let lastElement = self.elements.removeLast()
+        self.elements.insert(lastElement, at: 0)
+        // 下滤第一个
+        shifDown(index: 0)
+        return firstElement
+    }
+    
+    // clear
+    public func clear() {
+        elements.removeAll()
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[二叉搜索树的解题套路]]></title>
         <id>https://glve1027.github.io/post/er-cha-sou-suo-shu-de-jie-ti-tao-lu/</id>
@@ -1765,1256 +2005,6 @@ typedef struct {
     float x;
     float y;
 } Point;
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[整理C++笔记]]></title>
-        <id>https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji/</id>
-        <link href="https://glve1027.github.io/post/zheng-li-xue-xi-cbi-ji/">
-        </link>
-        <updated>2020-01-28T15:54:39.000Z</updated>
-        <summary type="html"><![CDATA[<h2 id="学习c-的重要性不言而喻春节在家没事就整理了一下c的知识点">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</h2>
-]]></summary>
-        <content type="html"><![CDATA[<h2 id="学习c-的重要性不言而喻春节在家没事就整理了一下c的知识点">学习C++ 的重要性不言而喻，春节在家没事就整理了一下C++的知识点。</h2>
-<!-- more -->
-<h2 id="学习c">学习C++</h2>
-<h3 id="第一天">第一天</h3>
-<ol>
-<li>c++ 中是不能同时存在两个<code>main</code>函数。</li>
-<li><code>getchar()</code> 等待键盘输入。</li>
-<li>输出: <code>cout &lt;&lt; &quot;xx&quot;</code>。</li>
-<li><code>endl</code>: 换行的意思。</li>
-<li>键盘赋值给： <code>cin &gt;&gt; xx</code>。</li>
-<li>C语言不支持函数重载。【重载 -&gt; 函数名相同，参数的个数，参数的类型，参数的顺序不同。】</li>
-<li>extern &quot;C&quot;/ extern &quot;C&quot; { } -&gt; 按照C语言的方式编译。</li>
-<li>extern &quot;C&quot;/ extern &quot;C&quot; { } 使用在函数声明的地方。</li>
-<li>c++ 支持默认参数，【默认参数只能从右边开始】</li>
-<li>c++ 函数中使用默认参数，既有<code>定义</code>，也有<code>实现</code>，只能将默认参数使用在<code>定义</code>中 【可是是<code>常量</code>，也可以是<code>全局变量</code>】</li>
-</ol>
-<h3 id="第二天">第二天</h3>
-<ol>
-<li><code>inline</code> -&gt; 1. 函数代码不多  2. 函数调用频率比较频繁【可以修饰函数<code>声明</code>、也可以修饰函数<code>实现</code>】</li>
-<li><code>inline</code>和<code>宏</code>的区别：<code>inline</code>还是有<code>语法检测</code>和<code>函数检测</code></li>
-<li><code>#pragma once</code>：防止整个文件内容被重复引入。【#ifndef,#define,#endif 不受任何编译器限制，也可以用于<code>部分代码</code>不被重复引用】</li>
-<li>引用：1. <code>定义了一个引用,相当于变量的别名</code>, 2. <code>对引用做计算，就相当于对引用的变量做计算</code> 3. <code>定义引用的时候必须要赋值，不能修改指向 【对比指针更加安全】</code> 4. <code>不存在引用的引用/引用的指针/引用数组</code></li>
-</ol>
-<pre><code class="language-c++">int a = 10;
-int b = 20;
-
-int *p = &amp;a;  // 相当于p的指针指向变量a
-int *&amp;rp = p; // 创建一个指针p的引用/别名rp
-rp = &amp;b;      // rp的指针指向变量b/相当于变量b的指针赋值给p
-
-// 数组引用
-int array[] = { 10, 20, 30 };
-int (&amp;rArray)[3] = array;
-</code></pre>
-<blockquote>
-<p><code>const</code>: 1. 常量的意思，被修饰的变量不可修改。 2. 如果修饰的是<code>类</code>,<code>结构体（的指针）</code>其他的成员也不可以修改。3. 修饰的是其右边的内容 4. const 必须放在&amp;左边才能算是<code>常引用</code> 5. <code>常引用</code>可以用来修饰临时变量/表达式/函数返回值</p>
-</blockquote>
-<pre><code class="language-c++">int age = 10;
-const int *p0 = &amp;age; // *p0是常量  p0不是常量
-int const *p1 = &amp;age; // *p1是常量  p1不是常量
-int * const p2 = &amp;age; // *p2不是常量，p2是常量
-const int * const p3 = &amp;age; // *p3是常量，p3是常量
-
-//
-int age = 10;
-int&amp; const rage = age; // rage 的指向不能改 【不管这里加不加`const`, 引用都不能再次赋值】
-int const&amp; rage1 = age;// 不能通过引用修改所指向的内容 【因为rage的时候不需要添加&amp;】
-rage = 30;
-
-
-int const *page = &amp;age;  // 不能通过指针修改所指向的内容
-int* const page1 = &amp;age; // 不能修改指针的指向，但是可以通过指针修改指向的内容
-</code></pre>
-<blockquote>
-<p>函数参数用<code>const</code>修饰,入参可以是<code>const</code>， 也可以不是<code>const</code>.<br>
-函数参数不用<code>const</code>修饰, 入参不可以<code>const</code></p>
-</blockquote>
-<h3 id="第三天">第三天</h3>
-<ul>
-<li>汇编基础</li>
-</ul>
-<pre><code class="language-c++">// Intel / AT&amp;T汇编
-// 寄存器是在CPU里面的
-// x86(32bit)  eax/ebx/ecx/edx/ebp...
-// x86(64bit) |63-56|55-48|47-40|39-32|31-24|23-16|15-8|7-0|
-//								                  |AH..|AL.|
-//		                                          |AX......|
-//									  |EAX.................|
-//		      |RAX.........................................|
-</code></pre>
-<blockquote>
-<p><code>R开头的寄存器是64位的，占8个字节</code>/ <code>E开头的寄存器是64位的，占4个字节</code><br>
-[地址值]<br>
-<code>word</code> = <code>2</code>个字节  <code>dword</code> = <code>4</code>个字节(double)  <code>qword</code> = <code>8</code>个字节(quad)<br>
-<code>call</code>调用函数<br>
-lea dest [地址值]</p>
-</blockquote>
-<pre><code class="language-c++">move eax, [0x12313..] // 将从地址 0x12313..取四个字节的值赋值给eax
-lea dest [0x12313..]  // 将地址 0x12313..  赋值给 dest
-</code></pre>
-<blockquote>
-<p><code>ret</code>函数返回<br>
-<code>xor</code>异或<br>
-<code>inc</code>自增/ <code>dec</code>自减<br>
-<code>j</code>开头的一般都是跳转，大多数的带条件的跳转，一般跟test/cmp等指令配合使用</p>
-</blockquote>
-<pre><code class="language-c++">jmp 0x12129.. // 无条件的跳转
-// 有条件的跳转
-cmp eax, ebx
-jz 0x12129..
-mov eax, 1
-mov ebx, 2
-</code></pre>
-<blockquote>
-<p>开始开始调用前，<code>栈</code>空间已经分配好了，<code>栈</code>内存的特点：1. 由<code>CPU</code>自动创建和回收的</p>
-</blockquote>
-<blockquote>
-<p>从内存地址开始往高地址走，取几个字节，就是取到的值<br>
-一个变量的地址值是它所有字节中最小的地址值</p>
-</blockquote>
-<blockquote>
-<p><code>引用</code>的本质就是<code>地址</code><br>
-<code>引用不能修改</code>如何实现？ 【C++的规则】</p>
-</blockquote>
-<pre><code class="language-c++">int age = 10;
-int &amp;rage = age; // 相当于 int * const rage = &amp;age 作用一样
-</code></pre>
-<blockquote>
-<p><code>当引用指向了不同类型的数据时，会产生临时变量，即引用指向的并不是初始化的那个变量</code><br>
-<code>表达式</code>可以被<code>赋值</code> =&gt; <code>(a = b) = 4;</code></p>
-</blockquote>
-<h3 id="第四天">第四天</h3>
-<blockquote>
-<p>C++中可以使用<code>struct</code>/<code>class</code>定义类.<br>
-<code>struct</code>默认属性都是<code>public</code><br>
-<code>class</code>默认属性都是<code>private</code></p>
-</blockquote>
-<pre><code class="language-c++">struct Person {
-	// 成员变量
-	int m_id;
-	int m_age;
-	int m_height;
-
-	// 成员函数
-	void run() {
-		// this指向Person对象的指针
-		// this里面存储的就是person对象的地址值
-		this-&gt;m_id = 11;
-		this-&gt;m_age = 22;
-		this-&gt;m_height = 33;
-	};
-};
-
-int main() {
-
-	// 在栈空间分配了内存给person对象
-	// 这个person的对象的内存会自动回收，不需要开发人员去管理
-	// person对象占4个字节
-	Person person;
-	person.m_id = 1;
-	person.m_age = 2;
-	person.m_height = 3;
-	person.run(); // 函数代码不占用空间【在编译的完成的时候就已经决定了函数的地址，调用函数直接就是call xxx】
-
-	cout &lt;&lt; sizeof(person) &lt;&lt; endl; // 12个字节
-	/*
-	* 属性值在对象内的分布是连续的，分别占4个字节
-	*/
-	cout &lt;&lt; &amp;person &lt;&lt; endl;
-	cout &lt;&lt; &amp;person.m_id &lt;&lt; endl;
-	cout &lt;&lt; &amp;person.m_age &lt;&lt; endl;
-	cout &lt;&lt; &amp;person.m_height &lt;&lt; endl;
-
-	/*
-	* 1.  取出person 的对象地址，存入到pPerson
-	* 2.  取出pPerson也就是m_id的地址进行赋值
-	* 3/4 取出pPerson的地址偏移4/8个字节，进行赋值
-	*/
-	Person* pPerson = &amp;person;
-	pPerson-&gt;m_id = 4;
-	pPerson-&gt;m_age = 5;
-	pPerson-&gt;m_height = 6;
-
-	return 0;
-}
-</code></pre>
-<h3 id="第五天">第五天</h3>
-<pre><code class="language-c++">
-struct Person {
-private:
-	int m_age;
-
-public:
-	void setAge(int age) {
-		// 过滤的操作
-		if (age &lt; 0) return;
-		// 不能通过.来获取值，例如this.xx 这是不对的
-		this-&gt;m_age = age;
-	}
-
-	int getAge() {
-		return this-&gt;m_age;
-	}
-};
-
-class Person {// struct 只有成员访问权限的区别，其他没有区别
-public:
-	int m_age;
-	void run() {
-		cout &lt;&lt; &quot;run() &quot; &lt;&lt; endl;
-	};
-};
-
-/* 内存空间的分布
-1. 栈空间 【自动回收和分配】
-2. 堆空间 【需要我们主动申请和释放】
-3. 代码区
-4. 全局区 【全局变量，特点：整个程序运行过程中都存在】
-*/
-</code></pre>
-<blockquote>
-<p>在c++的堆空间如何创建内存？</p>
-</blockquote>
-<pre><code class="language-c++">/*
-1. malloc -&gt; free
-2. new -&gt; delete
-3. new [] -&gt; delete []
-*/
-
-void test() {
-	// 申请4个字节的堆空间内存
-	int* p = (int*)malloc(4);
-	*p = 10;
-	cout &lt;&lt; *p &lt;&lt; endl;
-	free(p);
-}
-
-void test2() {
-	int* p = new int;
-	delete p;
-};
-
-void test3() {
-	// 申请10个连续的int类型
-	int* p = (int*)malloc(sizeof(int) * 10);
-	free(p);
-
-	int* p1 = new int[10];
-	delete[] p1;
-};
-
-// 下列代码会出现内存泄漏
-void test4() {
-	int* p = new int; // 第一个int *的指针会出现内存泄漏
-	p = new int;
-
-	delete p;
-};
-
-void test5() {
-	int size = sizeof(int);
-	int* p = (int*)malloc(size); // 申请完内存之后，*p的值是脏数据
-	// memory set =&gt; [从p地址开始的4个字节, 每个字节都存放0]
-	memset(p, 0, size);
-
-	cout &lt;&lt; *p &lt;&lt; endl;
-
-	free(p);
-};
-
-void test6() {
-	int* p1 = new int; // 没有初始化
-	int* p2 = new int(); // 初始化为0
-	int* p3 = new int(5); // 初始化为5
-	int* p4 = new int[3]; // 没有初始化
-	int* p5 = new int[3](); // 初始化为0
-	int* p6 = new int[3]{}; // 初始化为0
-	int* p7 = new int[3]{ 5 }; // 初始化为 5，0，0
-};
-
-struct Person {
-	int m_age;
-};
-
-// 全局区
-Person g_person;
-
-int main() {
-	// 栈空间
-	Person person;
-
-	// 堆空间
-	Person* p = new Person();
-	p-&gt;m_age = 20;
-	// 释放空间
-	delete p;
-
-	Person* p1 = (Person*)malloc(sizeof(Person));
-	// 释放空间
-	free(p1);
-
-	return 0;
-}
-</code></pre>
-<blockquote>
-<p>构造函数的注意事项：</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-struct Person {
-	int m_age;
-
-	Person() {
-		cout &lt;&lt; &quot;Person() &quot; &lt;&lt; endl;
-		this-&gt;m_age = 0;
-		// 格式化Person中的所有值为0：memset(this, 0, sizeof(Person));
-	};
-
-	// 构造函数重载 overload
-	// 一旦自定义了构造函数，一定要用自定义的构造函数初始化对象
-	Person(int age) {
-		this-&gt;m_age = age;
-		cout &lt;&lt; &quot;Person(int age)&quot; &lt;&lt; endl;
-	};
-};
-
-Person g_person(); // 这是一个函数声明
-
-int main() {
-	Person person3(); // 这是一个函数声明，无参，返回值类型为Person
-
-	// 创建的person对象在栈空间
-	Person person1;
-	Person person(30);
-	person.m_age = 20;
-	cout &lt;&lt; &quot;age is &quot; &lt;&lt; person.m_age &lt;&lt; endl;
-
-	// 创建的person对象在堆空间
-	Person* person2 = new Person();
-	delete person2;
-	Person* person3 = new Person(100);
-	delete person3;
-
-	// 通过malloc创建对象内存的时候不会调用构造函数
-	Person* person4 = (Person*)malloc(sizeof(Person));
-	delete person4;
-
-	// 在某些特定的情况下，编译器会为类生成空的无参的构造函数
-
-	return 0;
-};
-</code></pre>
-<blockquote>
-<p>成员变量的初始化问题</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-struct Person {
-	int m_age;
-};
-
-// 全局区（成员变量的初始值为0）【不管有没有实现构造函数，都会默认初始化成员变量】
-Person g_person;
-
-/*
-！！如果自定义了构造函数，除了全局区，其他内存空间的成员变量默认都不会初始化，需要开发人员手动初始化
-*/
-
-//!! 1个字节  =&gt; 0000 0000 (8个bit)
-
-int main() {
-	// 栈空间（成员变量没有初始化）【不管有没有实现构造函数，都不会初始化成员变量】
-	Person person;
-	// 堆空间
-	Person* p1 = new Person; // 成员变量没有初始化 【不管有没有实现构造函数，都不会初始化成员变量】
-	Person* p2 = new Person(); // 成员变量有初始化 【如果没有定义构造函数则会初始化成员变量，如果定义了构造函数则不会初始化成员变量】
-
-	cout &lt;&lt; g_person.m_age &lt;&lt; endl;
-	cout &lt;&lt; p1-&gt;m_age &lt;&lt; endl;
-	cout &lt;&lt; p2-&gt;m_age &lt;&lt; endl;
-
-	return 0;
-};
-</code></pre>
-<h3 id="第六天">第六天</h3>
-<blockquote>
-<p>析构函数的特点：</p>
-</blockquote>
-<pre><code class="language-c++">struct Person {
-	int m_age;
-	// 对象创建完毕的时候调用
-	Person() {
-		cout &lt;&lt; &quot;Person()&quot; &lt;&lt; endl;
-		this-&gt;m_age = 0;
-	};
-	// 对象销毁的时候调用
-	// 析构函数特点： 1. 不能重载 2. 使用malloc创建的内存，调用free, 不能触发析构函数 3. 构建函数/析构函数必要public
-	~Person() {
-		cout &lt;&lt; &quot;~Person()&quot; &lt;&lt; endl;
-	};
-};
-</code></pre>
-<blockquote>
-<p>对象内存的管理</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-// 如果这个对象里面没有任何成员变量，也会占1个字节
-struct Car {
-	Car() {
-		cout &lt;&lt; &quot;Car()&quot; &lt;&lt; endl;
-	};
-
-	~Car() {
-		cout &lt;&lt; &quot;~Car()&quot; &lt;&lt; endl;
-	};
-};
-
-struct Person {
-	int m_age;  // 4个字节
-	Car *m_car; // 一个指针，占4个字节，起初不会立即创建一个Car对象
-
-	// 初始化工作
-	Person() {
-		cout &lt;&lt; &quot;Person created&quot; &lt;&lt; endl;
-		this-&gt;m_car = new Car();
-	};
-
-	// 内存回收，清理工作（回收Person对象内部的申请的空间）
-	~Person() {
-		delete this-&gt;m_car;
-		cout &lt;&lt; &quot;Person destoryed&quot; &lt;&lt; endl;
-	};
-};
-
-int main() {
-	Person* p = new Person(); // p指针在栈空间  Person/Car都在堆空间
-
-	cout &lt;&lt; sizeof(Car) &lt;&lt; endl; // 啥属性都没有，也会占有1个字节
-
-	delete p;
-
-	return 0;
-};
-</code></pre>
-<blockquote>
-<p>声明和实现分离的操作<br>
-<code>Person.h</code>文件  定义声明</p>
-</blockquote>
-<pre><code class="language-c++">#pragma once
-
-// 声明
-class Person {
-	int m_age;
-public:
-	Person();
-	~Person();
-	void setAge(int age);
-	int getAge();
-};
-</code></pre>
-<blockquote>
-<p><code>Person.cpp</code>文件  实现内容</p>
-</blockquote>
-<pre><code class="language-c++">#include &quot;Person.h&quot;
-#include &lt;iostream&gt;
-
-using namespace std;
-
-// :: 域运算符号 【跟在函数名的前面】
-// 实现
-Person::Person() {
-	cout &lt;&lt; &quot;Person()&quot; &lt;&lt; endl;
-};
-Person::~Person() {
-	cout &lt;&lt; &quot;~Person()&quot; &lt;&lt; endl;
-};
-void Person::setAge(int age) {
-	this-&gt;m_age = age;
-};
-int Person::getAge() {
-	return this-&gt;m_age;
-};
-</code></pre>
-<blockquote>
-<p>命名空间的概念</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-#include &quot;Person.h&quot;
-using namespace G2;
-using namespace std;
-
-
-// 命名空间不影响内存布局
-namespace GX {
-	int g_no;
-	class Person {
-	public:
-		int m_age;
-	};
-};
-
-
-namespace GH {
-	int no;
-	class Person {
-	public:
-		int m_height;
-	};
-
-	void test() {
-
-	};
-};
-
-void test1() {
-	GX::Person person;
-	person.m_age = 10;
-	GX::g_no = 1;
-
-	GH::Person person2;
-	person2.m_height = 10;
-	GH::Person* person3 = new GH::Person();
-	person3-&gt;m_height = 11;
-	GH::test();
-};
-
-// 命名空间可以嵌套
-namespace GG {
-	namespace HH {
-		int m_age;
-	};
-};
-
-void test11() {};
-
-namespace G1 {
-	int m_age;
-};
-
-namespace G1 {
-	int m_height;
-};
-
-// =&gt; 合并命名空间, 和上面是等效的
-namespace G1 {
-	int m_age;
-	int m_height;
-};
-
-int main() {
-	GG::HH::m_age = 10;
-
-	using namespace GG::HH;
-	m_age = 11;
-
-	::test11(); // 空的，就是最大的命名空间
-
-	return 0;
-};
-</code></pre>
-<blockquote>
-<p>C++ 关于继承</p>
-</blockquote>
-<pre><code class="language-c++">// C++ 里面没有想Java/Object-C里面一样有基类
-int main() {
-	
-	GoodStudent gs;
-	gs.m_age = 20;
-	gs.m_no = 1;
-	gs.m_money = 2000;
-
-	cout &lt;&lt; sizeof(Person) &lt;&lt; endl;
-	cout &lt;&lt; sizeof(Student) &lt;&lt; endl;
-	cout &lt;&lt; sizeof(GoodStudent) &lt;&lt; endl;
-
-	// 内存排布
-	// 父类的成员变量在前面，子类的成员变量在后面
-	cout &lt;&lt; &amp;gs &lt;&lt; endl;
-	cout &lt;&lt; &amp;gs.m_age &lt;&lt; endl;
-	cout &lt;&lt; &amp;gs.m_no &lt;&lt; endl;
-	cout &lt;&lt; &amp;gs.m_money &lt;&lt; endl;
-
-	return 0;
-};
-</code></pre>
-<blockquote>
-<p>成员访问权限的问题：</p>
-</blockquote>
-<pre><code class="language-c++">/*
-子类内部访问父类成员的权限，是取以下2个权限最小的那个一个
-1. 成员本身的访问权限
-2. 上一级父类的继承方式
-*/
-// 开发中的继承都是要用public关键字，这样可以保证父类的权限特性
-
-struct Person {
-protected: // 子类内部/当前类内部可以访问
-	int m_age;
-};
-
-struct Student: public Person {
-private:// 只有当前类内部可以访问（class默认）
-	int m_score;
-};
-
-struct GoodsStudent: public Student {
-public: // 任何地方都可以访问 （struct默认）
-	int m_money;
-};
-</code></pre>
-<blockquote>
-<p>初始化列表</p>
-</blockquote>
-<pre><code class="language-c++">struct Person {
-	int m_age;
-	int m_height;
-
-	Person() {
-		// ！！直接调用构造函数，会创建一个临时对象，传入一个临时的地址给this指针
-		// ！！构造函数的互相调用必须要在初始化列表中调用
-		Person(0, 0);
-		/*this-&gt;m_age = 0;
-		this-&gt;m_height = 0;*/
-	}
-
-	// 初始化列表 : m_age(age), m_height(height) // 语法糖
-	// 1. 只能用在构造函数中
-	// 2. 初始化列表中的顺序只和 成员变量声明的顺序有关【跟内存的排布】
-	Person(int age, int height) : m_age(age), m_height(height) {}
-	/*Person(int age, int height) {
-		this-&gt;m_age = age;
-		this-&gt;m_height = height;
-	}*/
-
-	void display() {
-		cout &lt;&lt; &quot;age is &quot; &lt;&lt; this-&gt;m_age &lt;&lt; endl;
-		cout &lt;&lt; &quot;height is &quot; &lt;&lt; this-&gt;m_height &lt;&lt; endl;
-	}
-};
-</code></pre>
-<h3 id="第七天">第七天</h3>
-<blockquote>
-<p>构造函数列表的功能</p>
-</blockquote>
-<pre><code class="language-c++">class Person {
-	int m_age;
-	int m_height;
-public:
-	//Person(int age = 0, int height = 0) :m_age(age), m_height(height) {}
-	// 定义，默认参数只能写在函数的声明中
-	Person(int age = 0, int height = 0);
-};
-
-// 实现分离
-// 构造函数的初始化列表只能写在实现中
-Person::Person(int age, int height) :m_age(age), m_height(height) {}
-
-int main() {
-	Person person;
-	Person person1(10);
-	Person person2(10, 180);
-
-	return 0;
-};
-</code></pre>
-<blockquote>
-<p>父类的构造函数<br>
-子类默认会调用父类的无参构造函数<br>
-子类默认会调用父类的无参构造函数<br>
-子类的构造函数显式调用父类的有参构造函数，就不会区调用父类的无参构造函数<br>
-如果父类里面没有无参的构造函数，子类必须调用有参的构造函数</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-// 子类默认会调用父类的无参构造函数
-// 子类的构造函数显式调用父类的有参构造函数，就不会区调用父类的无参构造函数
-// 如果父类里面没有无参的构造函数，子类必须调用有参的构造函数
-class Person {
-	int m_age;
-public:
-	//Person() {
-	//	cout &lt;&lt; &quot;Person()&quot; &lt;&lt; endl;
-	//};
-
-	Person(int age) : m_age(age) {
-		cout &lt;&lt; &quot;Person(int age)&quot; &lt;&lt; endl;
-	}
-};
-
-class Student :public Person {
-	int m_score;
-public:
-	Student(): Person(0) {
-		cout &lt;&lt; &quot;Student()&quot; &lt;&lt; endl;
-	}
-
-	//Student(int age, int score): m_score(score), Person(age) {
-	//	cout &lt;&lt; &quot;Student(int age, int score)&quot; &lt;&lt; endl;
-	//}
-};
-</code></pre>
-<blockquote>
-<p>父类指针的问题</p>
-</blockquote>
-<pre><code class="language-c++">// 父类指针可以指向子类对象， 这个是安全的，开发中经常用到
-Person* stu = new Student();
-// 子类指针指向父类对象，这个是不安全的
-Student* person = (Student *)new Person();
-</code></pre>
-<blockquote>
-<p>如果子类继承父类的方式不是<code>public</code>, 那么就不能用父类指针指向子类对象<br>
-多态的要素：1. 子类重写父类成员函数 2. 父类指针指向子类对象 3. 利用父类指针调用重写的成员函数【必须是虚函数】</p>
-</blockquote>
-<blockquote>
-<p>虚表的内存排布</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-class Animal {
-public:
-	int m_age;
-	virtual void speak() {
-		cout &lt;&lt; &quot;Animal::Speak()&quot; &lt;&lt; endl;
-	}
-	virtual void run() {
-		cout &lt;&lt; &quot;Animal::run()&quot; &lt;&lt; endl;
-	}
-};
-
-class Cat : public Animal {
-public:
-	int m_life;
-	void speak() {
-		cout &lt;&lt; &quot;Cat::Speak()&quot; &lt;&lt; endl;
-	}
-	void run() {
-		cout &lt;&lt; &quot;Cat::run()&quot; &lt;&lt; endl;
-	}
-};
-
-int main() {
-
-	Animal* cat = new Cat();
-	cat-&gt;m_age = 20;
-	cat-&gt;speak();
-	cat-&gt;run();
-	/*
-	// 取出cat指针变量里面的存储的地址值
-	// eax里面存放的是Cat对象的地址值
-	mov         eax,dword ptr [cat]  
-
-	// 取出cat对象的前面4个字节内容给edx
-	// edx里面存储的是虚表的地址
-	mov         edx,dword ptr [eax] 
-
-	mov         esi,esp  
-	mov         ecx,dword ptr [cat]  
-
-	// 取出虚表地址（再偏移4个字节）取前4个字节的内容给eax
-	// eax里面存储的是Cat::run的函数地址
-	mov         eax,dword ptr [edx+4]  
-
-	call        eax  
-	*/
-
-	/*
-	同一个类的虚表的都是同一的
-	*/
-	Animal* a1 = new Animal(); // 虚表地址：84 9d f9 00 -&gt; 这个是小端(从右往左读)  0xf99d84
-	Animal* a2 = new Animal(); // 虚表地址：84 9d f9 00
-	Animal* a3 = new Animal(); // 虚表地址：84 9d f9 00
-
-	return 0;
-};
-</code></pre>
-<h3 id="第八天">第八天</h3>
-<blockquote>
-<p>如果子类中没有覆写父类的的虚函数，那么它存放的就是父类的虚函数地址。<br>
-如果子类中没有任何覆写的函数，那么它还是存在虚表地址，子类和父类的虚表地址不一样，但是内容是一样的。<br>
-如何调用父类中的成员函数。<br>
-如果使用了多态，析构函数也要使用虚函数。这样才能保证正常销毁对象。<br>
-如果子类继承了抽象类，没有<code>完全</code>覆盖虚函数，则子类也属抽象类</p>
-</blockquote>
-<pre><code class="language-c++">父类::xxx
-</code></pre>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-// 含有纯虚函数的类，是抽象类 【不能直接实例化】
-class Animal {
-public:
-	// 纯虚函数 【没有函数体的函数，且初始化为0, 定义接口规范】
-	virtual void speak() = 0;
-	virtual void run() = 0;
-};
-
-// 如果子类继承了抽象类，没有完全覆盖虚函数，则子类也属抽象类
-class Dog : public Animal {
-public:
-	void speak() {
-		cout &lt;&lt; &quot;Dog speak()&quot; &lt;&lt; endl;
-	}
-
-	void run() {
-		cout &lt;&lt; &quot;Dog run()&quot; &lt;&lt; endl;
-	}
-};
-</code></pre>
-<blockquote>
-<p>多继承<br>
-如果子类继承的多个父类都有虚函数，那么子类对象就会产生对应的<code>多张虚表</code><br>
-如果是同名函数，想要调用指定函数的话，就在指定函数名前面加 <code>对象::</code> [<code>如果自己没有函数的话，就会报错，因为二意性</code>]<br>
-虚基类</p>
-</blockquote>
-<pre><code class="language-c++">/*
-1. 虚表地址  ---------------------------&gt;  1. 0: 虚表指针与本类起始的偏移量 （一般为0）
-2. m_score                                2. 8：虚基类成员与本类的偏移量
-3. m_age    // 虚基类的属性值放在最后
-*/
-</code></pre>
-<h3 id="第九天">第九天</h3>
-<blockquote>
-<p><code>static</code>相关知识<br>
-静态成员：</p>
-<ol>
-<li>存储在数据段 （全局区，类似全局变量） 2. 整个程序运行过程中只有有一份内存<br>
-与下面的全局静态变量相比，它可以设置访问权限（private,protected,public）,达到局部共享的目的</li>
-<li>静态成员必须初始化  2. 必须在类外面初始化  3. 初始化的时候不能带static<br>
-如果类的定义和实现都分开的话，需要将static定义的属性值初始化的是步骤放在.cpp中<br>
-1.直接通过类来获取  2.直接通过对象来获取  3.直接通过指针来获取</li>
-</ol>
-</blockquote>
-<hr>
-<blockquote>
-<p>静态成员函数：<br>
-静态函数内部不能使用<code>this</code>（<code>this</code>指针只能用在非静态成员函数内部）<br>
-不能用虚函数<br>
-内部不能访问非静态成员变量，只能访问静态成员变量/函数<br>
-非静态成员函数可以访问 静态成员函数和静态成员变量<br>
-构造函数和析构函数不能是静态函数<br>
-<code>声明</code>和<code>实现</code>分离的时候，<code>实现</code>中不能出现<code>static</code></p>
-</blockquote>
-<pre><code class="language-c++">class Person1 {
-	static int getAge();
-};
-
-int Person1::getAge() {
-	return 1;
-}
-</code></pre>
-<pre><code class="language-c++">/*
-	静态成员变量 
-	1. 存储在数据段 （全局区，类似全局变量）
-	2. 整个程序运行过程中只有有一份内存
-*/
-
-// 与下面的全局静态变量相比，它可以设置访问权限（private,protected,public）,达到局部共享的目的
-
-/*
-	1. 静态成员必须初始化
-	2. 必须在类外面初始化
-	3. 初始化的时候不能带static
-*/
-
-// 如果类的定义和实现都分开的话，需要将static定义的属性值初始化的是步骤放在.cpp中
-
-int main() {
-	// 1.直接通过类来获取
-	Car::m_price = 30;
-	// 2.直接通过对象来获取
-	Car car3;
-	cout &lt;&lt; car3.m_price &lt;&lt; endl;
-	// 3.直接通过指针来获取
-	Car* p = new Car();
-	cout &lt;&lt; p-&gt;m_price &lt;&lt; endl;
-}
-</code></pre>
-<blockquote>
-<p>单例模式</p>
-</blockquote>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-/*
-	我们希望某些类的实例对象永远只有一个
-	单例模式
-	条件：
-
-	1. 构造函数私有化
-	2. 定义一个私有的静态成员变量指针，用于指向单例对象
-	3. 提供一个公共的返回单例对象的静态成员函数
-*/
-
-#include &lt;iostream&gt;
-using namespace std;
-
-/*
-	我们希望某些类的实例对象永远只有一个
-	单例模式
-	条件：
-
-	1. 构造函数私有化
-	2. 定义一个私有的静态成员变量指针，用于指向单例对象
-	3. 提供一个公共的返回单例对象的静态成员函数
-*/
-
-class Rocket {
-public:
-	static Rocket* sharedRocket() {
-		// p_thread
-		if (ms_rocket == NULL) {
-			ms_rocket = new Rocket();
-		}
-		return ms_rocket;
-	}
-	static void freeRocket() {
-		if (ms_rocket == NULL) return;
-		delete ms_rocket;
-		ms_rocket = NULL; // 回收内存、抹掉数据
-	}
-private:
-	static Rocket *ms_rocket;
-	Rocket() {
-		cout &lt;&lt; &quot;Rocket()&quot; &lt;&lt; endl;
-	}
-};
-
-Rocket* Rocket::ms_rocket = NULL;
-
-</code></pre>
-<blockquote>
-<p>如果子类父类中存在同名的<code>静态成员变量</code>，是可以的，并且不存在继承功能</p>
-</blockquote>
-<pre><code class="language-c++">class Person {
-public:
-	static int m_age;
-};
-
-int Person::m_age = 1;
-
-class Student : public Person {
-public:
-	static int m_age;
-};
-
-int Student::m_age = 2;
-
-int main() {
-	Person* p1 = new Person();
-	Student* s1 = new Student();
-	
-	/*
-	Person location is 0094C034
-   Student location is 0094C038
-	*/
-	cout &lt;&lt; &quot;Person location is &quot; &lt;&lt; &amp;p1-&gt;m_age &lt;&lt; endl;
-	cout &lt;&lt; &quot;Student location is &quot; &lt;&lt; &amp;s1-&gt;m_age &lt;&lt; endl;
-
-	return 0;
-}
-</code></pre>
-<h3 id="第十天">第十天</h3>
-<ul>
-<li>const 成员</li>
-</ul>
-<blockquote>
-<p>被<code>const</code>修饰的成员变量、非静态成员变量</p>
-</blockquote>
-<ul>
-<li>const成员变量</li>
-</ul>
-<blockquote>
-<p>必须初始化（类内部初始化），可以在声明的时候<code>直接</code>初始化赋值/也可以<code>初始化列表</code>赋值</p>
-</blockquote>
-<ul>
-<li>const成员函数（非静态）</li>
-</ul>
-<blockquote>
-<p>函数的<code>声明</code>和<code>实现</code>都必须要带<code>const</code><br>
-不能在函数内部修改<code>当前</code>对象的成员变量（非<code>static</code>）<br>
-内部只能调用<code>const</code>成员函数,<code>static</code>成员函数<br>
-非<code>const</code>成员函数可以调用<code>const</code>成员函数<br>
-函数通过添加<code>const</code>和<code>非const</code>，可以构成重载<br>
-<code>非const</code>对象（指针）优先调用<code>非const</code>成员函数、<code>const</code>对象（指针）只能调用<code>const</code>成员函数</p>
-</blockquote>
-<ul>
-<li>
-<p>拷贝构造函数</p>
-</li>
-<li>
-<p>如果函数的入参是字符常量</p>
-</li>
-</ul>
-<blockquote>
-<p><code>Car(int price, char *name = NULL) :m_price(price) {}</code></p>
-</blockquote>
-<ul>
-<li>使用对象类型作为函数的参数或者返回值，可能会产生一些不必要的中间对象</li>
-</ul>
-<h3 id="第十一天">第十一天</h3>
-<ul>
-<li>匿名对象</li>
-</ul>
-<pre><code class="language-c++">// 匿名函数
-Person().display();
-</code></pre>
-<ul>
-<li>参数传入对象时：</li>
-</ul>
-<pre><code class="language-c++">Person person; // 构造一次
-test1(person); // 作为参数传去进去的时候，会再创建一个Person对象（所以这里会有一个拷贝构造）
-
-test1(Person()); // 调用匿名构造函数，只会调用一次构造函数，不会调用拷贝构造
-</code></pre>
-<ul>
-<li>隐式构造</li>
-</ul>
-<pre><code class="language-c++">/*
-	Person(int age), age = 10,this = 00EFFCE0 - 创建一个新的对象1
-	Person(int age), age = 20,this = 00EFFC14 - 隐式构造创建一个临时对象2，并且把它的属性值赋值给对象1的属性值
-	~Person(), age = 20,this = 00EFFC14       - 析构对象2
-	~Person(), age = 20,this = 00EFFCE0       - 析构对象1
-*/
-Person person(10);  //!! 如果没有单参数构造函数，则会报错
-person = 20; // 隐式构造：Person(20)
-
-// 禁止隐式构造
-explicit Person(int age) : m_age(age) {}
-</code></pre>
-<ul>
-<li>编译器自动生成的构造函数</li>
-<li>C++的编译器会在默些特定的情况下，为类自动生成无参的构造函数，例如：</li>
-</ul>
-<ol>
-<li>成员变量在声明的同时进行了初始化。【需要进行赋值】</li>
-<li>有定义虚函数。 【需要创建虚表】</li>
-<li>虚继承其他类。 【需要创建虚表】</li>
-<li>包含了对象类型的成员（如果是指针类型则不需要调用构造函数），且这个成员有构造函数 【需要调用子类的构造函数】</li>
-<li>父类有构造函数。【需要先创建父类】</li>
-</ol>
-<blockquote>
-<p>对象创建后，需要做一些额外操作时（比如内存操作，函数调用），编译器一般都会为其生成构造函数。</p>
-</blockquote>
-<ul>
-<li>友元 [编译器行为]</li>
-</ul>
-<blockquote>
-<p>如果将函数<code>A</code>（非成员函数）声明为类<code>C</code>的友元函数，那么函数<code>A</code>就能直接访问类<code>C</code>对象的所有成员。</p>
-</blockquote>
-<pre><code class="language-c++">class Point {
-	friend Point add(const Point&amp;, const Point&amp;); // 定义友元函数 【全局的】
-	friend class Math; // 定义友元类
-private:
-	int m_x;
-	int m_y;
-public:
-	Point(int x, int y) :m_x(x), m_y(y) {}
-	int getX() const { return this-&gt;m_x; }
-	int getY() const { return this-&gt;m_y; }
-};
-
-Point add(const Point&amp; point1, const Point&amp; point2) {
-	return Point(point1.m_x + point2.m_x, point1.m_y + point2.m_y);
-}
-
-class Math {
-public:
-	Point add(const Point&amp; point1, const Point&amp; point2) {
-		return Point(point1.m_x + point2.m_x, point1.m_y + point2.m_y);
-	}
-};
-</code></pre>
-<ul>
-<li>
-<p>内部类/局部类【定义在函数内部】</p>
-</li>
-<li>
-<p>运算符重载</p>
-</li>
-</ul>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-using namespace std;
-
-class Point {
-	friend Point operator+(const Point&amp;, const Point&amp;);
-private:
-	int m_x;
-	int m_y;
-public:
-	Point(int x, int y) : m_x(x), m_y(y) {}
-	static void display(const Point &amp;point) {
-		cout &lt;&lt; &quot;(x: &quot; &lt;&lt; point.m_x &lt;&lt; &quot;, y: &quot; &lt;&lt; point.m_y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
-	}
-};
-
-// 操作符重载
-Point operator+(const Point &amp;p1, const Point &amp;p2) {
-	return Point(p1.m_x + p2.m_x, p1.m_y + p2.m_y);
-}
-
-int main() {
-	
-	Point::display(Point(1, 2) + Point(2, 3)); // 等价 =&gt;  display(operator(Point(1, 2), Point(2, 3)));
-	Point::display(operator+(Point(1, 2), Point(2, 3)));
-
-
-	return 0;
-}
-</code></pre>
-<ul>
-<li>通过指针<code>this</code>获取对象 =&gt; '*this'</li>
-<li><code>const</code>对象只能调用<code>const</code>的成员函数</li>
-</ul>
-<h3 id="第十二天">第十二天</h3>
-<ul>
-<li>操作符重载</li>
-</ul>
-<pre><code class="language-c++">// ++x
-void operator++() {
-	this-&gt;m_x++;
-	this-&gt;m_y++;
-}
-
-// x++
-void operator++(int) {
-	this-&gt;m_x++;
-	this-&gt;m_y++;
-}
-</code></pre>
-<ul>
-<li><code>a++</code>与<code>++a</code>运算符的汇编解析</li>
-</ul>
-<blockquote>
-<p>a++ 会返回a以前的值进行运算，运算完毕之后才会让a的值加1。【不能进行赋值】<br>
-++a 会直接让a的值加1，并且作为最新的a进行运算。【可以进行赋值】</p>
-</blockquote>
-<pre><code class="language-c++">int b = a++ + 8;
-// eax = a
-mov         eax,dword ptr [a]  
-// eax += 8
-add         eax,8  
-// b = eax [此时a的值没有发生改变]
-mov         dword ptr [b],eax  
-
-// ecx = a
-mov         ecx,dword ptr [a]  
-// ecx += 1
-add         ecx,1  
-// a = ecx [a++] 
-mov         dword ptr [a],ecx  
-
-
-int c = ++a + 8;
-// 先将a的值加1，然后覆盖a的值
-// eax = a
-mov         eax,dword ptr [a]  
-// eax += 1
-add         eax,1  
-// a = eax [a++] 
-mov         dword ptr [a],eax  
-
-// ecx = a [a = 9]
-mov         ecx,dword ptr [a]  
-// ecx += 8
-add         ecx,8  
-// c = exc
-mov         dword ptr [c],ecx 
-</code></pre>
-<ul>
-<li>重载</li>
-</ul>
-<pre><code class="language-c++">// 操作符重载
-Point operator+(const Point &amp;p1, const Point &amp;p2) {
-	return Point(p1.m_x + p2.m_x, p1.m_y + p2.m_y);
-}
-
-// 重载 cout &lt;&lt; Point;
-ostream&amp; operator&lt;&lt;(ostream&amp; cout, const Point&amp; point) {
-	return cout &lt;&lt; &quot;(x: &quot; &lt;&lt; point.m_x &lt;&lt; &quot;, y: &quot; &lt;&lt; point.m_y &lt;&lt; &quot;)&quot;;
-}
-</code></pre>
-<ul>
-<li>字符串重载实战</li>
-<li>重写<code>String</code>类</li>
-</ul>
-<pre><code class="language-c++">// String.h
-#pragma once
-#include &lt;iostream&gt;
-using namespace std;
-
-class String {
-	friend ostream&amp; operator&lt;&lt; (ostream&amp;, const String&amp;);
-public:
-	String&amp; operator=(const char* cstring);
-	String&amp; operator=(const String &amp;string);
-	String(const String &amp;string);
-	String(const char* cstring);
-	~String();
-private:
-	char* m_cstring;
-	String&amp; assign(const char* cstring);
-};
-
-// String.cpp
-#include &quot;String.h&quot;
-
-String::String(const char* cstring) {
-	assign(cstring);
-}
-
-String::String(const String&amp; string) {
-	assign(string.m_cstring);
-}
-
-String::~String() {
-	assign(NULL);
-}
-
-String&amp; String::operator=(const String&amp; string) {
-	return assign(string.m_cstring);
-}
-
-String&amp; String::operator=(const char* cstring) {
-	return assign(cstring);
-}
-
-String&amp; String::assign(const char* cstring) {
-	// 如果指向一样的堆空间
-	if (this-&gt;m_cstring == cstring) return *this;
-
-	// 如果传入进来的cstring == NULL的话就会达到释放指针的效果
-	// 释放旧的字符串
-	if (this-&gt;m_cstring != NULL) {
-		cout &lt;&lt; &quot;operator=(const char* cstring) - delete[] String: &quot; &lt;&lt; this-&gt;m_cstring &lt;&lt; endl;
-		delete[] this-&gt;m_cstring;
-		this-&gt;m_cstring = NULL;
-	}
-	if (cstring != NULL) {
-		// 创建字符串空间
-		this-&gt;m_cstring = new char[strlen(cstring) + 1]{};
-		// copy赋值
-		strcpy(this-&gt;m_cstring, cstring);
-
-		cout &lt;&lt; &quot;operator=(const char* cstring) - new - String: &quot; &lt;&lt; cstring &lt;&lt; endl;
-	}
-
-	return *this;
-}
-
-ostream&amp; operator&lt;&lt; (ostream &amp; cout, const String &amp; string) {
-	if (string.m_cstring == NULL) { return cout; }
-	return cout &lt;&lt; string.m_cstring;
-}
 </code></pre>
 ]]></content>
     </entry>
