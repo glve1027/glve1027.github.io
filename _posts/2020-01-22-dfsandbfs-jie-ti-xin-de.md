@@ -131,7 +131,7 @@ class Solution {
 
 > LeetCode 994
 
-![leetCode 994图片](img/1577333441345.jpg)
+![leetCode 994图片](/img/1577333441345.jpg)
 
 ```swift
 import Foundation
