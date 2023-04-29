@@ -15,7 +15,7 @@ tags:
 * 可以使用锁[这里就不具体展开了，锁的实现太多了]，这里重点说一下第二个方案：
 * 利用GCD实现“多读单写”的功能
 
-```objc
+```java
 // 创建一个全局的自定义并行队列
 dispatch_queue_t globalQueue = dispatch_queue_create("xxx", DISPATCH_QUEUE_CONCURRENT);
 // 对于"写"的操作

@@ -26,12 +26,12 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 
 ### GCTTheme使用篇
 * 方法1：如果要修改的控件是UIView或者是它的子类并且这个UIView不等于nil，可以直接调用方法
-```
+```java
 - (void)configSkinWithModule:(GCTThemeModuleTypes)module skinDatas:(NSDictionary<NSString *, NSString *> *)skinDatas;
 ```
 
 * 方法2：如果上面的条件有其中一个不满足，可以直接调用单例GCTThemeManager
-```
+```java
 // 需要配置皮肤替换功能的，图片获取需要 1. moduleName  2. imgKey
 - (UIImage *)getImageByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
 - (NSString *)getImageNameByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
@@ -43,7 +43,7 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 
 ### 实际使用情况
 * 直接配置TabBarController图片、文字。【因为tabBarItem默认是懒加载的，所以只能通过GCTThemeManager去实现】
-```
+```java
 navController.tabBarItem.title = [[GCTThemeManager sharedInstance] getTitleByKey:model.titleKey from:GCTThemeModuleTypeHomeTabbar];
 navController.tabBarItem.image = [UIImage imageMakeWithName:model.imageName type:@"png"];
 NSString *imageName = [[GCTThemeManager sharedInstance] getImageNameByKey:model.imageSelectedKey from:GCTThemeModuleTypeHomeTabbar];
@@ -53,7 +53,7 @@ navController.tabBarItem.selectedImage = [[UIImage imageMakeWithName:imageName t
 1. 在默认情况下，使用的是背景色。
 2. 在春节皮肤的配置下使用的是图片 【这里可以以此类推，某种皮肤下面使用的属性1，在另一种皮肤下使用的是属性2，因为当找不到对应的属性值的时候返回nil，也就是不实现】
 
-```
+```java
 self.tipsView.homeBG.image = [[GCTThemeManager sharedInstance] getImageByKey:@"home_wifi_scaning_unconnected" from:GCTThemeModuleTypeHomeWifi];
 self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@"home_wifi_found_scaning" from:GCTThemeModuleTypeHomeWifi];
 ```
@@ -62,7 +62,7 @@ self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@"home_wi
 
 * GCTThemeSwitchObject遵循的协议
 
-```
+```java
 @protocol GCTThemeSwitchProtocol <NSObject>
 
 - (void)setGCTThemeSwitch:(BOOL)isOpen;
@@ -73,7 +73,7 @@ self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@"home_wi
 
 * 数据源GCTThemeData遵循的协议
 
-```
+```java
 typedef enum : NSUInteger {
     GCTThemeDefaultData,
     GCTThemeFestivalData
@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 * GCTThemeManager核心代码
 
-```
+```java
 - (NSString *)findResourceBy:(NSString *)key from:(GCTThemeModuleTypes)module with:(NSString *)subKey {
     // 切换数据
     NSDictionary *resourcesData = self.switchIsOpen ? self.tempSkinData : self.skinData;
@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 ### 测试篇
 * 配置以及Mock数据
 
-```
+```java
 - (void)setUp {
     self.themeData = [GCTThemeData new];
     // Mock Data
