@@ -8,7 +8,7 @@ tags:
     - Object-C
 ---
 
-# 现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。
+### 现在国内很多App，每到节假日，都会搞一些活动，这样就免不了需要一个统一管理所谓“皮肤”功能【这里主要指图片、字体、颜色等资源】，下面就是我设计的”皮肤“功能模块。
 
 <!-- more -->
 
@@ -26,11 +26,13 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 
 ### GCTTheme使用篇
 * 方法1：如果要修改的控件是UIView或者是它的子类并且这个UIView不等于nil，可以直接调用方法
+
 ```java
 - (void)configSkinWithModule:(GCTThemeModuleTypes)module skinDatas:(NSDictionary<NSString *, NSString *> *)skinDatas;
 ```
 
 * 方法2：如果上面的条件有其中一个不满足，可以直接调用单例GCTThemeManager
+
 ```java
 // 需要配置皮肤替换功能的，图片获取需要 1. moduleName  2. imgKey
 - (UIImage *)getImageByKey:(NSString *)imgKey from:(GCTThemeModuleTypes)module;
@@ -43,6 +45,7 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 
 ### 实际使用情况
 * 直接配置TabBarController图片、文字。【因为tabBarItem默认是懒加载的，所以只能通过GCTThemeManager去实现】
+
 ```java
 navController.tabBarItem.title = [[GCTThemeManager sharedInstance] getTitleByKey:model.titleKey from:GCTThemeModuleTypeHomeTabbar];
 navController.tabBarItem.image = [UIImage imageMakeWithName:model.imageName type:@"png"];
