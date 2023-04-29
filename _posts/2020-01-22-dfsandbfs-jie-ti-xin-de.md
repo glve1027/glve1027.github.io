@@ -74,7 +74,7 @@ private func dfs(terminalValue, value, arr) {
 
 > LeetCode 199题目
 
-![leetCode 199图片](../img/1577330692621.jpg)
+![leetCode 199图片](/img/1577330692621.jpg)
 
 ```swift
 import Foundation
