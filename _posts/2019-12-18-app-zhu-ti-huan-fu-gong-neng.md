@@ -14,7 +14,7 @@ tags:
 
 ## 主题皮肤切换模块
 ### GCTTheme配置篇
-* 调用GCTThemeManager之前需要注册配置数据, 调用的时机目前是在didFinishLaunchingWithOptions的时候 （这个后期可以修改！！）
+> 调用GCTThemeManager之前需要注册配置数据, 调用的时机目前是在didFinishLaunchingWithOptions的时候 （这个后期可以修改！！）
 
 ```java
 // 1. GCTThemeSwitchObject 控制开关的类，灵活控制开关就可以配置这个类 （面向协议）
@@ -25,13 +25,13 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 ```
 
 ### GCTTheme使用篇
-* 方法1：如果要修改的控件是UIView或者是它的子类并且这个UIView不等于nil，可以直接调用方法
+> 方法1：如果要修改的控件是UIView或者是它的子类并且这个UIView不等于nil，可以直接调用方法
 
 ```java
 - (void)configSkinWithModule:(GCTThemeModuleTypes)module skinDatas:(NSDictionary<NSString *, NSString *> *)skinDatas;
 ```
 
-* 方法2：如果上面的条件有其中一个不满足，可以直接调用单例GCTThemeManager
+> 方法2：如果上面的条件有其中一个不满足，可以直接调用单例GCTThemeManager
 
 ```java
 // 需要配置皮肤替换功能的，图片获取需要 1. moduleName  2. imgKey
@@ -44,7 +44,7 @@ GCTThemeSwitchObject *switchObj = [GCTThemeSwitchObject new];
 ```
 
 ### 实际使用情况
-* 直接配置TabBarController图片、文字。【因为tabBarItem默认是懒加载的，所以只能通过GCTThemeManager去实现】
+> 直接配置TabBarController图片、文字。【因为tabBarItem默认是懒加载的，所以只能通过GCTThemeManager去实现】
 
 ```java
 navController.tabBarItem.title = [[GCTThemeManager sharedInstance] getTitleByKey:model.titleKey from:GCTThemeModuleTypeHomeTabbar];
@@ -63,7 +63,7 @@ self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@"home_wi
 
 ### GCTTheme原理篇
 
-* GCTThemeSwitchObject遵循的协议
+> GCTThemeSwitchObject遵循的协议
 
 ```java
 @protocol GCTThemeSwitchProtocol <NSObject>
@@ -74,7 +74,7 @@ self.backgroundColor = [[GCTThemeManager sharedInstance] getColorByKey:@"home_wi
 @end
 ```
 
-* 数据源GCTThemeData遵循的协议
+> 数据源GCTThemeData遵循的协议
 
 ```java
 typedef enum : NSUInteger {
@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 ```
 
-* GCTThemeManager核心代码
+> GCTThemeManager核心代码
 
 ```java
 - (NSString *)findResourceBy:(NSString *)key from:(GCTThemeModuleTypes)module with:(NSString *)subKey {
@@ -113,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
 ```
 
 ### 测试篇
-* 配置以及Mock数据
+> 配置以及Mock数据
 
 ```java
 - (void)setUp {
@@ -212,7 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 ### 思考篇
 
-* 配置的时机，需要切换，尽量不要放到AppDelegate中，影响启动时间。
-* GCTThemeManager中的开关GCTThemeSwitchObject以及数据源GCTThemeData相应的属性都是同时又Getter/Setter方法的，**数据不安全！！
+> 配置的时机，需要切换，尽量不要放到AppDelegate中，影响启动时间。
+> GCTThemeManager中的开关GCTThemeSwitchObject以及数据源GCTThemeData相应的属性都是同时又Getter/Setter方法的，**数据不安全！！
 ！！都要通过字符串去查找，编码不是很友好！（后期会通过R.Obj去修正这个问题。）**
-* 统一修改的时机每次启动只有一次，后期这里需要修改。
+> 统一修改的时机每次启动只有一次，后期这里需要修改。
