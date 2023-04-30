@@ -5,7 +5,7 @@ author:       "GH"
 header-style: text
 catalog:      true
 tags:
-    - Algorithm
+    - Git
 ---
 
 ### 二叉树、多叉树个人认为是最考验一个递归思考算法的一种题型，今天就总结一下关于层序遍历的总结吧！
