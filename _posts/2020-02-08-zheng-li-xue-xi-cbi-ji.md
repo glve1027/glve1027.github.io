@@ -937,9 +937,9 @@ int main() {
 > 函数通过添加const和非const，可以构成重载
 > 非const对象（指针）优先调用非const成员函数、const对象（指针）只能调用const成员函数
 
-*拷贝构造函数
+* 拷贝构造函数
 
-*如果函数的入参是字符常量
+* 如果函数的入参是字符常量
 
 > Car(int price, char *name = NULL) :m_price(price) {}
 
