@@ -84,4 +84,43 @@ async let r2 = hello1(123)
 let (result1, result2) = await (r1, r2)
 ```
 
+### More complicated situation:
 
+#### We can use `withTaskGroup` or `withThrowingTaskGroup`. It you want to use above ones. You must return the same type. such as `enum`
+
+```swift
+enum ReturnType {
+    case returnVoid
+    case returnIntArray([Int])
+    case returnString(String)
+}
+    
+func hello() async -> [ReturnType] { return [.returnVoid] }
+    
+func hello1() async -> [ReturnType] { return [.returnIntArray([1,2,3])] }
+    
+func hello2() async -> [ReturnType] { return [.returnString("hello")] }
+
+func test() async {
+    let complexResult = await withTaskGroup(of: [ReturnType].self, body: { group -> [ReturnType]  in
+        group.addTask {
+            // Specific operation
+            await self.hello()
+        }
+            
+        group.addTask {
+            // Specific operation1
+            await self.hello1()
+        }
+            
+        group.addTask {
+            await self.hello2()
+        }
+            
+        let finalResult: [ReturnType] = await group.reduce([], +)
+            
+        return finalResult
+    })
+    print(complexResult)
+}
+```
