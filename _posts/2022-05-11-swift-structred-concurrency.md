@@ -85,8 +85,7 @@ let (result1, result2) = await (r1, r2)
 ```
 
 ### More complicated situation:
-
-#### We can use `withTaskGroup` or `withThrowingTaskGroup`. It you want to use above ones. You must return the same type. such as `enum`
+* We can use `withTaskGroup` or `withThrowingTaskGroup`. It you want to use above ones. You must return the same type. such as `enum`
 
 ```swift
 enum ReturnType {
@@ -124,3 +123,63 @@ func test() async {
     print(complexResult)
 }
 ```
+### Easy to test:
+> If these functions are all private. Only one public function: func test() async. Which means we just need to test this function.
+* Before we start wirting the test codes. we need to update some codes first.
+
+1. Add `private` for these three functions: `hello`, `hello1`, `hello2`.
+2. Update above thress functions to `static` functions or we can move to another object, because we use these three functions as the default parameters.
+3. Add these three parameters for this function `test`
+4. Add `return type` to easy test.
+
+```swift
+  private static func hello() async -> [ReturnType] { return [.returnVoid] }
+  
+  private static func hello1() async -> [ReturnType] { return [.returnIntArray([1,2,3])] }
+  
+  private static func hello2() async -> [ReturnType] { return [.returnString("hello")] }
+  
+  func test(_ func1: @escaping () async -> [ReturnType] = TestAsync.hello,
+            _ func2: @escaping () async -> [ReturnType] = TestAsync.hello1,
+            _ func3: @escaping () async -> [ReturnType] = TestAsync.hello2) async -> [ReturnType] {
+    let complexResult = await withTaskGroup(of: [ReturnType].self, body: { group -> [ReturnType]  in
+      group.addTask {
+        // Specific operation
+        await func1()
+      }
+
+      group.addTask {
+        // Specific operation1
+        await func2()
+      }
+
+      group.addTask {
+        await func3()
+      }
+
+      let finalResult: [ReturnType] = await group.reduce([], +)
+
+      return finalResult
+    })
+    return complexResult
+  }
+```
+* Test Codes:
+```swift
+  func testFinalTestFunc() async {
+    
+    let result = await TestAsync().test {
+      return [.returnVoid]
+    } func2: {
+      return [.returnIntArray([1])]
+    } func3: {
+      return [.returnString("hello")]
+    }
+    
+    XCTAssertEqual(result[0], .returnVoid)
+    XCTAssertEqual(result[1], .returnIntArray([1]))
+    XCTAssertEqual(result[2], .returnString("hello"))
+  }
+```
+
+
